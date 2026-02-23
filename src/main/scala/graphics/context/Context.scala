@@ -52,7 +52,7 @@ object Context {
         }
 
         // Recolor window background to black
-        window.recolor(Colours.black)
+        window.recolor(config.colour)
         new Context(window, gladVersion)
     }
 }
