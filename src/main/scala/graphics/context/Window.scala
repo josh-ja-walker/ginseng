@@ -15,6 +15,9 @@ class Window(private[context] val ptr: Ptr[GLFWwindow]) {
         glfwSwapBuffers(ptr) // Swap buffers into window
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT) // Clear window
     }
+    
+    // Resize window viewport
+    def resize(width: Int, height: Int): Unit = glViewport(0, 0, width, height)
 
     // Set background colour
     def recolor(colour: Colour): Unit = {

@@ -21,6 +21,11 @@ class Context(val window: Window, val gladVersion: Int) {
     def run(render: () => Unit)(using zone: Zone): Unit = {
         try while (running) {
             window.reload() // Reload window buffers
+            
+            // Resize window on callback
+            glfwSetWindowSizeCallback(window.ptr, 
+                (ptr: Ptr[GLFWwindow], w: Int, h: Int) => window.resize(w, h))
+                
             render() // Run rendering function
         }
 
