@@ -4,15 +4,13 @@ import scala.util.Random
 import scala.scalanative.unsafe.*
 import scala.scalanative.unsigned.*
 
-import ginseng.primitives.*
-import ginseng.graphics.*
-import ginseng.graphics.shaders.*
-import ginseng.graphics.context.*
-import ginseng.graphics.rendering.*
+import ginseng.core.primitives.*
+import ginseng.core.colour.*
 
-import opengl.bindings.glad.*
-import opengl.bindings.glfw.*
-import opengl.conversions.UBytePtr.*
+import ginseng.renderer.*
+import ginseng.renderer.shaders.*
+import ginseng.renderer.context.*
+import ginseng.renderer.rendering.*
 
 
 @main def main: Unit = Zone {
