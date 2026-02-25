@@ -1,51 +1,44 @@
-import com.indoorvivants.vcpkg.sbtplugin
 Global / onChangedBuildSource := ReloadOnSourceChanges
 
-
-/* Global project settings */
 ThisBuild / scalaVersion := "3.8.1"
 
+
+// Root project aggregating subprojects
 lazy val ginseng = project
     .in(file("."))
     .dependsOn(core, maths, renderer)
-    .enablePlugins(commonPlugins*)
-    .enablePlugins(VcpkgNativePlugin)
-    .aggregate(core, maths, renderer)
-    .settings(nativeSettings)
+    .enablePlugins(ScalaNativePlugin, VcpkgNativePlugin)
+    .settings(vcpkgDependencies := VcpkgDependencies("glfw3"))
+    .settings(openglSettings)
 
 
-lazy val commonPlugins = Seq(ScalaNativePlugin)
-
-lazy val commonSettings = Seq()
-lazy val nativeSettings = Seq(
-    vcpkgDependencies := VcpkgDependencies("glfw3"),
+// Note: required to duplicate between projects
+// ScalaNative config options required for compiling and linking opengl
+lazy val openglSettings: Seq[Def.Setting[_]] = Seq(
     nativeConfig := {
         nativeConfig.value
             .withLinkingOptions(_ :+ "-lshell32")
             .withLinkingOptions(_ ++ vcpkgConfigurator.value.pkgConfig.linkingFlags("glfw3"))
-    },
+    }
 )
 
 
+// Project containing DSL, primitives, colour, etc.,
 lazy val core = project
     .in(file("core"))
     .dependsOn(maths)
-    .enablePlugins(commonPlugins*)
-    .settings(commonSettings)
+    .enablePlugins(ScalaNativePlugin, VcpkgNativePlugin)
 
+// Project containing mathematics helpers for Vectors, Matrices, etc.,
 lazy val maths = project
     .in(file("maths"))
-    .enablePlugins(commonPlugins*)
-    .settings(commonSettings)
-    
+    .enablePlugins(ScalaNativePlugin, VcpkgNativePlugin)
+
+// Project containing renderers and OpenGL handlers
 lazy val renderer = project
     .in(file("renderer"))
     .dependsOn(core, maths)
-    .enablePlugins(commonPlugins*)
-    .enablePlugins(VcpkgNativePlugin)
-    .settings(
-        libraryDependencies  += "io.github.josh-ja-walker" %%% "opengl-bindings" % "0.1.4"
-    )
-    .settings(commonSettings)
-    .settings(nativeSettings)
-
+    .enablePlugins(ScalaNativePlugin, VcpkgNativePlugin)
+    .settings(vcpkgDependencies := VcpkgDependencies("glfw3"))
+    .settings(libraryDependencies += "io.github.josh-ja-walker" %%% "opengl-bindings" % "0.1.4")
+    .settings(openglSettings)
