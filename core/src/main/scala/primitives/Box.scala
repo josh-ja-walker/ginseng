@@ -5,7 +5,7 @@ import ginseng.core.transformations.*
 import ginseng.core.colour.*
 
 
-case class Box(private val topLeft: Point, private val topRight: Point, private val bottomLeft: Point, private val bottomRight: Point) extends Primitive with Freeform
+case class Box(private val topLeft: Pos, private val topRight: Pos, private val bottomLeft: Pos, private val bottomRight: Pos) extends Primitive with Freeform
 {
     // Trait implementations
     def recolor(colour: Colour): Primitive = ???
@@ -40,10 +40,10 @@ object Box {
     // these are same function signatures
 
     // Box with sides length x with bottom left vertex at point p
-    def apply(p1: Point, size: Float): Box = ???
+    def apply(p1: Pos, size: Float): Box = ???
 
     // Box with sides length x centered at point
-    def centered(center: Point, size: Float): Box = ???
+    def centered(center: Pos, size: Float): Box = ???
 
 
     // TODO: should boxes by default be centered at origin, or p1 = origin??

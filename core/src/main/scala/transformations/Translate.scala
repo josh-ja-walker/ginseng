@@ -1,6 +1,6 @@
 package ginseng.core.transformations
 
-import ginseng.maths.*
+import ginseng.maths.linalg.*
 
 
 trait Translate {

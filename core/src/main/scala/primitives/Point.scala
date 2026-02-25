@@ -1,16 +1,16 @@
 package ginseng.core.primitives
 
-import ginseng.maths.*
+import ginseng.maths.linalg.*
 import ginseng.core.primitives.*
 import ginseng.core.transformations.*
 
 
-case class Point(val x: Double, val y: Double, val z: Double = 0d) extends Primitive with Translate {
-    override def translate(v: Vector): Point = Point(x + v.x, y + v.y, z + v.z)
+case class Point(val pos: Pos) extends Primitive with Translate {
+    override def translate(v: Vector): Point = Point((pos + v).asInstanceOf[Pos])
 
-    def toDebugString: String = s"Point: (${x}, ${y})"
+    def toDebugString: String = s"Pos: (${pos.toDebugString})"
 }
 
 object Point {
-    def origin = Point(-1, -1, 0)
+    def origin = Point(Pos.origin)
 }

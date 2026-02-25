@@ -39,7 +39,7 @@ object PointRenderer {
     def apply(size: Float, points: Point*)(using zone: Zone): PointRenderer = {
         // Define points array
         val glPoints: Array[Float] = points 
-            .flatMap(p => Seq(p.x, p.y, p.z))
+            .flatMap(p => Seq(p.pos.x, p.pos.y, p.pos.z))
             .map(_.toFloat)
             .toArray
 
