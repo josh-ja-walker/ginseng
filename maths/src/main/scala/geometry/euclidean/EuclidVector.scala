@@ -1,5 +1,4 @@
-
-package ginseng.maths.linalg.coordinates
+package ginseng.maths.geometry.euclidean
 
 import ginseng.maths.*
 import ginseng.maths.linalg.*

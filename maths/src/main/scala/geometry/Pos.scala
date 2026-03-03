@@ -2,7 +2,7 @@ package ginseng.maths.geometry
 
 import ginseng.maths.*
 import ginseng.maths.linalg.*
-import ginseng.maths.linalg.coordinates.*
+import ginseng.maths.geometry.homogenous.*
 
 
 /** Position Vector */ 

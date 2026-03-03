@@ -1,9 +1,10 @@
 package ginseng.maths.geometry
 
+import slash.vector.Vec as SlashVec
+
 import ginseng.maths.*
 import ginseng.maths.linalg.* 
-import ginseng.maths.linalg.coordinates.*
-import slash.vector.Vec as SlashVec
+import ginseng.maths.geometry.homogenous.*
 
 
 /** Direction Vector */

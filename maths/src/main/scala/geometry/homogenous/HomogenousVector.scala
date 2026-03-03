@@ -1,4 +1,4 @@
-package ginseng.maths.linalg.coordinates
+package ginseng.maths.geometry.homogenous
 
 import ginseng.maths.*
 import ginseng.maths.linalg.*

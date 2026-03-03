@@ -1,7 +1,6 @@
-package ginseng.maths.linalg.coordinates
+package ginseng.maths.geometry.euclidean
 
 import ginseng.maths.linalg.*
-import ginseng.maths.linalg.coordinates.*
 
 
 /** Matrix in 3D space with x, y and z coordinates */
