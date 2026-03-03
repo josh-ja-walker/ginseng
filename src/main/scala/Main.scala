@@ -11,9 +11,14 @@ import ginseng.renderer.*
 import ginseng.renderer.shaders.*
 import ginseng.renderer.context.*
 import ginseng.renderer.rendering.*
+import scala.collection.mutable.HashSet
+import scala.collection.immutable.HashMap
+import scala.scalanative.runtime.IntArray
 
 
 @main def main: Unit = Zone {
+    val a = HashSet[Int]()
+    val b = IntArray
     val config = new ConfigBuilder()
         .withSize(800, 600)
         .withName("Hello Triangle")
