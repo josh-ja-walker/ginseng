@@ -21,11 +21,6 @@ class Vec[N <: Int](private val vec: SlashVec[N])
 
     override infix def dot(u: Vec[N]): Double = vec.dot(u.vec)
 
-    override def transpose: Matrix[1, N] = {
-        ConcreteMatrixFactory[Double].from(vec.asNativeArray)
-            .asInstanceOf[Matrix[1, N]] //FIXME: instanceOf bad
-    }
-    
 }
 
 
@@ -36,7 +31,7 @@ object Vec {
 }
 
 
-transparent trait VectorOps[N <: Int, T, V <: VectorOps[N, T, V]] {
+transparent trait VectorOps[N <: Int, T <: Double | Float, V <: VectorOps[N, T, V]] {
 
     def apply(i: Int): T
 
@@ -58,8 +53,6 @@ transparent trait VectorOps[N <: Int, T, V <: VectorOps[N, T, V]] {
     def normalized: V
 
     infix def dot(u: V): T
-
-    // def transpose: M[1, N]
 
 }
 
