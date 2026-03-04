@@ -6,7 +6,7 @@ import ginseng.maths.linalg.*
 
 /** Vector in homogenous space with x, y and z and s coordinates */
 class HomogenousVec(private val vec: Vec[4]) 
-    extends HomogenousVectorOps[Double, HomogenousVec] {
+    extends HomogenousVectorOps[Double, HomogenousMatrix, HomogenousVec] {
 
     override def x: Double = vec(0)
     override def y: Double = vec(1)
@@ -23,13 +23,13 @@ class HomogenousVec(private val vec: Vec[4])
 
     override def unary_- : HomogenousVec = new HomogenousVec(-vec)
 
-    override def transpose: Matrix[1, 4] = vec.transpose
-
     override def norm: Double = vec.norm
     override def normalized: HomogenousVec = new HomogenousVec(vec / vec.norm)
 
     override infix def dot(u: HomogenousVec): Double = vec.dot(u.vec)
 
+
+    override infix def rotate(r: HomogenousMatrix[4]): Double = ???
 }
 
 
@@ -39,7 +39,7 @@ object HomogenousVec {
 }
 
 
-transparent trait HomogenousVectorOps[T, V <: HomogenousVectorOps[T, V]] 
+transparent trait HomogenousVectorOps[T <: Double | Float, M[N <: Int] <: HomogenousMatrixOps[N, T, M[N]], V <: HomogenousVectorOps[T, M, V]] 
     extends VectorOps[4, Double, V] {
 
     /* Methods for homogenous vectors */
@@ -52,6 +52,9 @@ transparent trait HomogenousVectorOps[T, V <: HomogenousVectorOps[T, V]]
     
     /* Normalize the vector according to the norm */    
     def normalized: V
-    
+
+    /* Transformations */
+    infix def rotate(r: M[4]): T
+
 }
 

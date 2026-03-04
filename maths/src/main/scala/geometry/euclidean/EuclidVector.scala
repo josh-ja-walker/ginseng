@@ -6,7 +6,7 @@ import ginseng.maths.linalg.*
 
 /** Vector in 3D space with x, y and z coordinates */
 class EuclidVec(private val vec: Vec[3])
-    extends EuclidVectorOps[Double, EuclidVec] {
+    extends EuclidVectorOps[Double, EuclidMatrix, EuclidVec] {
 
     /* Implement concrete type */
 
@@ -27,24 +27,28 @@ class EuclidVec(private val vec: Vec[3])
 
     override def unary_- : EuclidVec = new EuclidVec(-vec)
 
-    // override def transpose: EuclidMatrix = new EuclidMatrix(vec.transpose)
-
     override def norm: Double = vec.norm
     override def normalized: EuclidVec = new EuclidVec(vec / vec.norm)
 
     override infix def dot(u: EuclidVec): Double = vec.dot(u.vec)
 
-    override def angle(s: EuclidVec): Angle = 
+    override infix def angle(s: EuclidVec): Angle = 
         Radians(math.acos((vec dot s.vec) / (norm * s.norm)))
 
-    override def rotate(r: EuclidMatrix): Double = ???
+    override infix def rotate(r: EuclidMatrix[3]): Double = ???
 
-    override def intersect(t: EuclidVec): EuclidVec = ???
+    override infix def intersect(t: EuclidVec): EuclidVec = ???
 
 }
 
 
-transparent trait EuclidVectorOps[T <: Double | Float, V <: EuclidVectorOps[T, V]]
+object EuclidVec {
+    def apply(x: Double, y: Double, z: Double): EuclidVec = 
+        new EuclidVec(Vec(x, y, z))
+}
+
+
+transparent trait EuclidVectorOps[T <: Double | Float, M[N <: Int] <: EuclidMatrixOps[N, T, M[N]], V <: EuclidVectorOps[T, M, V]]
     extends VectorOps[4, Double, V] {
 
     /* Methods for Euclid vectors */
@@ -58,7 +62,7 @@ transparent trait EuclidVectorOps[T <: Double | Float, V <: EuclidVectorOps[T, V
     infix def angle(s: V): Angle
 
     /* Transformations */
-    // infix def rotate(r: M): T
+    infix def rotate(r: M[3]): T
 
     /* Compute intersection between two vectors */
     infix def intersect(t: V): V

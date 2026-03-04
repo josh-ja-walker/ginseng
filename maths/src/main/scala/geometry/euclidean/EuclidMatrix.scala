@@ -3,9 +3,11 @@ package ginseng.maths.geometry.euclidean
 import ginseng.maths.linalg.*
 
 
-/** Matrix in 3D space with x, y and z coordinates */
-class EuclidMatrix(private val mat: Matrix[3, 3])
-    extends EuclidMatrixOps[Double, EuclidMatrix] {
+/** Matrix in 3D space with x, y and z coordinates 
+ * Consists of N Euclidean vectors
+*/
+class EuclidMatrix[N <: Int](private val mat: Matrix[3, N])
+    extends EuclidMatrixOps[N, Double, EuclidMatrix[N]] {
 
     /* Implement concrete type */
 
@@ -13,9 +15,10 @@ class EuclidMatrix(private val mat: Matrix[3, 3])
 
 }
 
- 
-transparent trait EuclidMatrixOps[T <: Double | Float, +M <: EuclidMatrixOps[T, M]] {
-    /* Methods for Euclidean matrices */
-    
-}
 
+transparent trait EuclidMatrixOps[N <: Int, T <: Double | Float, +M <: EuclidMatrixOps[N, T, M]]
+    // extends MatrixOps[4, N, T, M] //FIXME:
+{
+    /* Methods for Euclidean matrices */
+
+}
