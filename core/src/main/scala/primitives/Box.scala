@@ -10,14 +10,11 @@ import ginseng.core.colour.*
 
 case class Box(private val topLeft: Pos, private val topRight: Pos, private val bottomLeft: Pos, private val bottomRight: Pos) extends Primitive with Freeform
 {
-    // Trait implementations
-    def recolor(colour: Colour): Primitive = ???
-
     // Freeform allows all translations
-    def translate(v: Vec3): Translate = ???
-    def rotate(v: Vec3): Rotate = ???
-    def skew(v: Vec3): Skew = ???
-    def scale(v: Vec3): Scale = ???
+    override def translate(v: Vec3): Translate = ???
+    override def rotate(theta: Angle, around: Pos, axis: Dir): Rotate = ???
+    override def skew(v: Vec3): Skew = ???
+    override def scale(v: Vec3): Scale = ???
 
 
     // TODO: decide on convention for vertices
