@@ -1,8 +1,8 @@
 package ginseng.core.transformations
 
-import ginseng.maths.linalg.*
+import ginseng.maths.linalg.vectors.*
 
 
 trait Translate {
-    infix def translate(v: Vector): Translate
+    infix def translate(v: Vec3): Translate
 }

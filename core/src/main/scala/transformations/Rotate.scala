@@ -1,8 +1,8 @@
 package ginseng.core.transformations
 
-import ginseng.maths.linalg.*
+import ginseng.maths.linalg.vectors.*
 
 
 trait Rotate {
-    infix def rotate(v: Vector): Rotate
+    infix def rotate(v: Vec3): Rotate
 }
