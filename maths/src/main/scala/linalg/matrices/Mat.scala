@@ -28,6 +28,11 @@ object Mat {
     
     extension[M <: Int, N <: Int] (m: Mat[M, N])(using ValueOf[M], ValueOf[N]) {
 
+        // Index into column vectors
+        def apply(i: Int): Vec[M] = m.columnVectors(i)
+
+
+
         @targetName("appendCol")
         def :+>(v: Vec[M])(using ValueOf[+[N, 1]]): Mat[M, +[N, 1]] = 
             slash.Mat(m.columnVectors :+ v).transpose 
