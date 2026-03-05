@@ -2,75 +2,43 @@ package ginseng.maths.geometry
 
 import ginseng.maths.*
 import ginseng.maths.linalg.*
-import ginseng.maths.geometry.homogenous.*
+import ginseng.maths.linalg.vectors.*
+import ginseng.maths.linalg.matrices.*
 
 
-/** Position Vector */ 
-final class Pos(private val vec: HomogenousVec)
-    extends PosOps[Pos] {
-
-    /* Implement concrete type */
-
-    //TODO:
-    override infix def rotate(r: Angle, around: Pos = Pos.origin): Pos = ???
-
-
-    /* ... */
-
-    override def x: Double = vec.x
-    override def y: Double = vec.y
-    override def z: Double = vec.z
-    // override def s: Double = vec.s
-
-    override def apply(i: Int): Double = vec(i)
-
-    override def +(p: Pos): Pos = new Pos(vec + p.vec)
-    override def -(p: Pos): Pos = new Pos(vec - p.vec)
-
-    override def *(s: Double): Pos = new Pos(vec * s)
-    override def /(s: Double): Pos = new Pos(vec / s)
-
-    override def unary_- : Pos = new Pos(-vec)
-
-    override def norm: Double = vec.norm
-    override def normalized: Pos = new Pos(vec / vec.norm)
-    
-}
-
-
-trait PosOps[+P <: PosOps[P]] {
-    /* Transformations */
-
-    infix def rotate(r: Angle, around: Pos = Pos.origin): Pos
-
-
-    /* ... */
-
-    def x: Double
-    def y: Double
-    def z: Double
-    // def s: Double
-
-    def apply(i: Int): Double
-    
-    def +(p: Pos): Pos
-    def -(p: Pos): Pos
-
-    def *(s: Double): Pos
-    def /(s: Double): Pos
-
-    def unary_- : Pos
-
-    def norm: Double
-    def normalized: Pos
-
-}
-
+/** Position Vector */
+type Pos = Vec4
 
 object Pos {
     // Note: homogenous coordinate value is 1 for a Position Vector
-    def apply(x: Double, y: Double, z: Double = 0d): Pos = 
-        new Pos(HomogenousVec(x, y, z, 0))
+    def apply(x: Double, y: Double, z: Double = 0d): Pos = Vec4(x, y, z, 1)
 
     def origin = Pos(-1, -1, 0)
+    
+    def topLeft = Pos(-1, 1, 0)
+    def topRight = Pos(1, 1, 0)
+    def bottomLeft = origin
+    def bottomRight = Pos(1, -1, 0)
+
+    def center = Pos(0, 0, 0)
+
+
+    extension (p: Pos) {
+        /* Transformations */
+
+        /** Rotate position by counterclockwise angle */
+        infix def rotate(theta: Angle, axis: Dir = Dir.forward): Pos = Vec4.rotate(p)(theta, axis) 
+
+        /** Rotate position by counterclockwise angle around a position */
+        infix def rotateAround(theta: Angle, around: Pos, axis: Dir = Dir.forward): Pos = {
+            // Translate coordinates so around is at origin, then rotate and translate back 
+            val toOrigin = TranslateMat4(around)
+            (-toOrigin * Rotation4(theta, axis) * toOrigin) * p
+        }
+
+        //FIXME: distinguish between Dir and Pos??
+        // infix def rotate(theta: Angle, around: Pos): Pos = p.rotate(theta, Dir.forward, around)
+        
+    }
+
 }
