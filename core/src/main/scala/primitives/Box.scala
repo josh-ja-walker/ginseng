@@ -1,6 +1,9 @@
 package ginseng.core.primitives
 
 import ginseng.maths.*
+import ginseng.maths.geometry.*
+import ginseng.maths.linalg.vectors.*
+
 import ginseng.core.transformations.*
 import ginseng.core.colour.*
 
@@ -11,10 +14,10 @@ case class Box(private val topLeft: Pos, private val topRight: Pos, private val 
     def recolor(colour: Colour): Primitive = ???
 
     // Freeform allows all translations
-    def translate(vector: Vector): Translate = ???
-    def rotate(vector: Vector): Rotate = ???
-    def skew(vector: Vector): Skew = ???
-    def scale(vector: Vector): Scale = ???
+    def translate(v: Vec3): Translate = ???
+    def rotate(v: Vec3): Rotate = ???
+    def skew(v: Vec3): Skew = ???
+    def scale(v: Vec3): Scale = ???
 
 
     // TODO: decide on convention for vertices

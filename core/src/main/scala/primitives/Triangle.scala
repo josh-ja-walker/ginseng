@@ -1,13 +1,16 @@
 package ginseng.core.primitives
 
 import ginseng.maths.*
+import ginseng.maths.geometry.*
+import ginseng.maths.linalg.vectors.*
+import ginseng.maths.linalg.vectors.Vec3.*
+
 import ginseng.core.transformations.*
-import ginseng.maths.linalg.Vector
 
 
 case class Triangle(private val a: Pos, private val b: Pos, private val c: Pos) extends Primitive with Translate {
 
-    override def translate(v: Vector): Triangle = new Triangle((a + v).asInstanceOf[Pos], (b + v).asInstanceOf[Pos], (c + v).asInstanceOf[Pos])
+    override def translate(v: Vec3): Triangle = ???
 
     // TODO: sort naming convention for sides, angles and vertices
 
@@ -24,26 +27,26 @@ case class Triangle(private val a: Pos, private val b: Pos, private val c: Pos) 
     // side 3 = c - b
     
     // TODO: allow reference sides for transformations
+
+    // FIXME:
     
-    def sideAB: Vector = pointB - pointA
-    def sideAC: Vector = pointC - pointA
-    def sideBC: Vector = pointC - pointB
-    def sideBA: Vector = -sideAB
-    def sideCA: Vector = -sideAC
-    def sideCB: Vector = -sideBC
+    // def sideAB: Vec3 = pointB - pointA
+    // def sideAC: Vec3 = pointC - pointA
+    // def sideBC: Vec3 = pointC - pointB
+    // def sideBA: Vec3 = -sideAB
+    // def sideCA: Vec3 = -sideAC
+    // def sideCB: Vec3 = -sideBC
 
-    // helpers for referencing vertices
-    def pointA: Pos = a
-    def pointB: Pos = b
-    def pointC: Pos = c
+    // // helpers for referencing vertices
+    // def pointA: Pos = a
+    // def pointB: Pos = b
+    // def pointC: Pos = c
 
-    // reference angles
-    def angleA: Double = sideAB angle sideAC 
-    def angleB: Double = sideBA angle sideBC
-    def angleC: Double = sideCA angle sideCB 
+    // // reference angles
+    // def angleA: Double = sideAB angle sideAC 
+    // def angleB: Double = sideBA angle sideBC
+    // def angleC: Double = sideCA angle sideCB 
 
-
-    def toDebugString: String = s"Triangle: ${a} - ${b} - ${c}"
 }
 
 
@@ -65,28 +68,36 @@ object Triangle {
         }
         
         val angleA = computeAngle(s1, s2, s3)
-        val c = a + ((Dir.right rotate angleA) * s3)
 
-        Triangle(a, b.asInstanceOf[Pos], c.asInstanceOf[Pos])
+        //TODO: import Dir by default
+        import Dir.rotate
+        val c = a + (Dir.right.rotate(angleA) * s3)
+
+        Triangle(a, b, c)
     }
 
     // SAS - set side 1 as horizontal, center angle at origin
     def sas(s1: Double, angle: Angle, s2: Double): Triangle = {
         val a = Pos.origin
         val b = a + (Dir.right * s1)
-        val c = a + ((Dir.right rotate angle) * s2)
         
-        Triangle(a, b.asInstanceOf[Pos], c.asInstanceOf[Pos])
+        //TODO: import Dir by default
+        import Dir.rotate
+        val c = a + (Dir.right.rotate(angle) * s2)
+        
+        Triangle(a, b, c)
     }
 
     // ASA - set side as horizontal, center angle between s1 and s2 at origin
     def asa(a1: Angle, s: Double, a2: Angle): Triangle = {
         val a = Pos.origin
-        val b = (Pos.origin + (Dir.right * s)).asInstanceOf[Pos]
+        val b = (Pos.origin + (Dir.right * s))
 
-        val p = a.toVector + (Dir.right rotate a1)
-        val q = b.toVector + (Dir.left rotate -a2)
-        val c = p intersect q
+        //TODO: import Dir by default
+        import Dir.{rotate, intersect}
+        val p = a + (Dir.right rotate a1)
+        val q = b + (Dir.left rotate -a2)
+        val c = p.intersect(q) //TODO:: should this be a Pos.intersect?
 
         Triangle(a, b, c)
     }
