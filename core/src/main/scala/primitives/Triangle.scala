@@ -5,13 +5,14 @@ import ginseng.maths.geometry.*
 
 import ginseng.maths.linalg.vectors.*
 import ginseng.maths.linalg.vectors.Vec.* 
+import ginseng.maths.linalg.vectors.Vec4.* 
 import ginseng.maths.linalg.matrices.* 
 import ginseng.maths.linalg.matrices.Mat.* 
 
 import ginseng.core.transformations.*
 
 
-case class Triangle(mat: Mat[4, 4]) extends Primitive with Translate with Rotate with Scale {
+case class Triangle(mat: Mat[4, 3]) extends Primitive with Translate with Rotate with Scale {
 
     private val a: Pos = mat(0)
     private val b: Pos = mat(1)
@@ -67,7 +68,8 @@ case class Triangle(mat: Mat[4, 4]) extends Primitive with Translate with Rotate
 
 object Triangle {
     // Pointwise construction of triangle
-    def apply(a: Pos, b: Pos, c: Pos): Triangle = new Triangle(Mat[4, 4](a, b, c))
+    //TODO: helper method for Mat4 from Mat3
+    def apply(a: Pos, b: Pos, c: Pos): Triangle = new Triangle(Mat(a, b, c))
     def unapplySeq(tri: Triangle): Seq[Pos] = Mat.unapplySeq(tri.mat)
 
     // SSS - set side 1 as horizontal, center angle 1 at origin
@@ -86,7 +88,6 @@ object Triangle {
         val angleA = computeAngle(s1, s2, s3)
 
         //TODO: import Dir by default
-        import Dir.rotate
         val c = a + (Dir.right.rotate(angleA) * s3)
 
         Triangle(a, b, c)
@@ -98,7 +99,6 @@ object Triangle {
         val b = a + (Dir.right * s1)
         
         //TODO: import Dir by default
-        import Dir.rotate
         val c = a + (Dir.right.rotate(angle) * s2)
         
         Triangle(a, b, c)
@@ -110,9 +110,9 @@ object Triangle {
         val b = (Pos.origin + (Dir.right * s))
 
         //TODO: import Dir by default
-        import Dir.{rotate, intersect}
         val p = a + (Dir.right rotate a1)
         val q = b + (Dir.left rotate -a2)
+        import Dir.intersect
         val c = p.intersect(q) //TODO:: should this be a Pos.intersect?
 
         Triangle(a, b, c)

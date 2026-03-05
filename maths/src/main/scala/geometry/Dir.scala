@@ -31,8 +31,6 @@ object Dir {
         /** Compute intersection between two direction vectors */
         infix def intersect(t: Dir): Dir = ???
 
-        /* Transformations */
-        infix def rotate(r: Angle): Dir = ???
     }
     
 }

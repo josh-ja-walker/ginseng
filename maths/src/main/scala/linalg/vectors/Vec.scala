@@ -33,6 +33,8 @@ object Vec {
         infix def ++[M <: Int](u: Vec[M])(using ValueOf[+[N, M]]): Vec[+[N, M]] = 
             slash.Vec(v.asNativeArray ++ u.asNativeArray)
         
+        def toSeq: Seq[Double] = v.asNativeArray.toSeq
+        
     }
     
     extension[N <: Int] (d: Double) {
