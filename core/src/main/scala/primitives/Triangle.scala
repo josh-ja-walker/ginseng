@@ -2,15 +2,30 @@ package ginseng.core.primitives
 
 import ginseng.maths.*
 import ginseng.maths.geometry.*
+
 import ginseng.maths.linalg.vectors.*
-import ginseng.maths.linalg.vectors.Vec3.*
+import ginseng.maths.linalg.vectors.Vec.* 
+import ginseng.maths.linalg.matrices.* 
+import ginseng.maths.linalg.matrices.Mat.* 
 
 import ginseng.core.transformations.*
 
 
-case class Triangle(private val a: Pos, private val b: Pos, private val c: Pos) extends Primitive with Translate {
+case class Triangle(mat: Mat[4, 4]) extends Primitive with Translate with Rotate with Scale {
 
-    override def translate(v: Vec3): Triangle = ???
+    private val a: Pos = mat(0)
+    private val b: Pos = mat(1)
+    private val c: Pos = mat(2)
+
+    override def translate(v: Vec3): Triangle = new Triangle(TranslateMat4(v) * mat)
+
+    override def rotate(theta: Angle, around: Pos, axis: Dir): Triangle = {
+        val translateOrigin = TranslateMat4(around.take[3])
+        val newMat = (-translateOrigin * RotateMat4(theta, axis) * translateOrigin) * mat
+        new Triangle(newMat)
+    }
+
+    override def scale(v: Vec3): Triangle = new Triangle(ScaleMat4(v) * mat)
 
     // TODO: sort naming convention for sides, angles and vertices
 
@@ -52,7 +67,8 @@ case class Triangle(private val a: Pos, private val b: Pos, private val c: Pos) 
 
 object Triangle {
     // Pointwise construction of triangle
-    def apply(a: Pos, b: Pos, c: Pos): Triangle = new Triangle(a, b, c)
+    def apply(a: Pos, b: Pos, c: Pos): Triangle = new Triangle(Mat[4, 4](a, b, c))
+    def unapplySeq(tri: Triangle): Seq[Pos] = Mat.unapplySeq(tri.mat)
 
     // SSS - set side 1 as horizontal, center angle 1 at origin
     def sss(s1: Double, s2: Double, s3: Double): Triangle = {
