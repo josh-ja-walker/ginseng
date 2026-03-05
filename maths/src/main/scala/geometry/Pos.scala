@@ -32,8 +32,9 @@ object Pos {
         /** Rotate position by counterclockwise angle around a position */
         infix def rotateAround(theta: Angle, around: Pos, axis: Dir = Dir.forward): Pos = {
             // Translate coordinates so around is at origin, then rotate and translate back 
-            val toOrigin = TranslateMat4(around)
-            (-toOrigin * Rotation4(theta, axis) * toOrigin) * p
+            import Vec.take
+            val toOrigin = TranslateMat4(around.take[3])
+            (-toOrigin * RotateMat4(theta, axis) * toOrigin) * p
         }
 
         //FIXME: distinguish between Dir and Pos??

@@ -39,7 +39,7 @@ object Vec3 {
         /* Rotate by angle anticlockwise */
         infix def rotate(angle: Angle): Vec3 = rotate(angle, Vec3.forward)
         infix def rotate(angle: Angle, axis: Vec3): Vec3 = 
-            Rotation3(angle, axis) * v
+            RotateMat3(angle, axis) * v
 
     }
 }
