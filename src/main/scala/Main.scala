@@ -7,9 +7,13 @@ import ginseng.core.primitives.*
 import ginseng.core.colour.*
 
 import ginseng.maths.Degrees
-import ginseng.maths.geometry.*
 import ginseng.maths.linalg.vectors.*
-import ginseng.maths.linalg.vectors.Vec.*
+import ginseng.maths.geometry.vectors.*
+
+import Vec.*
+import Dir.*
+
+
 
 import ginseng.renderer.*
 import ginseng.renderer.shaders.*
@@ -30,12 +34,26 @@ import scala.util.Random
 
     val context = Context(config)
 
-    val tri = Triangle.equilateral(2)
-    val triRenderer = TriangleRenderer(tri)
+    var tri = Triangle.equilateral(2)
     val triShader = Shaders.triShader
+    var i = 0
 
     context.run(() => 
-        triRenderer.render(triShader)
+        // TODO: make angle opaque? then impossible to pass 90 without constructing degrees or radians
+        // tri = tri.rotate(Degrees(90), Pos.center, Dir.forward)
+        
+        i += 1
+        if (i > 100) {
+            i = 0
+        } else if (i > 50) {
+            tri = tri.scale(1.111d * Vec3.one)
+        } else {
+            tri = tri.scale(0.900d * Vec3.one)
+        }
+
+        TriangleRenderer(tri).render(triShader)
+
+        Thread.sleep(50)
     )
 
 }

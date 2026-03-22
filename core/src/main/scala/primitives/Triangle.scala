@@ -94,8 +94,6 @@ object Triangle {
     def sas(s1: Double, angle: Angle, s2: Double): Triangle = {
         val a = Pos.origin
         val b = a + (Dir.right * s1)
-        
-        //TODO: import Dir by default
         val c = a + (Dir.right.rotate(angle) * s2)
         
         Triangle(a, b, c)
