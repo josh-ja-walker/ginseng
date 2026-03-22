@@ -23,6 +23,9 @@ case class Box(private val topLeft: Pos, private val topRight: Pos, private val 
     
     override def scale(v: Vec3): Box = ???
 
+    override def squeeze(f: Double): Box = ???
+    override def squeeze(f: Vec2): Box = ???
+
 
     // TODO: decide on convention for vertices
 

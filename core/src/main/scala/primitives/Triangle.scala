@@ -59,6 +59,18 @@ case class Triangle(mat: Mat[4, 3]) extends Primitive with Freeform[Triangle] {
         new Triangle(skewMat * mat)
     }
 
+    // Area preserving with unmodified Z axis 
+    override def squeeze(f: Double) = {
+        val squeezeMat = ScaleMat4(Vec3(f, 1/f, 1))
+        new Triangle(squeezeMat * mat)
+    }
+
+    // Volume preserving with full X, Y, Z degrees of freedom 
+    override def squeeze(f: Vec2) = {
+        val squeezeMat = ScaleMat4(f :+ 1 / (f.x * f.y))
+        new Triangle(squeezeMat * mat)
+    }
+
     // Calculate centroid of triangle by intersection of medians
     def center: Pos = (a - (0.5 * bc)).intersect(b - (0.5 * ac))
 
