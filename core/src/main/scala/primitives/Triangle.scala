@@ -14,9 +14,25 @@ import ginseng.core.transformations.*
 
 case class Triangle(mat: Mat[4, 3]) extends Primitive with Translate with Rotate with Scale {
 
-    private val a: Pos = mat(0)
-    private val b: Pos = mat(1)
-    private val c: Pos = mat(2)
+    // /_ = side 2, angle 1, side 1
+    // _\ = side 1, angle 2, side 3
+    // /\ = side 2, angle 3, side 3
+
+    // helpers for referencing vertices
+    val a: Pos = mat(0)
+    val b: Pos = mat(1)
+    val c: Pos = mat(2)
+    
+    // TODO: allow modification of referenced sides
+    def ab: Dir = b - a ; def ba: Dir = -ab
+    def bc: Dir = c - b ; def cb: Dir = -bc
+    def ac: Dir = c - a ; def ca: Dir = -ac
+
+    // TODO: allow modification of referenced angles
+    def A: Angle = Dir.angle(ab, ac) 
+    def B: Angle = Dir.angle(ba, bc)
+    def C: Angle = Dir.angle(ca, cb) 
+
 
     override def translate(v: Vec3): Triangle = new Triangle(TranslateMat4(v) * mat)
 
@@ -28,47 +44,12 @@ case class Triangle(mat: Mat[4, 3]) extends Primitive with Translate with Rotate
 
     override def scale(v: Vec3): Triangle = new Triangle(ScaleMat4(v) * mat)
 
-    // TODO: sort naming convention for sides, angles and vertices
-
-    // angle 1 = angle(side 1, side 2)
-    // angle 2 = angle(side 1, side 3)
-    // angle 3 = angle(side 2, side 3)
-
-    // /_ = side 2, angle 1, side 1
-    // _\ = side 1, angle 2, side 3
-    // /\ = side 2, angle 3, side 3
-
-    // side 1 = b - a
-    // side 2 = c - a
-    // side 3 = c - b
-    
-    // TODO: allow reference sides for transformations
-
-    // FIXME:
-    
-    // def sideAB: Vec3 = pointB - pointA
-    // def sideAC: Vec3 = pointC - pointA
-    // def sideBC: Vec3 = pointC - pointB
-    // def sideBA: Vec3 = -sideAB
-    // def sideCA: Vec3 = -sideAC
-    // def sideCB: Vec3 = -sideBC
-
-    // // helpers for referencing vertices
-    // def pointA: Pos = a
-    // def pointB: Pos = b
-    // def pointC: Pos = c
-
-    // // reference angles
-    // def angleA: Double = sideAB angle sideAC 
-    // def angleB: Double = sideBA angle sideBC
-    // def angleC: Double = sideCA angle sideCB 
-
 }
 
 
 object Triangle {
+
     // Pointwise construction of triangle
-    //TODO: helper method for Mat4 from Mat3
     def apply(a: Pos, b: Pos, c: Pos): Triangle = new Triangle(Mat(a, b, c))
     def unapplySeq(tri: Triangle): Seq[Pos] = Mat.unapplySeq(tri.mat)
 
@@ -86,8 +67,6 @@ object Triangle {
         }
         
         val angleA = computeAngle(s1, s2, s3)
-
-        //TODO: import Dir by default
         val c = a + (Dir.right.rotate(angleA) * s3)
 
         Triangle(a, b, c)
@@ -108,12 +87,7 @@ object Triangle {
     def asa(a1: Angle, s: Double, a2: Angle): Triangle = {
         val a = Pos.origin
         val b = (Pos.origin + (Dir.right * s))
-
-        //TODO: import Dir by default
-        val p = a + (Dir.right rotate a1)
-        val q = b + (Dir.left rotate -a2)
-        import Dir.intersect
-        val c = p.intersect(q) //TODO:: should this be a Pos.intersect?
+        val c = Dir.intersect(a + Dir.right.rotate(a1), b + Dir.left.rotate(-a2))
 
         Triangle(a, b, c)
     }
