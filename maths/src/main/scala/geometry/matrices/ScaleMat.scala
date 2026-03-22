@@ -1,7 +1,9 @@
-package ginseng.maths.linalg.matrices
+package ginseng.maths.geometry.matrices
 
 import ginseng.maths.linalg.vectors.*
-import ginseng.maths.linalg.vectors.Vec.*
+import ginseng.maths.linalg.matrices.*
+
+import Vec.*
 
 
 type ScaleMat4 = SqrMat[4]

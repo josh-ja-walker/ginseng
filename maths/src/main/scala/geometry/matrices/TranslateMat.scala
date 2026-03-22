@@ -1,14 +1,20 @@
 package ginseng.maths.linalg.matrices
 
 import ginseng.maths.linalg.vectors.*
-import ginseng.maths.linalg.vectors.Vec.*
-    
+import ginseng.maths.linalg.matrices.*
+import ginseng.maths.geometry.vectors.*
 
-type TranslateMat4 = SqrMat[4]
+import Vec.*
+import Dir.*
+import Mat.*
 
-object TranslateMat4 {
-    def apply(t: Vec3): TranslateMat4 = {
-        val SqrMat(p, q, r, s) = SqrMat.identity[4]
-        SqrMat(p, q, r, t :+ 1)
+
+type TranslateMat = SqrMat[4]
+
+object TranslateMat {
+    def apply(t: Vec4): TranslateMat = {
+        // TODO: stop making distinction between dir and pos?
+        // TODO: add map method for modifiying values of vec/mat
+        SqrMat.identity[4].take[3] :+> (t.take[3] :+ 1)
     }
 }

@@ -31,8 +31,6 @@ object Mat {
         // Index into column vectors
         def apply(i: Int): Vec[M] = m.columnVectors(i)
 
-
-
         @targetName("appendCol")
         def :+>(v: Vec[M])(using ValueOf[+[N, 1]]): Mat[M, +[N, 1]] = 
             slash.Mat(m.columnVectors :+ v).transpose 
@@ -54,6 +52,11 @@ object Mat {
         @targetName("preconcatMatCols")
         def <++[R <: Int](n: Mat[M, R])(using ValueOf[R], ValueOf[+[R, N]]): Mat[M, +[R, N]] = 
             n.concatenateColumns(m)
+
+        
+        // Take first R vectors
+        def take[R <: Int](using ValueOf[R], R < N =:= true): Mat[M, R] =
+            slash.Mat(m.columnVectors.take(valueOf[R])).transpose
 
     }
 

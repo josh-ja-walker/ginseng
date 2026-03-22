@@ -1,9 +1,10 @@
-package ginseng.maths.linalg.matrices
+package ginseng.maths.geometry.matrices
 
 import ginseng.maths.*
-import ginseng.maths.linalg.*
 import ginseng.maths.linalg.vectors.*
-import ginseng.maths.linalg.vectors.Vec.*
+import ginseng.maths.linalg.matrices.*
+
+import Vec.*
 import SqrMat.*
 
 

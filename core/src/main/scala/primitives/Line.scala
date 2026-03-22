@@ -1,7 +1,7 @@
 package ginseng.core.primitives
 
 import ginseng.maths.*
-import ginseng.maths.geometry.*
+import ginseng.maths.geometry.vectors.*
 import ginseng.maths.linalg.vectors.*
 
 

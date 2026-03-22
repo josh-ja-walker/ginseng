@@ -1,4 +1,10 @@
 package ginseng.core.transformations
 
+import ginseng.core.primitives.Primitive
 
-trait Freeform extends Translate with Rotate with Skew with Scale
+
+trait Freeform[A <: Primitive & Freeform[A]] 
+    extends Translate[A]    
+        with Rotate[A] 
+        with Skew[A] 
+        with Scale[A]

@@ -2,19 +2,26 @@ package ginseng.core.primitives
 
 import ginseng.maths.*
 import ginseng.maths.geometry.*
+import ginseng.maths.geometry.vectors.*
 import ginseng.maths.linalg.vectors.*
 
 import ginseng.core.transformations.*
 import ginseng.core.colour.*
 
 
-case class Box(private val topLeft: Pos, private val topRight: Pos, private val bottomLeft: Pos, private val bottomRight: Pos) extends Primitive with Freeform
+case class Box(private val topLeft: Pos, private val topRight: Pos, private val bottomLeft: Pos, private val bottomRight: Pos) 
+    extends Primitive 
+        with Freeform[Box] 
 {
+
     // Freeform allows all translations
-    override def translate(v: Vec3): Translate = ???
-    override def rotate(theta: Angle, around: Pos, axis: Dir): Rotate = ???
-    override def skew(v: Vec3): Skew = ???
-    override def scale(v: Vec3): Scale = ???
+    override def translate(v: Dir): Box = ???
+    override def rotate(theta: Angle, around: Pos, axis: Dir): Box = ???
+
+    //FIXME: this makes a parallelogram (not a box)
+    override def skew(f: Double, plane: Dir): Box = ???
+    
+    override def scale(v: Vec3): Box = ???
 
 
     // TODO: decide on convention for vertices

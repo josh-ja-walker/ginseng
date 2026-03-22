@@ -2,7 +2,7 @@ package ginseng.maths.linalg.vectors
 
 import ginseng.maths.*
 import ginseng.maths.geometry.*
-import ginseng.maths.linalg.matrices.*
+import ginseng.maths.geometry.matrices.*
 
 
 type Vec3 = Vec[3]

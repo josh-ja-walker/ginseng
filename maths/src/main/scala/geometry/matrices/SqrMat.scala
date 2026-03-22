@@ -10,6 +10,7 @@ import ginseng.maths.linalg.vectors.*
 type SqrMat[M <: Int] = Mat[M, M]
 
 object SqrMat {
+    
     def apply[M <: Int](vecs: Vec[M]*)(using ValueOf[M]): SqrMat[M] = Mat[M, M](vecs*)
     def unapplySeq[M <: Int](mat: SqrMat[M]): Seq[Vec[M]] = Mat.unapplySeq[M, M](mat)
 

@@ -1,18 +1,22 @@
 package ginseng.core.primitives
 
 import ginseng.maths.*
-import ginseng.maths.geometry.*
+
+import ginseng.maths.geometry.vectors.*
+import ginseng.maths.geometry.matrices.*
 
 import ginseng.maths.linalg.vectors.*
-import ginseng.maths.linalg.vectors.Vec.* 
-import ginseng.maths.linalg.vectors.Vec4.* 
 import ginseng.maths.linalg.matrices.* 
-import ginseng.maths.linalg.matrices.Mat.* 
 
 import ginseng.core.transformations.*
 
+import Vec.* 
+import Mat.* 
+import Dir.*
+import Pos.*
 
-case class Triangle(mat: Mat[4, 3]) extends Primitive with Translate with Rotate with Scale {
+
+case class Triangle(mat: Mat[4, 3]) extends Primitive with Freeform[Triangle] {
 
     // /_ = side 2, angle 1, side 1
     // _\ = side 1, angle 2, side 3
@@ -29,20 +33,34 @@ case class Triangle(mat: Mat[4, 3]) extends Primitive with Translate with Rotate
     def ac: Dir = c - a ; def ca: Dir = -ac
 
     // TODO: allow modification of referenced angles
-    def A: Angle = Dir.angle(ab, ac) 
-    def B: Angle = Dir.angle(ba, bc)
-    def C: Angle = Dir.angle(ca, cb) 
+    def A: Angle = ab.angle(ac) 
+    def B: Angle = ba.angle(bc)
+    def C: Angle = ca.angle(cb) 
 
 
-    override def translate(v: Vec3): Triangle = new Triangle(TranslateMat4(v) * mat)
+    // Transformations
+    
+    override def translate(v: Dir): Triangle = new Triangle(TranslateMat(v) * mat)
 
     override def rotate(theta: Angle, around: Pos, axis: Dir): Triangle = {
-        val translateOrigin = TranslateMat4(around.take[3])
+        val translateOrigin = TranslateMat(around)
         val newMat = (-translateOrigin * RotateMat4(theta, axis) * translateOrigin) * mat
         new Triangle(newMat)
     }
 
     override def scale(v: Vec3): Triangle = new Triangle(ScaleMat4(v) * mat)
+
+    override def skew(f: Double, plane: Dir) = {
+        val skewMat = plane match {
+            case Dir.right => SkewMat.x(f)
+            case Dir.up => SkewMat.y(f)
+            case Dir.forward => ???
+        }
+        new Triangle(skewMat * mat)
+    }
+
+    // Calculate centroid of triangle by intersection of medians
+    def center: Pos = (a - (0.5 * bc)).intersect(b - (0.5 * ac))
 
 }
 
@@ -87,7 +105,7 @@ object Triangle {
     def asa(a1: Angle, s: Double, a2: Angle): Triangle = {
         val a = Pos.origin
         val b = (Pos.origin + (Dir.right * s))
-        val c = Dir.intersect(a + Dir.right.rotate(a1), b + Dir.left.rotate(-a2))
+        val c = (a + Dir.right.rotate(a1)).intersect(b + Dir.left.rotate(-a2))
 
         Triangle(a, b, c)
     }

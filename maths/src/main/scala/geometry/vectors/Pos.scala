@@ -1,9 +1,14 @@
-package ginseng.maths.geometry
+package ginseng.maths.geometry.vectors
 
 import ginseng.maths.*
-import ginseng.maths.linalg.*
+
+import ginseng.maths.geometry.vectors.*
+import ginseng.maths.geometry.matrices.*
+
 import ginseng.maths.linalg.vectors.*
 import ginseng.maths.linalg.matrices.*
+
+import Vec.* 
 
 
 /** Position Vector */
@@ -13,6 +18,7 @@ object Pos {
     // Note: homogenous coordinate value is 1 for a Position Vector
     def apply(x: Double, y: Double, z: Double = 0d): Pos = Vec4(x, y, z, 1)
 
+    // TODO: move window specific positions to Window? 
     def origin = Pos(-1, -1, 0)
     
     def topLeft = Pos(-1, 1, 0)
@@ -24,6 +30,7 @@ object Pos {
 
 
     extension (p: Pos) {
+
         /* Transformations */
 
         /** Rotate position by counterclockwise angle */
@@ -32,8 +39,7 @@ object Pos {
         /** Rotate position by counterclockwise angle around a position */
         infix def rotateAround(theta: Angle, around: Pos, axis: Dir = Dir.forward): Pos = {
             // Translate coordinates so around is at origin, then rotate and translate back 
-            import Vec.take
-            val toOrigin = TranslateMat4(around.take[3])
+            val toOrigin = TranslateMat(around)
             (-toOrigin * RotateMat4(theta, axis) * toOrigin) * p
         }
 
