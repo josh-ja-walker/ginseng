@@ -35,7 +35,7 @@ import scala.util.Random
     val context = Context(config)
 
     var tri = Triangle.equilateral(2)
-    val triShader = Shaders.triShader
+    val triShader = Shaders.interpolateShader(Colours.red, Colours.green, Colours.blue)
 
     var t = 25 // Animation timestep - start halfway through growth phase
     context.run(() => {
