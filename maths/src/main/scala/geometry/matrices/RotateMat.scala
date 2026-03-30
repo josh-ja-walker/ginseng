@@ -23,6 +23,7 @@ object RotateMat2 {
 type RotateMat3 = SqrMat[3]
 
 object RotateMat3 {
+    // TODO: handle case where axis is not Right/Up/Forward
     def apply(theta: Angle, axis: Vec3): RotateMat3 = {
         axis match {
             case Vec3(1, 0, 0) => RotateMat3.x(theta) 
@@ -37,6 +38,7 @@ object RotateMat3 {
         id
     }
 
+    // TODO: consolidate constructors into one
     private def y(theta: Angle): RotateMat3 = {
         val p = Vec3(math.cos(theta), 0, -math.sin(theta))
         val r = Vec3(math.sin(theta), 0, math.cos(theta))

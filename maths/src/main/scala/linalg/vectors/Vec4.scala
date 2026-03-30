@@ -11,7 +11,8 @@ object Vec4 {
     def apply(x: Double, y: Double, z: Double,  w: Double) = Vec[4](x, y, z, w)
     def unapply(v: Vec4) = (v.x, v.y, v.z, v.w)
 
-    def origin = Vec4(-1, -1, 0, 1) //FIXME:?
+    // FIXME: possibly reparameterise viewpoint space such that origin is (0, 0)  
+    def origin = Vec4(-1, -1, 0, 1) 
 
     def up = Vec4(0, 1, 0, 0)
     def down = Vec4(0, -1, 0, 0)

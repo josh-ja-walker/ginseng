@@ -6,6 +6,7 @@ import ginseng.maths.*
 import ginseng.maths.linalg.matrices.*
 
 
+// TODO: unsure if type alias is required - extension methods could be moved to Vec.scala
 type Vec2 = Vec[2]
 
 object Vec2 {

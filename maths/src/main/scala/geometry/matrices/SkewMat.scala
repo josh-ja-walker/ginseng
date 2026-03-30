@@ -7,7 +7,9 @@ import ginseng.maths.linalg.vectors.Vec.*
 type SkewMat = SqrMat[4]
 
 object SkewMat {
-    
+    // TODO: support creating more generic Skew matrix 
+    // i.e., support Z skew and possibly combine constructors
+
     def x(f: Double): SkewMat = {
         val SqrMat(a, b, c, d) = SqrMat.identity[4]
         SqrMat(a, Vec4(f, 1, 0, 0), c, d)

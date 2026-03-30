@@ -31,29 +31,20 @@ object Mat {
         // Index into column vectors
         def apply(i: Int): Vec[M] = m.columnVectors(i)
 
-        @targetName("appendCol")
-        def :+>(v: Vec[M])(using ValueOf[+[N, 1]]): Mat[M, +[N, 1]] = 
+        // TODO: implement following methods via Iterable interface 
+
+        infix def appendColumn(v: Vec[M])(using ValueOf[+[N, 1]]): Mat[M, +[N, 1]] = 
             slash.Mat(m.columnVectors :+ v).transpose 
 
-        @targetName("appendRow")
-        def :+(v: Vec[N])(using ValueOf[+[M, 1]]): Mat[+[M, 1], N] = 
+        infix def appendRow(v: Vec[N])(using ValueOf[+[M, 1]]): Mat[+[M, 1], N] = 
             slash.Mat(m.rowVectors :+ v)
 
-
-        @targetName("concatMatCols")
-        def ++>[R <: Int](n: Mat[M, R])(using ValueOf[R], ValueOf[+[N, R]]): Mat[M, +[N, R]] = 
+        infix def concatColumns[R <: Int](n: Mat[M, R])(using ValueOf[R], ValueOf[+[N, R]]): Mat[M, +[N, R]] = 
             m.concatenateColumns(n)
 
-        @targetName("concatMatRows")
-        def ++[R <: Int](n: Mat[R, N])(using ValueOf[R], ValueOf[+[M, R]]): Mat[+[M, R], N] = 
+        infix def concatRows[R <: Int](n: Mat[R, N])(using ValueOf[R], ValueOf[+[M, R]]): Mat[+[M, R], N] = 
             m.concatenateRows(n)
 
-
-        @targetName("preconcatMatCols")
-        def <++[R <: Int](n: Mat[M, R])(using ValueOf[R], ValueOf[+[R, N]]): Mat[M, +[R, N]] = 
-            n.concatenateColumns(m)
-
-        
         // Take first R vectors
         def take[R <: Int](using ValueOf[R], R < N =:= true): Mat[M, R] =
             slash.Mat(m.columnVectors.take(valueOf[R])).transpose
@@ -62,13 +53,12 @@ object Mat {
 
     extension[N <: Int] (v: Vec[N])(using ValueOf[N]) {
         @targetName("prependRow")
-        def +:[M <: Int](m: Mat[M, N])(using ValueOf[M], ValueOf[+[1, M]]): Mat[+[1, M], N] = 
+        infix def prependRow[M <: Int](m: Mat[M, N])(using ValueOf[M], ValueOf[+[1, M]]): Mat[+[1, M], N] = 
             slash.Mat(v +: m.rowVectors)
     }
     
     extension[M <: Int] (v: Vec[M])(using ValueOf[M]) {
-        @targetName("prependCol")
-        def <+:[N <: Int](m: Mat[M, N])(using ValueOf[N], ValueOf[+[1, N]]): Mat[M, +[1, N]] = 
+        infix def prependColumn[N <: Int](m: Mat[M, N])(using ValueOf[N], ValueOf[+[1, N]]): Mat[M, +[1, N]] = 
             slash.Mat(v +: m.columnVectors).transpose
     }
 
