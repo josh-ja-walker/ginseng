@@ -50,7 +50,7 @@ case class Triangle(mat: Mat[4, 3]) extends Primitive with Freeform[Triangle] {
 
     override def scale(v: Vec3): Triangle = new Triangle(ScaleMat4(v) * mat)
 
-    override def skew(f: Double, plane: Dir) = {
+    override def skew(f: Double, plane: Dir): Triangle = {
         val skewMat = plane match {
             case Dir.right => SkewMat.x(f)
             case Dir.up => SkewMat.y(f)
@@ -60,16 +60,21 @@ case class Triangle(mat: Mat[4, 3]) extends Primitive with Freeform[Triangle] {
     }
 
     // Area preserving with unmodified Z axis 
-    override def squeeze(f: Double) = {
+    override def squeeze(f: Double): Triangle = {
         val squeezeMat = ScaleMat4(Vec3(f, 1/f, 1))
         new Triangle(squeezeMat * mat)
     }
 
     // Volume preserving with full X, Y, Z degrees of freedom 
-    override def squeeze(f: Vec2) = {
+    override def squeeze(f: Vec2): Triangle = {
         val squeezeMat = ScaleMat4(f :+ 1 / (f.x * f.y))
         new Triangle(squeezeMat * mat)
     }
+
+    override def reflect(normal: Dir, point: Pos): Triangle = {
+        new Triangle(HouseholderMat(normal.take[3]) * mat)
+    }
+
 
     // Calculate centroid of triangle by intersection of medians
     def center: Pos = (a - (0.5 * bc)).intersect(b - (0.5 * ac))

@@ -5,7 +5,8 @@ import ginseng.maths.geometry.vectors.*
 
 
 trait Reflect[A <: Primitive & Reflect[A]] {
-    // TODO: requires solving for Householder matrix
-    def reflect(pos: Pos, dir: Dir): A 
+    // Reflect in the plane defined by the position vector p and normal vector n
+    // i.e., n . (x - p) = 0
+    def reflect(normal: Dir, point: Pos): A
 }
 
