@@ -17,14 +17,14 @@ import ginseng.renderer.rendering.*
     val config = new ConfigBuilder()
         .withSize(800, 600)
         .withName("Hello Triangle")
-        .withBackgroundColour(Colours.red)
+        .withBackgroundColour(Colours.black)
         .build
 
     val context = Context(config)
 
     val tri = Triangle.equilateral(2)
     val triRenderer = TriangleRenderer(tri)
-    val triShader = Shaders.triShader
+    val triShader = Shaders.interpolateShader(Colours.red, Colours.green, Colours.blue)
 
     context.run(() => 
         triRenderer.render(triShader)
