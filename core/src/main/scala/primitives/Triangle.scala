@@ -54,7 +54,7 @@ case class Triangle(mat: Mat[4, 3]) extends Primitive with Freeform[Triangle] {
         val skewMat = plane match {
             case Dir.right => SkewMat.x(f)
             case Dir.up => SkewMat.y(f)
-            case Dir.forward => ???
+            case Dir.forward => ??? // TODO: support skew in Z direction
         }
         new Triangle(skewMat * mat)
     }

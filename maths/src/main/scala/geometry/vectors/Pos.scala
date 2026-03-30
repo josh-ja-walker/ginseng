@@ -43,7 +43,7 @@ object Pos {
             (-toOrigin * RotateMat4(theta, axis) * toOrigin) * p
         }
 
-        //FIXME: distinguish between Dir and Pos??
+        //FIXME: cannot distinguish between Dir and Pos for overloading of rotote
         // infix def rotate(theta: Angle, around: Pos): Pos = p.rotate(theta, Dir.forward, around)
         
     }
