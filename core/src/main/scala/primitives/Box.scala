@@ -63,7 +63,7 @@ object Box {
 
     def unital: Box = Box(1)
 
-    //TODO: bounding box construction
+    // TODO: bounding box construction
     def apply(left: Double, top: Double, right: Double, bottom: Double): Box = ???
 }
 
