@@ -32,7 +32,8 @@ object Mat {
         def apply(i: Int): Vec[M] = m.columnVectors(i)
 
         // TODO: implement following methods via Iterable interface 
-
+        // TODO: define :+, etc., operators for following collection operators
+        
         infix def appendColumn(v: Vec[M])(using ValueOf[+[N, 1]]): Mat[M, +[N, 1]] = 
             slash.Mat(m.columnVectors :+ v).transpose 
 
