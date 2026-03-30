@@ -33,6 +33,7 @@ lazy val core = project
 lazy val maths = project
     .in(file("maths"))
     .enablePlugins(ScalaNativePlugin, VcpkgNativePlugin)
+    .settings(libraryDependencies += "ai.dragonfly" %%% "slash" %  "0.4.3")
 
 // Project containing renderers and OpenGL handlers
 lazy val renderer = project

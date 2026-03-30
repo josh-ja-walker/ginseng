@@ -1,8 +1,9 @@
 package ginseng.core.transformations
 
-import ginseng.maths.*
+import ginseng.maths.geometry.vectors.*
+import ginseng.core.primitives.Primitive
 
 
-trait Translate {
-    infix def translate(v: Vector): Translate
+trait Translate[A <: Primitive & Translate[A]] {
+    infix def translate(v: Dir): A
 }

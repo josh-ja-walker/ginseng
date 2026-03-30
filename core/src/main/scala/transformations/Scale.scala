@@ -1,8 +1,9 @@
 package ginseng.core.transformations
 
-import ginseng.maths.*
+import ginseng.maths.linalg.vectors.*
+import ginseng.core.primitives.Primitive
 
 
-trait Scale {
-    infix def scale(v: Vector): Scale
+trait Scale[A <: Primitive & Scale[A]] {
+    infix def scale(v: Vec3): A
 }

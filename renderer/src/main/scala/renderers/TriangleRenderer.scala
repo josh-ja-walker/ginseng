@@ -10,6 +10,9 @@ import ginseng.renderer.shaders.*
 import ginseng.renderer.rendering.*
 import ginseng.core.primitives.Triangle
 
+import ginseng.maths.linalg.matrices.*
+import ginseng.maths.linalg.vectors.Vec.*
+
 
 class TriangleRenderer(private val num: Int, private val vao: Ptr[UInt]) extends Renderer[Triangle] {
     def render(shader: ShaderProg)(using zone: Zone) = {
@@ -27,11 +30,10 @@ object TriangleRenderer {
     def apply(tris: Triangle*)(using zone: Zone): TriangleRenderer = {
         // Define triangle points array
         val points: Array[Float] = tris
-            .flatMap(tri => Seq(
-                tri.pointA.x, tri.pointA.y, tri.pointA.z,
-                tri.pointB.x, tri.pointB.y, tri.pointB.z,
-                tri.pointC.x, tri.pointC.y, tri.pointC.z,
-            ))
+            .flatMap(tri => {
+                val Mat(a, b, c) = tri.mat
+                (a.take[3] ++ b.take[3] ++ c.take[3]).toSeq
+            })
             .map(_.toFloat)
             .toArray
 
