@@ -9,7 +9,7 @@ import ginseng.core.transformations.*
 
 
 case class Point(val pos: Pos) extends Primitive with Translate[Point] {
-    override def translate(v: Dir): Point = ???
+    override def translate(v: Dir): Point = Point(pos + v)
 }
 
 object Point {
