@@ -18,7 +18,7 @@ case class Box(private val topLeft: Pos, private val topRight: Pos, private val 
     override def translate(v: Dir): Box = ???
     override def rotate(theta: Angle, around: Pos, axis: Dir): Box = ???
 
-    //FIXME: this makes a parallelogram (not a box) - i.e., return Quad
+    // FIXME: this makes a parallelogram (not a box) - i.e., return Quad
     override def skew(f: Double, plane: Dir): Box = ???
     
     override def scale(v: Vec3): Box = ???
