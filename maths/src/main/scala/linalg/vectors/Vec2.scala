@@ -18,7 +18,7 @@ object Vec2 {
         
         infix def rotate(angle: Angle): Vec2 = {
             val u = v.copy
-            slash.Vec.rotate[2](v)(angle.toRadians) // apply slash's rotate method in-place
+            slash.Vec.rotate[2](v)(angle) // apply slash's rotate method in-place
             u // return rotated u 
         }
 

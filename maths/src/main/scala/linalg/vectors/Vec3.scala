@@ -32,8 +32,7 @@ object Vec3 {
         def intersect(u: Vec3): Vec3 = ??? //TODO:
         
         /** Compute angle between two vectors */
-        infix def angle(u: Vec3): Angle = 
-            math.acos((v dot u) / (v.norm * u.norm)).toRadians
+        infix def angle(u: Vec3): Angle = Rad(math.acos((v dot u) / (v.norm * u.norm)))
 
 
         /* Transformations */

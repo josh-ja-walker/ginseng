@@ -3,23 +3,24 @@ package ginseng.maths
 import scala.annotation.targetName
 
 
-
 opaque type Angle = Double
 
 object Angle {
     
     object Rad {
-        def apply(d: Double) = d
+        def apply(d: Double): Angle = d
     }
 
     object Deg {
-        def apply(d: Double) = d.toRadians
+        def apply(d: Double): Angle = d.toRadians
     }
 
 
+    given Conversion[Angle, Double] = (angle: Angle) => angle.toRadians
+
     extension (a: Angle) {
         def toRadians: Double = a
-        def toDegrees = a.toDegrees
+        def toDegrees = (a : Double).toDegrees
     }
 
     extension (d: Double) {
