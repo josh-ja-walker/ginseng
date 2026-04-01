@@ -10,6 +10,7 @@ import ginseng.maths.linalg.matrices.*
 type Vec2 = Vec[2]
 
 object Vec2 {
+    
     def apply(x: Double, y: Double) = slash.Vec[2](x, y)
     def unapply(v: Vec2) = (v.x, v.y)
 
@@ -17,7 +18,7 @@ object Vec2 {
         
         infix def rotate(angle: Angle): Vec2 = {
             val u = v.copy
-            slash.Vec.rotate[2](v)(angle) // apply slash's rotate method in-place
+            slash.Vec.rotate[2](v)(angle.toRadians) // apply slash's rotate method in-place
             u // return rotated u 
         }
 

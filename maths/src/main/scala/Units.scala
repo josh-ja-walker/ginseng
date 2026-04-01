@@ -1,12 +1,36 @@
 package ginseng.maths
 
-type Angle = Double
-type Length = Double
+import scala.annotation.targetName
 
-object Radians {
-    def apply(factor: Double): Angle = math.Pi * factor
+
+
+opaque type Angle = Double
+
+object Angle {
+    
+    object Rad {
+        def apply(d: Double) = d
+    }
+
+    object Deg {
+        def apply(d: Double) = d.toRadians
+    }
+
+
+    extension (a: Angle) {
+        def toRadians: Double = a
+        def toDegrees = a.toDegrees
+    }
+
+    extension (d: Double) {
+        @targetName("doubleToRadians")
+        def toRadians: Angle = Rad(d)
+        
+        @targetName("doubleToDegrees")
+        def toDegrees: Angle = Deg(d)
+    }
+    
 }
 
-object Degrees { 
-    def apply(d: Double): Angle = Radians(d / 180) 
-}
+
+case class Length(private val dist: Double)

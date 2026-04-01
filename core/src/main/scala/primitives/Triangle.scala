@@ -1,6 +1,7 @@
 package ginseng.core.primitives
 
 import ginseng.maths.*
+import ginseng.maths.Angle.*
 
 import ginseng.maths.geometry.vectors.*
 import ginseng.maths.geometry.matrices.*
@@ -126,10 +127,10 @@ object Triangle {
     }
 
     // RHS - set adj as horizontal, center right-angle at origin
-    def rhs(hyp: Double, adj: Double): Triangle = Triangle.sas(adj, Degrees(90), hyp)
+    def rhs(hyp: Double, adj: Double): Triangle = Triangle.sas(adj, 90.toDegrees, hyp)
 
     // Equilateral - set side 1 as horizontal, unit length, center angle between s1 and s2 at origin
-    def equilateral(s: Double): Triangle = Triangle.sas(s, Degrees(60), s)
+    def equilateral(s: Double): Triangle = Triangle.sas(s, 60.toDegrees, s)
     def equilateral: Triangle = Triangle.equilateral(1)
 
 }

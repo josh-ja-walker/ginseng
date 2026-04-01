@@ -13,6 +13,7 @@ import ginseng.maths.linalg.matrices.*
 type Vec[N <: Int] = SlashVec[N]
 
 object Vec {
+    
     def apply[N <: Int](values: Double*)(using ValueOf[N]) = SlashVec[N](values*)
     def unapplySeq[N <: Int](vec: Vec[N]) = vec.toSeq
 
