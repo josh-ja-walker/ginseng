@@ -21,4 +21,12 @@ object HouseholderMat {
         (SqrMat.identity[3] -  2 * nn).extend[4]
     }
 
+    def apply(n: Vec3, d: Double): HouseholderMat = {
+        // TODO:
+        // transform world space such that plane passes through origin
+        // apply householder matrix reflection transformation
+        // transform world space back
+        
+        ???
+    }
 }
