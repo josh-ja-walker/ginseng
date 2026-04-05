@@ -26,14 +26,22 @@ case "$2" in
     sed -i -e 's/\[/FIXME: \[/g' $3 # Fix optionals manually
 ;;
     
-"--xml-style")
-    # TODO:
+"--xml-like")
+    # Replace rules:
+    sed -i -e 's/(\*.*\*)//g' $3 # Delete (* ... *) comments
+    sed -i -e 's/\*)//g' $3 # Delete trailing comment
+    
+    sed -i -e 's/;//g' $3 # Delete semi-colon endings
+    sed -i -e 's/=/<=/g' $3 # Replace production definition = with <=
+    sed -i -e 's/,//g' $3 # Delete commas between productions
 
+    #TODO: rewrite production names to be within <> brackets
+    
 ;;
     
 "--w3c")
     # Replace rules:
-    sed -i -e 's/(\*.*\*)//g' $3 # Replace (* ... *) comments with # ...
+    sed -i -e 's/(\*.*\*)//g' $3 # Delete (* ... *) comments
     sed -i -e 's/\*)//g' $3 # Delete trailing comment
     
     sed -i -e 's/;//g' $3 # Delete semi-colon endings
