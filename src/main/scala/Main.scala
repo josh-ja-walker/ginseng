@@ -13,8 +13,6 @@ import ginseng.maths.geometry.vectors.*
 import Vec.*
 import Dir.*
 
-
-
 import ginseng.renderer.*
 import ginseng.renderer.shaders.*
 import ginseng.renderer.context.*
@@ -22,6 +20,7 @@ import ginseng.renderer.rendering.*
 
 import opengl.bindings.glad.*
 import opengl.bindings.glfw.*
+
 import scala.util.Random
 
 
@@ -41,8 +40,28 @@ import scala.util.Random
         Colour.hex("#DBE5F8")
     )
 
+    val (lineRenderer, lineShader) = {
+        val n = 50
+        val lines = (1 until n)
+            .flatMap(i => Seq(
+                Line(Pos.bottomLeft, Pos.bottomRight).translate(Dir.up * 2 * (i.toDouble / n)),
+                Line(Pos.bottomLeft, Pos.topLeft).translate(Dir.right * 2 * (i.toDouble / n))
+            ))
+            
+        val shader = Shaders.flatShader(Colour.hex("#eeeeee"))
+        val renderer = LineRenderer(2.0f, lines*)
+
+        (renderer, shader)
+    }
+
+
     var t = 25 // Animation timestep - start halfway through growth phase
+
     context.run(() => {
+
+        // Draw grid lines
+        lineRenderer.render(lineShader)
+
         // TODO: make angle opaque? then impossible to pass 90 without constructing degrees or radians
         //  e.g., tri = tri.rotate(Degrees(90), Pos.center, Dir.forward)
         
