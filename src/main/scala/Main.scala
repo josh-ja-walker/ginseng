@@ -39,18 +39,25 @@ import scala.util.Random
         Colour.hex("#D7E5D3"),
         Colour.hex("#DBE5F8")
     )
+    
 
-    val (lineRenderer, lineShader) = {
-        val n = 50
-        val lines = (1 until n)
+    def grid(n: Int): Seq[Line] = {
+        (1 until n)
             .flatMap(i => Seq(
                 Line(Pos.bottomLeft, Pos.bottomRight).translate(Dir.up * 2 * (i.toDouble / n)),
                 Line(Pos.bottomLeft, Pos.topLeft).translate(Dir.right * 2 * (i.toDouble / n))
             ))
-            
-        val shader = Shaders.flatShader(Colour.hex("#eeeeee"))
-        val renderer = LineRenderer(2.0f, lines*)
+    }
 
+    val (lineRenderer, lineShader) = {
+        val shader = Shaders.flatShader(Colour.hex("#eeeeee"))
+        val renderer = LineRenderer(2.0f, grid(50)*)
+        (renderer, shader)
+    }
+
+    val (boldLineRenderer, boldLineShader) = {
+        val shader = Shaders.flatShader(Colour.hex("#aeaeae"))
+        val renderer = LineRenderer(4.0f, grid(10)*)
         (renderer, shader)
     }
 
@@ -61,6 +68,7 @@ import scala.util.Random
 
         // Draw grid lines
         lineRenderer.render(lineShader)
+        boldLineRenderer.render(boldLineShader)
 
         // TODO: make angle opaque? then impossible to pass 90 without constructing degrees or radians
         //  e.g., tri = tri.rotate(Degrees(90), Pos.center, Dir.forward)
