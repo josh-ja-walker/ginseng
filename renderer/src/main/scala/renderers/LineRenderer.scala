@@ -15,7 +15,7 @@ import ginseng.maths.linalg.vectors.Vec.*
 import ginseng.core.primitives.Line
 
 
-class LineRenderer(private val width: Double, private val num: Int, private val vao: Ptr[UInt]) extends Renderer[Line] {
+class LineRenderer(private val width: Float, private val num: Int, private val vao: Ptr[UInt]) extends Renderer[Line] {
     def render(shader: ShaderProg)(using zone: Zone) = {
         // Bind shader to OpenGL state machine
         shader.bind()
@@ -24,17 +24,16 @@ class LineRenderer(private val width: Double, private val num: Int, private val 
         val defaultWidth = alloc[Float](1)
         glGetFloatv(GL_LINE_WIDTH, defaultWidth)
 
-        // Change line width to desired width
         // TODO: this provides unstable results at high widths
         // line width must be within GL_ALIASED_LINE_WIDTH_RANGE / GL_SMOOTH_LINE_WIDTH_RANGE 
-        
         // TODO: also provide user with enabling / disabling of line smoothing
-        glLineWidth(width.toFloat)
+
+        // Change line width to desired width
+        glLineWidth(width)
 
         // Bind vertex array to and draw
         glBindVertexArray(!vao)
-        // TODO: support other type of line drawing (LOOP, STRIP, etc.,)
-        glDrawArrays(GL_LINES, 0, num * 2)
+        glDrawArrays(GL_LINES, 0, num * 2) // TODO: support other type of line drawing (LOOP, STRIP, etc.,)
 
         // Reset line width
         glLineWidth(!defaultWidth)
@@ -43,7 +42,16 @@ class LineRenderer(private val width: Double, private val num: Int, private val 
 
 
 object LineRenderer {
-    def apply(width: Double, lines: Line*)(using zone: Zone): LineRenderer = {
+    
+    // FIXME: default width means unnecessary modification of line width - instead use optional width 
+    private val defaultLineWidth: Float = 1f
+
+    def apply(lines: Line*)(using zone: Zone): LineRenderer = {
+        LineRenderer(defaultLineWidth, lines*)
+    }
+        
+
+    def apply(width: Float, lines: Line*)(using zone: Zone): LineRenderer = {
         // TODO: factor out points array intiialisation, etc. 
         // all of below is reused in TriangleRenderer, etc.
         
