@@ -1,7 +1,6 @@
 package ginseng.core.colour
 
-import ginseng.maths.Angle
-import ginseng.maths.Degrees
+import ginseng.maths.angle.*
 
 
 /**
@@ -43,31 +42,28 @@ object Colour {
     // Construct colour using RGB model (with 100% opacity)
     def rgb(r: Int, g: Int, b: Int): Colour = rgba(r, g, b, maxAlpha)
 
-    // FIXME: h should be Angle
-    def hsv(h: Double, s: Float, v: Float): Colour = {
-        // FIXME: degrees should NOT be converted to radians for these calculations
-        assert(h > Degrees(0) && h < Degrees(360))
+    // Construct colour using HSV model (with 100% opacity)
+    def hsv(h: Angle, s: Float, v: Float): Colour = {
+        assert(h.toDegrees > Deg(0) && h.toDegrees < Deg(360))
         assert(s > 0 && s <= 1)
         assert(v > 0 && v <= 1)
 
         def f(n: Int): Double = {
-            val k = (n + h / Degrees(60)) % 6
+            val k = (n + h.toDegrees / Deg(60)) % 6
             v - (v * s * math.max(0, math.min(k, math.min(4 - k, 1))))
         }
 
         Colour(f(5).toFloat, f(3).toFloat, f(1).toFloat, maxAlpha)
     }
     
-
-    // FIXME: h should be Angle
-    def hsl(h: Double, s: Float, l: Float): Colour = {
-        // FIXME: degrees should NOT be converted to radians for these calculations
-        assert(h > Degrees(0) && h <= Degrees(360))
+    // Construct colour using HSL model (with 100% opacity)
+    def hsl(h: Angle, s: Float, l: Float): Colour = {
+        assert(h.toDegrees > Deg(0) && h.toDegrees <= Deg(360))
         assert(s > 0 && s <= 1)
         assert(l > 0 && l <= 1)
 
         def f(n: Int): Double = {
-            val k = (n + h / Degrees(30)) % 12
+            val k = (n + h.toDegrees / Deg(30)) % 12
             val a = s * math.min(l, 1 - l)
             l - (a * math.max(-1, math.min(k - 3, math.min(9 - k, 1))))
         }
