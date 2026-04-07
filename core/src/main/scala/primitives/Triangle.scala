@@ -46,11 +46,12 @@ case class Triangle(mat: Mat[4, 3]) extends Primitive with Freeform[Triangle] {
 
     // Transformations
     
-    override def translate(v: Dir): Triangle = new Triangle(TranslateMat(v) * mat)
+    override def translate(v: Dir): Triangle = new Triangle(TranslateMat(v.take[3]) * mat)
 
     override def rotate(theta: Angle, around: Pos, axis: Dir): Triangle = {
-        val translation = TranslateMat(around)
-        new Triangle(translation * RotateMat4(theta, axis) * translation.inverse * mat)
+        val translation = TranslateMat(around.take[3])
+        val transformation = translation * RotateMat4(theta, axis) * translation.inverse
+        new Triangle(transformation * mat)
     }
 
     override def scale(v: Vec3): Triangle = new Triangle(ScaleMat4(v) * mat)
