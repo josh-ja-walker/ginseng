@@ -1,6 +1,8 @@
 package ginseng.maths.linalg.vectors
 
 import ginseng.maths.*
+import ginseng.maths.angle.*
+
 import ginseng.maths.geometry.*
 import ginseng.maths.geometry.matrices.*
 
@@ -8,6 +10,7 @@ import ginseng.maths.geometry.matrices.*
 type Vec3 = Vec[3]
 
 object Vec3 {
+
     def apply(x: Double, y: Double, z: Double) = Vec[3](x, y, z)
     def unapply(v: Vec3) = (v.x, v.y, v.z)
 
@@ -30,8 +33,7 @@ object Vec3 {
         def intersect(u: Vec3): Vec3 = ??? //TODO:
         
         /** Compute angle between two vectors */
-        infix def angle(u: Vec3): Angle = 
-            Radians(math.acos((v dot u) / (v.norm * u.norm)))
+        infix def angle(u: Vec3): Angle = Rad(math.acos((v dot u) / (v.norm * u.norm)))
 
 
         /* Transformations */
@@ -42,4 +44,5 @@ object Vec3 {
             RotateMat3(angle, axis) * v
 
     }
+    
 }

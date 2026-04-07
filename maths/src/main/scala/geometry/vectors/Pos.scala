@@ -1,6 +1,7 @@
 package ginseng.maths.geometry.vectors
 
 import ginseng.maths.*
+import ginseng.maths.angle.*
 
 import ginseng.maths.geometry.vectors.*
 import ginseng.maths.geometry.matrices.*

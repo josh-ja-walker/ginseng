@@ -1,7 +1,9 @@
 package ginseng.core.transformations
 
 import ginseng.maths.*
+import ginseng.maths.angle.*
 import ginseng.maths.geometry.vectors.*
+
 import ginseng.core.primitives.Primitive
 
 

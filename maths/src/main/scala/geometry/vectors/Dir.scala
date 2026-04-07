@@ -1,6 +1,6 @@
 package ginseng.maths.geometry.vectors
 
-import ginseng.maths.* 
+import ginseng.maths.angle.*
 import ginseng.maths.linalg.vectors.* 
 
 
@@ -25,7 +25,7 @@ object Dir {
 
     extension (s: Dir) {
         /** Compute angle between two direction vectors */
-        infix def angle(t: Dir): Angle = math.acos(s.dot(t))
+        infix def angle(t: Dir): Angle = Rad(math.acos(s.dot(t)))
 
         /** Compute intersection between two direction vectors */
         infix def intersect(t: Dir): Dir = ??? // TODO:

@@ -1,6 +1,6 @@
 package ginseng.maths.linalg.vectors
 
-import ginseng.maths.*
+import ginseng.maths.angle.*
 import ginseng.maths.linalg.matrices.*
 import ginseng.maths.geometry.matrices.*
 
@@ -8,6 +8,7 @@ import ginseng.maths.geometry.matrices.*
 type Vec4 = Vec[4]
 
 object Vec4 {
+    
     def apply(x: Double, y: Double, z: Double,  w: Double) = Vec[4](x, y, z, w)
     def unapply(v: Vec4) = (v.x, v.y, v.z, v.w)
 
