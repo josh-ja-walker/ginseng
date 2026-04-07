@@ -16,6 +16,7 @@ import Dir.*
 import Pos.*
 
 
+//TODO: make mat private - currently used by TriangleRenderer
 case class Triangle(mat: Mat[4, 3]) extends Primitive with Freeform[Triangle] {
 
     // /_ = side 2, angle 1, side 1
@@ -28,14 +29,17 @@ case class Triangle(mat: Mat[4, 3]) extends Primitive with Freeform[Triangle] {
     val c: Pos = mat(2)
     
     // TODO: allow modification of referenced sides
-    def ab: Dir = b - a ; def ba: Dir = -ab
-    def bc: Dir = c - b ; def cb: Dir = -bc
-    def ac: Dir = c - a ; def ca: Dir = -ac
+    val ab: Dir = b - a ; val ba: Dir = -ab
+    val bc: Dir = c - b ; val cb: Dir = -bc
+    val ac: Dir = c - a ; val ca: Dir = -ac
 
     // TODO: allow modification of referenced angles
-    def A: Angle = ab.angle(ac) 
-    def B: Angle = ba.angle(bc)
-    def C: Angle = ca.angle(cb) 
+    val A: Angle = ab.angle(ac)
+    val B: Angle = ba.angle(bc)
+    val C: Angle = ca.angle(cb)
+
+    // Calculate centroid of triangle by intersection of medians
+    lazy val center: Pos = (a - (0.5 * bc)).intersect(b - (0.5 * ac))
 
 
     // Transformations
@@ -44,8 +48,8 @@ case class Triangle(mat: Mat[4, 3]) extends Primitive with Freeform[Triangle] {
 
     override def rotate(theta: Angle, around: Pos, axis: Dir): Triangle = {
         val translateOrigin = TranslateMat(around)
-        val newMat = (-translateOrigin * RotateMat4(theta, axis) * translateOrigin) * mat
-        new Triangle(newMat)
+        val rotateMat = -translateOrigin * RotateMat4(theta, axis) * translateOrigin
+        new Triangle(rotateMat * mat)
     }
 
     override def scale(v: Vec3): Triangle = new Triangle(ScaleMat4(v) * mat)
@@ -74,10 +78,6 @@ case class Triangle(mat: Mat[4, 3]) extends Primitive with Freeform[Triangle] {
     override def reflect(normal: Dir, point: Pos): Triangle = {
         new Triangle(HouseholderMat(normal.take[3]) * mat)
     }
-
-
-    // Calculate centroid of triangle by intersection of medians
-    def center: Pos = (a - (0.5 * bc)).intersect(b - (0.5 * ac))
 
 }
 
