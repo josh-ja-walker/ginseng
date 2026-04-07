@@ -22,7 +22,7 @@ class Window(private[context] val ptr: Ptr[GLFWwindow]) {
 
     // Set background colour
     def recolor(colour: Colour): Unit = {
-        val (r, g, b, a) = colour.toFloatRGB
+        val Colour(r, g, b, a) = colour
         glClearColor(r, g, b, a)
     }
 }

@@ -1,33 +1,38 @@
 package ginseng.core.colour
 
-
-case class Colour(private val r: Int, private val g: Int, private val b: Int, private val a: Double) {
-    def toFloatRGB = (r / Colour.maxRgb.toFloat, g / Colour.maxRgb.toFloat, b / Colour.maxRgb.toFloat, a.toFloat)
-
-    def toDebugString: String = s"RGBA: (${r}, ${g}, ${b}, ${a})"
+/**
+  * Colour representation in RGBA format
+  *
+  * @param r Red channel value between 0 and 1
+  * @param g Green channel value between 0 and 1
+  * @param b Blue channel value between 0 and 1
+  * @param a Alpha channel value between 0 and 1
+  */
+case class Colour(private val r: Float, private val g: Float, private val b: Float, private val a: Float) {
+    
+    // Helper access variables with fully qualified names
+    val red: Double = r
+    val green: Double = g
+    val blue: Double = b
+    val alpha: Double = a
+    
 }
 
 
 object Colour {
-    private val minRgb: Int = 0
-    private val maxRgb: Int = 255
-    private val minAlpha: Double = 0
-    private val maxAlpha: Double = 1
 
-    // TODO: neaten verification of rgb values (or assume validity/clamp)
-    
-    // Construct colour using RGB model (with variable opacity)
-    def rgba(r: Int, g: Int, b: Int, a: Double): Colour = {
-        if (!(minRgb to maxRgb).contains(r)) throw IllegalArgumentException(s"Red value ${r} invalid - must be within ${minRgb} - ${maxRgb}")
-        if (!(minRgb to maxRgb).contains(g)) throw IllegalArgumentException(s"Green value ${g} invalid - must be within ${minRgb} - ${maxRgb}")
-        if (!(minRgb to maxRgb).contains(b)) throw IllegalArgumentException(s"Blue value ${b} invalid - must be within ${minRgb} - ${maxRgb}")
-        
-        if (a < minAlpha || a > maxAlpha) throw IllegalArgumentException(s"Alpha value ${a} invalid - must be within ${minAlpha} - ${maxAlpha}")
-        
-        new Colour(r, g, b, a)
+    val maxIntRGB: Int = 255
+    val maxAlpha: Float = 1.0f
+
+    // Construct colour using integer RGB model (with values 0 - 255 for red, green and blue)
+    def rgba(r: Int, g: Int, b: Int, a: Float): Colour = {
+        assert(r > 0 && r <= maxIntRGB)
+        assert(g > 0 && g <= maxIntRGB)
+        assert(b > 0 && b <= maxIntRGB)
+        assert(a > 0 && a <= maxAlpha)
+
+        new Colour(r.toFloat / maxIntRGB, g.toFloat / maxIntRGB, b.toFloat / maxIntRGB, a)
     }
-
-    // TODO: implement overload constructor for decimal RGB values
 
     // Construct colour using RGB model (with 100% opacity)
     def rgb(r: Int, g: Int, b: Int): Colour = rgba(r, g, b, maxAlpha)
@@ -47,7 +52,7 @@ object Colour {
         
         // If alpha value is specified, construct RGBA colour
         rgba match {
-            case Seq(r, g, b, a) => Colour.rgba(r, g, b, a / Colour.maxRgb)
+            case Seq(r, g, b, a) => Colour.rgba(r, g, b, a.toFloat / maxIntRGB)
             case Seq(r, g, b) => Colour.rgb(r, g, b)
         }
     }
