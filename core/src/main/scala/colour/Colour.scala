@@ -1,5 +1,9 @@
 package ginseng.core.colour
 
+import ginseng.maths.Angle
+import ginseng.maths.Degrees
+
+
 /**
   * Colour representation in RGBA format
   *
@@ -8,6 +12,8 @@ package ginseng.core.colour
   * @param b Blue channel value between 0 and 1
   * @param a Alpha channel value between 0 and 1
   */
+
+// FIXME: use double instead of floats for accuracy, then reduce for OpenGL usage
 case class Colour(private val r: Float, private val g: Float, private val b: Float, private val a: Float) {
     
     // Helper access variables with fully qualified names
@@ -21,8 +27,8 @@ case class Colour(private val r: Float, private val g: Float, private val b: Flo
 
 object Colour {
 
-    val maxIntRGB: Int = 255
-    val maxAlpha: Float = 1.0f
+    private val maxIntRGB: Int = 255
+    private val maxAlpha: Float = 1.0f
 
     // Construct colour using integer RGB model (with values 0 - 255 for red, green and blue)
     def rgba(r: Int, g: Int, b: Int, a: Float): Colour = {
@@ -37,11 +43,37 @@ object Colour {
     // Construct colour using RGB model (with 100% opacity)
     def rgb(r: Int, g: Int, b: Int): Colour = rgba(r, g, b, maxAlpha)
 
-    // TODO: implement constructor for HSV colour model
-    def hsv(h: Int, s: Int, v: Int): Colour = ???
+    // FIXME: h should be Angle
+    def hsv(h: Double, s: Float, v: Float): Colour = {
+        // FIXME: degrees should NOT be converted to radians for these calculations
+        assert(h > Degrees(0) && h < Degrees(360))
+        assert(s > 0 && s <= 1)
+        assert(v > 0 && v <= 1)
 
-    // TODO: implement constructor for HSL colour model
-    def hsl(h: Int, s: Int, l: Int): Colour = ???
+        def f(n: Int): Double = {
+            val k = (n + h / Degrees(60)) % 6
+            v - (v * s * math.max(0, math.min(k, math.min(4 - k, 1))))
+        }
+
+        Colour(f(5).toFloat, f(3).toFloat, f(1).toFloat, maxAlpha)
+    }
+    
+
+    // FIXME: h should be Angle
+    def hsl(h: Double, s: Float, l: Float): Colour = {
+        // FIXME: degrees should NOT be converted to radians for these calculations
+        assert(h > Degrees(0) && h <= Degrees(360))
+        assert(s > 0 && s <= 1)
+        assert(l > 0 && l <= 1)
+
+        def f(n: Int): Double = {
+            val k = (n + h / Degrees(30)) % 12
+            val a = s * math.min(l, 1 - l)
+            l - (a * math.max(-1, math.min(k - 3, math.min(9 - k, 1))))
+        }
+
+        Colour(f(0).toFloat, f(8).toFloat, f(4).toFloat, maxAlpha)
+    }
     
     // Construct colour using HEX colour code
     def hex(hex: String): Colour = {
