@@ -12,9 +12,11 @@ import Mat.*
 type TranslateMat = SqrMat[4]
 
 object TranslateMat {
-    def apply(t: Vec4): TranslateMat = {
+
+    def apply(t: Vec3): TranslateMat = {
         // TODO: stop making distinction between dir and pos?
         // TODO: add map method for modifiying values of vec/mat
-        SqrMat.identity[4].take[3] appendColumn (t.take[3] :+ 1)
+        SqrMat.identity[4].take[3] appendColumn (t :+ 1)
     }
+
 }

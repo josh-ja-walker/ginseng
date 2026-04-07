@@ -39,7 +39,7 @@ object Pos {
         /** Rotate position by counterclockwise angle around a position */
         infix def rotateAround(theta: Angle, around: Pos, axis: Dir = Dir.forward): Pos = {
             // Translate coordinates so around is at origin, then rotate and translate back 
-            val toOrigin = TranslateMat(around)
+            val toOrigin = TranslateMat(around.take[3])
             (-toOrigin * RotateMat4(theta, axis) * toOrigin) * p
         }
 
