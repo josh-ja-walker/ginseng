@@ -40,7 +40,8 @@ private object Radians {
     object Rad {
         def apply(v: Double): Rad = v
 
-        given Conversion[Rad, Double] = (r: Rad) => r.toDouble
+        given Conversion[Rad, Double] with 
+            def apply(r: Rad) = r.toDouble
 
         extension (r: Rad) {
             def toDegrees: Deg = Deg(r * (180 / math.Pi))
@@ -63,7 +64,8 @@ private object Degrees {
     object Deg {
         def apply(v: Double): Deg = v 
         
-        given Conversion[Deg, Double] = (d: Deg) => d.toDouble
+        given Conversion[Deg, Double] with
+            def apply(d: Deg) = d.toDouble
 
         extension (d: Deg) {
             def toRadians: Rad = Rad(d * (math.Pi / 180))
