@@ -15,6 +15,7 @@ trait Reflect[A <: Primitive & Reflect[A]] {
 type Reflection[N <: Int] = (Vec[N] => Vec[N])
 
 object Reflection {
+    
     def apply[N <: Int](n: Vec[N], d: Double): Reflection[N] = {
         (v: Vec[N]) => { v - (2 * ((v.dot(n) - d) / n.dot(n)) * n) }
     }
