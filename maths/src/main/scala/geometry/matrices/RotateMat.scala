@@ -1,6 +1,8 @@
 package ginseng.maths.geometry.matrices
 
 import ginseng.maths.*
+import ginseng.maths.angle.*
+
 import ginseng.maths.linalg.vectors.*
 import ginseng.maths.linalg.matrices.*
 
@@ -13,8 +15,8 @@ type RotateMat2 = SqrMat[2]
 object RotateMat2 {
     def apply(theta: Angle): RotateMat2 = {
         SqrMat(
-            Vec2(math.cos(theta), math.sin(theta)), 
-            Vec2(-math.sin(theta), math.cos(theta))
+            Vec2(math.cos(theta.toRadians), math.sin(theta.toRadians)), 
+            Vec2(-math.sin(theta.toRadians), math.cos(theta.toRadians))
         )
     }
 }
@@ -40,8 +42,8 @@ object RotateMat3 {
 
     // TODO: consolidate constructors into one
     private def y(theta: Angle): RotateMat3 = {
-        val p = Vec3(math.cos(theta), 0, -math.sin(theta))
-        val r = Vec3(math.sin(theta), 0, math.cos(theta))
+        val p = Vec3(math.cos(theta.toRadians), 0, -math.sin(theta.toRadians))
+        val r = Vec3(math.sin(theta.toRadians), 0, math.cos(theta.toRadians))
         SqrMat(p, Vec3.up, r)
     }
 

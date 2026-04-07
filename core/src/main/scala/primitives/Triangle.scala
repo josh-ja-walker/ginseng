@@ -1,7 +1,7 @@
 package ginseng.core.primitives
 
 import ginseng.maths.*
-import ginseng.maths.Angle.*
+import ginseng.maths.angle.*
 
 import ginseng.maths.geometry.vectors.*
 import ginseng.maths.geometry.matrices.*
@@ -94,15 +94,15 @@ object Triangle {
         val a = Pos.origin
         val b = Pos.origin + (Dir.right * s1)
         
-        def computeAngle(a: Double, b: Double, c: Double) = {
+        def computeAngle(a: Double, b: Double, c: Double): Rad = {
             val a2 = math.pow(a, 2)
             val b2 = math.pow(b, 2)
             val c2 = math.pow(c, 2)
 
-            math.acos((b2 + c2 - a2) / (2 * b * c))
+            math.acos((b2 + c2 - a2) / (2 * b * c)).toRadians
         }
         
-        val angleA = computeAngle(s1, s2, s3)
+        val angleA: Rad = computeAngle(s1, s2, s3)
         val c = a + (Dir.right.rotate(angleA) * s3)
 
         Triangle(a, b, c)
@@ -121,7 +121,7 @@ object Triangle {
     def asa(a1: Angle, s: Double, a2: Angle): Triangle = {
         val a = Pos.origin
         val b = (Pos.origin + (Dir.right * s))
-        val c = (a + Dir.right.rotate(a1)).intersect(b + Dir.left.rotate(-a2))
+        val c = (a + Dir.right.rotate(a1)) intersect (b + Dir.left.rotate(-a2.toRadians))
 
         Triangle(a, b, c)
     }

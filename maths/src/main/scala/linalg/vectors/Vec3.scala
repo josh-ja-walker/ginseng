@@ -1,7 +1,8 @@
 package ginseng.maths.linalg.vectors
 
 import ginseng.maths.*
-import ginseng.maths.Angle.*
+import ginseng.maths.angle.*
+
 import ginseng.maths.geometry.*
 import ginseng.maths.geometry.matrices.*
 

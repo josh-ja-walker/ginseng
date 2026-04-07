@@ -3,6 +3,7 @@ package ginseng.maths.linalg.vectors
 import slash.vector as slash
 
 import ginseng.maths.*
+import ginseng.maths.angle.*
 import ginseng.maths.linalg.matrices.*
 
 
@@ -18,8 +19,8 @@ object Vec2 {
         
         infix def rotate(angle: Angle): Vec2 = {
             val u = v.copy
-            slash.Vec.rotate[2](v)(angle) // apply slash's rotate method in-place
-            u // return rotated u 
+            slash.Vec.rotate[2](v)(angle.toRadians) // apply slash's rotate method in-place
+            u // return rotated u
         }
 
     }
