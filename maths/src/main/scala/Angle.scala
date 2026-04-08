@@ -15,19 +15,19 @@ package object angle {
 
     extension (a: Angle) {
         def toRadians: Rad = a match { 
-            case r: Rad @unchecked => r
-            case d: Deg @unchecked => d.toRadians
+            case r: Rad => r
+            case d: Deg => Deg.toRadians(d)
         }
 
         def toDegrees: Deg = a match { 
-            case r: Rad @unchecked => r.toDegrees
-            case d: Deg @unchecked => d
+            case r: Rad => Rad.toDegrees(r)
+            case d: Deg => d
         }
     }
 
     extension (v: Double) {
-        @targetName("doubleToRadians") def toRadians: Rad = Rad(v)
-        @targetName("doubleToDegrees") def toDegrees: Deg = Deg(v)
+        def toRadians: Rad = Rad(v)
+        def toDegrees: Deg = Deg(v)
     }
 
 }
@@ -35,21 +35,21 @@ package object angle {
 
 private object Radians {
 
-    opaque type Rad = Double
+    sealed class Rad(private val r: Double)
 
     object Rad {
-        def apply(v: Double): Rad = v
 
-        given Conversion[Rad, Double] = (r: Rad) => r.toDouble
+        given Conversion[Rad, Double] with 
+            def apply(r: Rad) = r.toDouble
 
-        extension (r: Rad) {
-            def toDegrees: Deg = Deg(r * (180 / math.Pi))
-            def toDouble: Double = r
+        extension (rad: Rad) {
+            def toDegrees: Deg = Deg(rad.r * (180 / math.Pi))
+            def toDouble: Double = rad.r
 
             // Helper mathematic functions
-            def unary_- : Rad = -r
-            def +(s: Rad) : Rad = r + s
-            def -(s: Rad) : Rad = r - s
+            def unary_- : Rad = Rad(-rad.r)
+            def +(s: Rad): Rad = Rad(rad.r + s.r)
+            def -(s: Rad): Rad = Rad(rad.r - s.r)
         }
     }
     
@@ -58,21 +58,21 @@ private object Radians {
 
 private object Degrees {
 
-    opaque type Deg = Double
+    sealed class Deg(private val d: Double)
     
     object Deg {
-        def apply(v: Double): Deg = v 
         
-        given Conversion[Deg, Double] = (d: Deg) => d.toDouble
+        given Conversion[Deg, Double] with
+            def apply(d: Deg) = d.toDouble
 
-        extension (d: Deg) {
-            def toRadians: Rad = Rad(d * (math.Pi / 180))
-            def toDouble: Double = d
+        extension (deg: Deg) {
+            def toRadians: Rad = Rad(deg.d * (math.Pi / 180))
+            def toDouble: Double = deg.d
         
             // Helper mathematic functions
-            def unary_- : Deg = -d
-            def +(e: Deg) : Deg = d + e
-            def -(e: Deg) : Deg = d - e
+            def unary_- : Deg = Deg(-deg.d)
+            def +(e: Deg) : Deg = Deg(deg.d + e.d)
+            def -(e: Deg) : Deg = Deg(deg.d - e.d)
         }
     }
 
