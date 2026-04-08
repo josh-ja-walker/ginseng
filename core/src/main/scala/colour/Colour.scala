@@ -31,10 +31,10 @@ object Colour {
 
     // Construct colour using integer RGB model (with values 0 - 255 for red, green and blue)
     def rgba(r: Int, g: Int, b: Int, a: Float): Colour = {
-        assert(r > 0 && r <= maxIntRGB)
-        assert(g > 0 && g <= maxIntRGB)
-        assert(b > 0 && b <= maxIntRGB)
-        assert(a > 0 && a <= maxAlpha)
+        assert(r >= 0 && r <= maxIntRGB)
+        assert(g >= 0 && g <= maxIntRGB)
+        assert(b >= 0 && b <= maxIntRGB)
+        assert(a >= 0 && a <= maxAlpha)
 
         new Colour(r.toFloat / maxIntRGB, g.toFloat / maxIntRGB, b.toFloat / maxIntRGB, a)
     }
@@ -44,9 +44,9 @@ object Colour {
 
     // Construct colour using HSV model (with 100% opacity)
     def hsv(h: Angle, s: Float, v: Float): Colour = {
-        assert(h.toDegrees > Deg(0) && h.toDegrees < Deg(360))
-        assert(s > 0 && s <= 1)
-        assert(v > 0 && v <= 1)
+        assert(h.toDegrees >= Deg(0) && h.toDegrees <= Deg(360))
+        assert(s >= 0 && s <= 1)
+        assert(v >= 0 && v <= 1)
 
         def f(n: Int): Double = {
             val k = (n + h.toDegrees / Deg(60)) % 6
@@ -58,9 +58,9 @@ object Colour {
     
     // Construct colour using HSL model (with 100% opacity)
     def hsl(h: Angle, s: Float, l: Float): Colour = {
-        assert(h.toDegrees > Deg(0) && h.toDegrees <= Deg(360))
-        assert(s > 0 && s <= 1)
-        assert(l > 0 && l <= 1)
+        assert(h.toDegrees >= Deg(0) && h.toDegrees <= Deg(360))
+        assert(s >= 0 && s <= 1)
+        assert(l >= 0 && l <= 1)
 
         def f(n: Int): Double = {
             val k = (n + h.toDegrees / Deg(30)) % 12
