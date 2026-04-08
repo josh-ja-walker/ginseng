@@ -6,7 +6,6 @@ import scala.scalanative.unsigned.*
 import ginseng.core.primitives.*
 import ginseng.core.colour.*
 
-import ginseng.maths.Degrees
 import ginseng.maths.linalg.vectors.*
 import ginseng.maths.geometry.vectors.*
 
@@ -71,13 +70,11 @@ import scala.util.Random
     var t = 25 
 
     context.run(() => {
+        
         // Draw grid lines
         lineRenderer.render(lineShader)
         boldLineRenderer.render(boldLineShader)
 
-        // TODO: make angle opaque? then impossible to pass 90 without constructing degrees or radians
-        //  e.g., tri = tri.rotate(Degrees(90), Pos.center, Dir.forward)
-        
         // TODO: make lerp, slerp, etc., functions for animating as below
 
         // Increase animation timestep
