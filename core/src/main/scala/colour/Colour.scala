@@ -3,6 +3,10 @@ package ginseng.core.colour
 import ginseng.maths.angle.*
 
 
+// TODO: make different colour modes individual case classes
+// i.e., RGB(r, g, b), HSV(h, s, v), and HSL(h, s, l)
+
+
 /**
   * Colour representation in RGBA format
   *
@@ -29,6 +33,7 @@ object Colour {
     private val maxIntRGB: Int = 255
     private val maxAlpha: Float = 1.0f
 
+
     // Construct colour using integer RGB model (with values 0 - 255 for red, green and blue)
     def rgba(r: Int, g: Int, b: Int, a: Float): Colour = {
         assert(r >= 0 && r <= maxIntRGB)
@@ -42,11 +47,13 @@ object Colour {
     // Construct colour using RGB model (with 100% opacity)
     def rgb(r: Int, g: Int, b: Int): Colour = rgba(r, g, b, maxAlpha)
 
+
     // Construct colour using HSV model (with 100% opacity)
-    def hsv(h: Angle, s: Float, v: Float): Colour = {
+    def hsva(h: Angle, s: Float, v: Float, a: Float): Colour = {
         assert(h.toDegrees >= Deg(0) && h.toDegrees <= Deg(360))
         assert(s >= 0 && s <= 1)
         assert(v >= 0 && v <= 1)
+        assert(a >= 0 && a <= 1)
 
         def f(n: Int): Double = {
             val k = (n + h.toDegrees / Deg(60)) % 6
@@ -55,12 +62,17 @@ object Colour {
 
         Colour(f(5).toFloat, f(3).toFloat, f(1).toFloat, maxAlpha)
     }
+
+    // Construct colour using HSV model (with 100% opacity)
+    def hsv(h: Angle, s: Float, v: Float, a: Float): Colour = hsva(h, s, v, maxAlpha)
+
     
     // Construct colour using HSL model (with 100% opacity)
-    def hsl(h: Angle, s: Float, l: Float): Colour = {
+    def hsla(h: Angle, s: Float, l: Float, a: Float): Colour = {
         assert(h.toDegrees >= Deg(0) && h.toDegrees <= Deg(360))
         assert(s >= 0 && s <= 1)
         assert(l >= 0 && l <= 1)
+        assert(a >= 0 && a <= 1)
 
         def f(n: Int): Double = {
             val k = (n + h.toDegrees / Deg(30)) % 12
@@ -70,6 +82,10 @@ object Colour {
 
         Colour(f(0).toFloat, f(8).toFloat, f(4).toFloat, maxAlpha)
     }
+
+    // Construct colour using HSL model (with 100% opacity)
+    def hsl(h: Angle, s: Float, l: Float): Colour = hsla(h, s, l, maxAlpha)
+    
     
     // Construct colour using HEX colour code
     def hex(hex: String): Colour = {
