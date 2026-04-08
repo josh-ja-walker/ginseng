@@ -1,0 +1,53 @@
+
+# Geometric primitives 
+
+primitive -> tri . # | square | line | ... 
+
+tri -> "tri " point point point 
+    | sas | sss | asa | rhs | equil .
+
+# tri constructions:  set bottom left vertex at origin 
+sas -> "tri " length angle side .
+sss -> "tri " length length length .
+asa -> "tri " angle length angle .
+rhs -> "tri " length length . # conflict with sss 
+equil -> "tri " | "tri " length . # default to sides of 1 
+
+
+square -> "square " point point # top left and bottom right points 
+    | "square " length . # sides 
+
+
+quad -> "quad " point point point point .
+
+
+# Transformations 
+
+transform -> move | stretch | scale | rotate .
+
+move -> "move " vector .
+stretch -> "stretch " vector .
+skew -> "skew " vector . # todo: unsure if vector is correct parameter 
+scale -> "scale " vector .
+
+# default to anticlockwise in the absense of clockwise specification 
+# can use -angle as clockwise 
+rotate -> "rotate" number ("c" | "ac") "about" point .
+
+
+# Mathematical units 
+
+vector -> "(" number number number ")" .
+
+nonzero -> "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "0" .
+digit -> nonzero | "0" .
+
+number -> "A" .
+
+
+# Geometric mathematical units 
+
+point -> vector .
+
+angle -> number ("deg" | "rad") .
+length -> number "u" .
