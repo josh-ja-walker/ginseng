@@ -2,6 +2,7 @@ package ginseng.core.colour
 
 
 object Colours {
+
     def red = Colour.rgb(255, 0, 0)    
     def green = Colour.rgb(0, 255, 0)    
     def blue = Colour.rgb(0, 0, 255)
@@ -16,4 +17,5 @@ object Colours {
     def transparent = Colour.rgba(0, 0, 0, 0)
 
     def default = white // Depends on background color and theme
+    
 }
