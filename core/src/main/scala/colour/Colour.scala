@@ -1,42 +1,91 @@
 package ginseng.core.colour
 
+import ginseng.maths.angle.*
 
-case class Colour(private val r: Int, private val g: Int, private val b: Int, private val a: Double) {
-    def toFloatRGB = (r / Colour.maxRgb.toFloat, g / Colour.maxRgb.toFloat, b / Colour.maxRgb.toFloat, a.toFloat)
 
-    def toDebugString: String = s"RGBA: (${r}, ${g}, ${b}, ${a})"
+// TODO: make different colour modes individual case classes
+// i.e., RGB(r, g, b), HSV(h, s, v), and HSL(h, s, l)
+
+
+/**
+  * Colour representation in RGBA format
+  *
+  * @param r Red channel value between 0 and 1
+  * @param g Green channel value between 0 and 1
+  * @param b Blue channel value between 0 and 1
+  * @param a Alpha channel value between 0 and 1
+  */
+
+// FIXME: use double instead of floats for accuracy, then reduce for OpenGL usage
+case class Colour(private val r: Float, private val g: Float, private val b: Float, private val a: Float) {
+    
+    // Helper access variables with fully qualified names
+    val red: Double = r
+    val green: Double = g
+    val blue: Double = b
+    val alpha: Double = a
+    
 }
 
 
 object Colour {
-    private val minRgb: Int = 0
-    private val maxRgb: Int = 255
-    private val minAlpha: Double = 0
-    private val maxAlpha: Double = 1
 
-    // TODO: neaten verification of rgb values (or assume validity/clamp)
-    
-    // Construct colour using RGB model (with variable opacity)
-    def rgba(r: Int, g: Int, b: Int, a: Double): Colour = {
-        if (!(minRgb to maxRgb).contains(r)) throw IllegalArgumentException(s"Red value ${r} invalid - must be within ${minRgb} - ${maxRgb}")
-        if (!(minRgb to maxRgb).contains(g)) throw IllegalArgumentException(s"Green value ${g} invalid - must be within ${minRgb} - ${maxRgb}")
-        if (!(minRgb to maxRgb).contains(b)) throw IllegalArgumentException(s"Blue value ${b} invalid - must be within ${minRgb} - ${maxRgb}")
-        
-        if (a < minAlpha || a > maxAlpha) throw IllegalArgumentException(s"Alpha value ${a} invalid - must be within ${minAlpha} - ${maxAlpha}")
-        
-        new Colour(r, g, b, a)
+    private val maxIntRGB: Int = 255
+    private val maxAlpha: Float = 1.0f
+
+
+    // Construct colour using integer RGB model (with values 0 - 255 for red, green and blue)
+    def rgba(r: Int, g: Int, b: Int, a: Float): Colour = {
+        assert(r >= 0 && r <= maxIntRGB)
+        assert(g >= 0 && g <= maxIntRGB)
+        assert(b >= 0 && b <= maxIntRGB)
+        assert(a >= 0 && a <= maxAlpha)
+
+        new Colour(r.toFloat / maxIntRGB, g.toFloat / maxIntRGB, b.toFloat / maxIntRGB, a)
     }
-
-    // TODO: implement overload constructor for decimal RGB values
 
     // Construct colour using RGB model (with 100% opacity)
     def rgb(r: Int, g: Int, b: Int): Colour = rgba(r, g, b, maxAlpha)
 
-    // TODO: implement constructor for HSV colour model
-    def hsv(h: Int, s: Int, v: Int): Colour = ???
 
-    // TODO: implement constructor for HSL colour model
-    def hsl(h: Int, s: Int, l: Int): Colour = ???
+    // Construct colour using HSV model (with 100% opacity)
+    def hsva(h: Angle, s: Float, v: Float, a: Float): Colour = {
+        assert(h.toDegrees >= Deg(0) && h.toDegrees <= Deg(360))
+        assert(s >= 0 && s <= 1)
+        assert(v >= 0 && v <= 1)
+        assert(a >= 0 && a <= 1)
+
+        def f(n: Int): Double = {
+            val k = (n + h.toDegrees / Deg(60)) % 6
+            v - (v * s * math.max(0, math.min(k, math.min(4 - k, 1))))
+        }
+
+        Colour(f(5).toFloat, f(3).toFloat, f(1).toFloat, maxAlpha)
+    }
+
+    // Construct colour using HSV model (with 100% opacity)
+    def hsv(h: Angle, s: Float, v: Float, a: Float): Colour = hsva(h, s, v, maxAlpha)
+
+    
+    // Construct colour using HSL model (with 100% opacity)
+    def hsla(h: Angle, s: Float, l: Float, a: Float): Colour = {
+        assert(h.toDegrees >= Deg(0) && h.toDegrees <= Deg(360))
+        assert(s >= 0 && s <= 1)
+        assert(l >= 0 && l <= 1)
+        assert(a >= 0 && a <= 1)
+
+        def f(n: Int): Double = {
+            val k = (n + h.toDegrees / Deg(30)) % 12
+            val a = s * math.min(l, 1 - l)
+            l - (a * math.max(-1, math.min(k - 3, math.min(9 - k, 1))))
+        }
+
+        Colour(f(0).toFloat, f(8).toFloat, f(4).toFloat, maxAlpha)
+    }
+
+    // Construct colour using HSL model (with 100% opacity)
+    def hsl(h: Angle, s: Float, l: Float): Colour = hsla(h, s, l, maxAlpha)
+    
     
     // Construct colour using HEX colour code
     def hex(hex: String): Colour = {
@@ -47,7 +96,7 @@ object Colour {
         
         // If alpha value is specified, construct RGBA colour
         rgba match {
-            case Seq(r, g, b, a) => Colour.rgba(r, g, b, a / Colour.maxRgb)
+            case Seq(r, g, b, a) => Colour.rgba(r, g, b, a.toFloat / maxIntRGB)
             case Seq(r, g, b) => Colour.rgb(r, g, b)
         }
     }

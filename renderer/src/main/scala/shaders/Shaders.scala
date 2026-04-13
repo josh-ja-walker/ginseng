@@ -22,7 +22,7 @@ object Shaders {
         ))
         // Define fragment shader - interpolates vertex colour
         .load({
-            val (r, g, b, a) = colour.toFloatRGB
+            val Colour(r, g, b, a) = colour
             Shader.frag(
                 s"""#version 410 core
                 |out vec4 frag_color;
@@ -38,10 +38,8 @@ object Shaders {
         // Define vertex shader - set rgb values at vertices
         .load({
             val n = colours.length
-            val rgba = colours.map(colour => {
-                    val (r, g, b, a) = colour.toFloatRGB
-                    s"vec4($r, $g, $b, $a)"
-                })
+            val rgba = colours
+                .map({ case Colour(r, g, b, a) => s"vec4($r, $g, $b, $a)" })
 
             Shader.vertex(
                 s"""#version 410 core
