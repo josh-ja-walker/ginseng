@@ -10,6 +10,7 @@ import ginseng.maths.linalg.vectors.*
 import ginseng.maths.linalg.matrices.* 
 
 import ginseng.core.transformations.*
+import ginseng.core.primitives.component.*
 
 import Vec.* 
 import Mat.* 
