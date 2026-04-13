@@ -6,6 +6,7 @@ import scala.scalanative.unsigned.*
 import ginseng.core.primitives.*
 import ginseng.core.colour.*
 
+import ginseng.maths.angle.*
 import ginseng.maths.linalg.vectors.*
 import ginseng.maths.geometry.vectors.*
 
