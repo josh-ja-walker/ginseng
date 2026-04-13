@@ -12,7 +12,7 @@ import ginseng.core.primitives.*
 import ginseng.core.transformations.*
 
 
-class Edge[T <: Primitive](val a: Vertex[T], val b: Vertex[T])
+case class Edge[T <: Primitive](val a: Vertex[T], val b: Vertex[T])
     extends Primitive 
         with Translate[Edge[T]] {
 
