@@ -14,7 +14,6 @@ object HouseholderMat {
     // Compute the Householder matrix using normal of reflection plane
     def apply(n: Vec3): HouseholderMat = {
         val nUnit = n.normalized
-        // FIXME: make conjugate transpose
         (SqrMat.identity[3] -  2 * (nUnit.toMat * nUnit.transpose)).extend[4] 
     }
 
@@ -27,13 +26,6 @@ object ReflectMat {
 
     // FIXME: does not allow reflection with respect to position of plane
     // i.e., assumes origin-positioned plane
-    
-    // Compute the Householder matrix using normal of reflection plane
-    def apply(n: Vec3): ReflectMat = {
-        val nUnit = n.normalized
-        val nn: SqrMat[3] = Mat[3, 1](nUnit) * nUnit.transpose
-        (SqrMat.identity[3] -  2 * nn).extend[4]
-    }
 
     def apply(n: Vec3, d: Double): ReflectMat = {
         // TODO:
