@@ -17,8 +17,13 @@ import ginseng.maths.angle.*
   */
 
 // FIXME: use double instead of floats for accuracy, then reduce for OpenGL usage
-case class Colour(private val r: Float, private val g: Float, private val b: Float, private val a: Float) {
+case class Colour(r: Float, g: Float, b: Float, a: Float) {
     
+    require(r >= 0.0 && r <= 1.0)
+    require(g >= 0.0 && g <= 1.0)
+    require(b >= 0.0 && b <= 1.0)
+    require(a >= 0.0 && a <= 1.0)
+
     // Helper access variables with fully qualified names
     val red: Double = r
     val green: Double = g
@@ -36,10 +41,10 @@ object Colour {
 
     // Construct colour using integer RGB model (with values 0 - 255 for red, green and blue)
     def rgba(r: Int, g: Int, b: Int, a: Float): Colour = {
-        assert(r >= 0 && r <= maxIntRGB)
-        assert(g >= 0 && g <= maxIntRGB)
-        assert(b >= 0 && b <= maxIntRGB)
-        assert(a >= 0 && a <= maxAlpha)
+        require(r >= 0 && r <= maxIntRGB)
+        require(g >= 0 && g <= maxIntRGB)
+        require(b >= 0 && b <= maxIntRGB)
+        require(a >= 0 && a <= maxAlpha)
 
         new Colour(r.toFloat / maxIntRGB, g.toFloat / maxIntRGB, b.toFloat / maxIntRGB, a)
     }
@@ -50,10 +55,10 @@ object Colour {
 
     // Construct colour using HSV model (with 100% opacity)
     def hsva(h: Angle, s: Float, v: Float, a: Float): Colour = {
-        assert(h.toDegrees >= Deg(0) && h.toDegrees <= Deg(360))
-        assert(s >= 0 && s <= 1)
-        assert(v >= 0 && v <= 1)
-        assert(a >= 0 && a <= 1)
+        require(h.toDegrees >= Deg(0) && h.toDegrees <= Deg(360))
+        require(s >= 0 && s <= 1)
+        require(v >= 0 && v <= 1)
+        require(a >= 0 && a <= 1)
 
         def f(n: Int): Double = {
             val k = (n + h.toDegrees / Deg(60)) % 6
@@ -69,10 +74,10 @@ object Colour {
     
     // Construct colour using HSL model (with 100% opacity)
     def hsla(h: Angle, s: Float, l: Float, a: Float): Colour = {
-        assert(h.toDegrees >= Deg(0) && h.toDegrees <= Deg(360))
-        assert(s >= 0 && s <= 1)
-        assert(l >= 0 && l <= 1)
-        assert(a >= 0 && a <= 1)
+        require(h.toDegrees >= Deg(0) && h.toDegrees <= Deg(360))
+        require(s >= 0 && s <= 1)
+        require(l >= 0 && l <= 1)
+        require(a >= 0 && a <= 1)
 
         def f(n: Int): Double = {
             val k = (n + h.toDegrees / Deg(30)) % 12
