@@ -1,4 +1,4 @@
-package ginseng.core.primitives
+package ginseng.core.primitives.component
 
 import ginseng.maths.linalg.*
 

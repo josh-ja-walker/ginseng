@@ -1,6 +1,7 @@
 package ginseng.core.primitives
 
 import ginseng.core.transformations.*
+import ginseng.core.primitives.component.*
 
 import ginseng.maths.angle.*
 import ginseng.maths.linalg.*
