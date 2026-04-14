@@ -1,10 +1,10 @@
 package ginseng.core.primitives.component
 
+import ginseng.maths.angle.*
 import ginseng.maths.linalg.*
-
 import ginseng.maths.linalg.matrices.*
-import ginseng.maths.geometry.vectors.*
 import ginseng.maths.linalg.vectors.*
+import ginseng.maths.geometry.vectors.*
 
 import Mat.*
 
@@ -19,9 +19,14 @@ case class Edge[T <: Primitive](val a: Vertex[T], val b: Vertex[T])
     require(a.host == b.host)
     val host: T = a.host
 
-
+    // Move edge by direction vector
     def translate(v: Dir): Edge[T] = Edge(a.translate(v), b.translate(v))
 
+    // Rotate edge around a position
+    def rotate(about: Pos, angle: Angle): Edge[T] = ???
+    def rotate(about: Vertex[T], angle: Angle): Edge[T] = rotate(about.pos, angle)
+
+    // Invert edge
     def unary_- : Edge[T] = Edge(b, a) 
 
     // TODO: ideally not required
