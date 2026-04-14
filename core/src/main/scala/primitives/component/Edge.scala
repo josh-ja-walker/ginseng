@@ -13,15 +13,14 @@ import ginseng.core.transformations.*
 
 
 case class Edge[T <: Primitive](val a: Vertex[T], val b: Vertex[T])
-    extends Primitive 
-        with Translate[Edge[T]] {
+    extends Component[T] {
 
     // Require that both vertices belong to the same primitive
     require(a.host == b.host)
     val host: T = a.host
 
 
-    override def translate(v: Dir): Edge[T] = Edge(a.translate(v), b.translate(v))
+    def translate(v: Dir): Edge[T] = Edge(a.translate(v), b.translate(v))
 
     def unary_- : Edge[T] = Edge(b, a) 
 
