@@ -12,11 +12,9 @@ import ginseng.core.transformations.*
 
 
 case class Vertex[T <: Primitive](index: Int, pos: Pos)(using val host: T) 
-    extends Primitive
-        with Translate[Vertex[T]] {
+    extends Component[T] {
 
-
-    override def translate(v: Dir): Vertex[T] = Vertex(index, pos + v)
+    def translate(v: Dir): Vertex[T] = Vertex(index, pos + v)
 
 }
 
