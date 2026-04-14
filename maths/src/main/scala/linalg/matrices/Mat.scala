@@ -14,6 +14,8 @@ type Mat[M <: Int, N <: Int] = slash.Mat[M, N]
 
 object Mat {
 
+    export slash.inverse // TODO: avoid requiring exports for extension methods such as inverse
+
     // Note: use convention of composing Matrix from column Vectors
     // Requires constructing slash Mat from horizontal vectors and transposing
     def apply[M <: Int, N <: Int](vecs: Vec[M]*)(using ValueOf[M], ValueOf[N]): Mat[M, N] = 

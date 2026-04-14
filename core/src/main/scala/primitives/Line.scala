@@ -29,9 +29,8 @@ case class Line(val mat: Mat[4, 2]) extends Primitive with Freeform[Line] {
     override def translate(v: Dir): Line = new Line(TranslateMat(v) * mat)
 
     override def rotate(theta: Angle, around: Pos, axis: Dir): Line = {
-        val translateOrigin = TranslateMat(around)
-        val transformMat = -translateOrigin * RotateMat4(theta, axis) * translateOrigin
-        new Line(transformMat * mat)
+        val translation = TranslateMat(around)
+        new Line(translation * RotateMat4(theta, axis) * translation.inverse * mat)
     }
 
     override def scale(v: Vec3): Line = new Line(ScaleMat4(v) * mat)
