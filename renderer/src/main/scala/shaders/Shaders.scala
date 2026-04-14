@@ -6,7 +6,7 @@ import scala.scalanative.unsigned.*
 import opengl.bindings.glad.*
 import opengl.bindings.glfw.*
 
-import ginseng.core.colour.*
+import ginseng.core.colours.*
 import ginseng.renderer.*
 
 

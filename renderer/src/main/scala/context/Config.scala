@@ -4,7 +4,7 @@ import scala.scalanative.unsafe.*
 import opengl.bindings.glfw.*
 
 import ginseng.renderer.*
-import ginseng.core.colour.*
+import ginseng.core.colours.*
 
 
 final case class Config(
