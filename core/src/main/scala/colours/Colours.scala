@@ -1,4 +1,4 @@
-package ginseng.core.colour
+package ginseng.core.colours
 
 
 object Colours {
