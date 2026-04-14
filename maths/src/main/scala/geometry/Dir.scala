@@ -13,8 +13,8 @@ case class Dir(x: Double, y: Double, z: Double)
    
    
     /** Compute angle between two direction vectors */
-    infix def angle(t: Dir): Angle = Rad(math.acos(this.dot(t)))
-    
+    infix def angle(t: Dir): Angle = Rad(math.acos(this.normalized.dot(t.normalized)))
+
     /** Rotate direction vector anticlockwise about origin */
     infix def rotate(theta: Angle): Dir = {
         val newDir: Vec[3] = RotateMat3(theta, Dir.forward.take[3]) * this.take[3]
