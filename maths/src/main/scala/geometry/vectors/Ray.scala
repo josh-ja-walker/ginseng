@@ -1,0 +1,30 @@
+package ginseng.maths.geometry.vectors
+
+import ginseng.maths.linalg.vectors.*
+import ginseng.maths.linalg.matrices.*
+
+import slash.matrix.solve
+
+import Vec.*
+import Mat.*
+
+
+case class Ray(p: Pos, d: Dir) {
+
+    // TODO: cast ray in direction, return first collision
+    // Possibly not required
+    def fire: Pos = ???
+
+    infix def intersect(other: Ray): Option[Pos] = {
+        val A = Mat[2, 2](p.take[2], -d.take[2].normalized)
+        val b = Mat[2, 1]((other.p - p).take[2])
+        val Mat(Vec2(s, t)) = A.solve(b)
+
+        val intersection = p + (s * d.normalized)
+        Option.when(intersection.z == (other.p.z + (t * other.d.z)))(intersection)
+    }
+
+}
+
+
+object Ray { }
