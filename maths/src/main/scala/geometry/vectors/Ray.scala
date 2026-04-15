@@ -16,11 +16,13 @@ case class Ray(p: Pos, d: Dir) {
     def fire: Pos = ???
 
     infix def intersect(other: Ray): Option[Pos] = {
-        val A = Mat[2, 2](p.take[2], -d.take[2].normalized)
-        val b = Mat[2, 1]((other.p - p).take[2])
+        var Ray(q, f) = other
+
+        val A = Mat[2, 2](d.take[2], -f.take[2])
+        val b = Mat[2, 1]((q - p).take[2])
         val Mat(Vec2(s, t)) = A.solve(b)
 
-        val intersection = p + (s * d.normalized)
+        val intersection = p + (s * d)
         Option.when(intersection.z == (other.p.z + (t * other.d.z)))(intersection)
     }
 
