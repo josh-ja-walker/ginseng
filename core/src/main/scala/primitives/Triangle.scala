@@ -27,20 +27,20 @@ case class Triangle(mat: Mat[4, 3]) extends Primitive with Freeform[Triangle] {
     // _\ = side 1, angle 2, side 3
     // /\ = side 2, angle 3, side 3
 
-    // helpers for referencing vertices 
+    // helpers for referencing vertices
     val a: Vertex[Triangle] = Vertex(0, mat(0))(using this)
     val b: Vertex[Triangle] = Vertex(1, mat(1))(using this)
     val c: Vertex[Triangle] = Vertex(2, mat(2))(using this)
     
-    // TODO: allow modification of referenced sides
+    // helpers for referencing edges
     val ab: Edge[Triangle] = (b - a) ; val ba: Edge[Triangle] = -ab
     val bc: Edge[Triangle] = (c - b) ; val cb: Edge[Triangle] = -bc
     val ac: Edge[Triangle] = (c - a) ; val ca: Edge[Triangle] = -ac
 
-    // TODO: allow modification of referenced angles
-    val A: Angle = ab.dir.angle(ac.dir)
-    val B: Angle = ba.dir.angle(bc.dir)
-    val C: Angle = ca.dir.angle(cb.dir)
+    // helpers for referencing angles
+    val A: AngleComponent[Triangle] = AngleComponent(ba, ac)
+    val B: AngleComponent[Triangle] = AngleComponent(ab, bc)
+    val C: AngleComponent[Triangle] = AngleComponent(ac, cb)
 
     // Calculate centroid of triangle by intersection of medians
     val center: Pos = Line(a.pos, Line(b.pos, c.pos).mid)
