@@ -25,15 +25,11 @@ case class Line(val mat: Mat[4, 2]) extends Primitive with Freeform[Line] {
 
     val mid: Pos = a + 0.5 * ab
 
-    // TODO: line is not infinite - i.e., not ray - so check whether 
-    // point is within line a/b points
-    // TODO: create Ray as infinite line
-    infix def intersect(l2: Line): Pos = {
-        val A = Mat[2, 2](ab.take[2].normalized, -l2.ab.take[2].normalized)
-        val b = Mat[2, 1]((l2.a - a).take[2])
-        val Mat(x) = A.solve(b)
 
-        a + (x(1) * ab.normalized)
+    infix def intersect(other: Line): Option[Pos] = {
+        Ray(a, ab).intersect(Ray(other.a, other.ab)) 
+            .filter(p => (p - a).dot(ab) >= 0)
+            .filter(p => (p - a).sqrMagnitude <= ab.sqrMagnitude)
     }
 
 
@@ -78,10 +74,10 @@ case class Line(val mat: Mat[4, 2]) extends Primitive with Freeform[Line] {
 
 
 object Line {
+
     def apply(a: Pos, b: Pos): Line = new Line(Mat(a, b))
+    def apply(p: Pos, s: Double, d: Dir): Line = Line(p, p + s * d)
+    
     def unapplySeq(line: Line): Seq[Pos] = Mat.unapplySeq(line.mat)
-    
-    // FIXME: Pos and Dir are of the same erased type
-    // def apply(p: Pos, d: Dir): Line = Line(p, (p + d))
-    
+
 }
