@@ -18,6 +18,7 @@ class Vec[N <: Int](private val values: Seq[Double])(using ValueOf[N]) {
 
     def apply(index: Int): Double = underlying(index)
 
+    def map(f: Double => Double)(using ValueOf[N]): Vec[N] = new Vec[N](values.map(f))
 
     inline def norm: Double = underlying.norm
     inline def magnitude: Double = norm
