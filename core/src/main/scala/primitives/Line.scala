@@ -9,6 +9,8 @@ import ginseng.maths.geometry.matrices.*
 import ginseng.maths.linalg.vectors.*
 import ginseng.maths.linalg.matrices.*
 
+import slash.matrix.solve
+
 import Vec.*
 import Mat.*
 
@@ -22,6 +24,17 @@ case class Line(val mat: Mat[4, 2]) extends Primitive with Freeform[Line] {
     val ba: Dir = -ab
 
     val mid: Pos = a + 0.5 * ab
+
+    // TODO: line is not infinite - i.e., not ray - so check whether 
+    // point is within line a/b points
+    // TODO: create Ray as infinite line
+    infix def intersect(l2: Line): Pos = {
+        val A = Mat[2, 2](ab.take[2].normalized, -l2.ab.take[2].normalized)
+        val b = Mat[2, 1]((l2.a - a).take[2])
+        val Mat(x) = A.solve(b)
+
+        a + (x(1) * ab.normalized)
+    }
 
 
     // Transformations
@@ -70,4 +83,5 @@ object Line {
     
     // FIXME: Pos and Dir are of the same erased type
     // def apply(p: Pos, d: Dir): Line = Line(p, (p + d))
+    
 }
