@@ -5,6 +5,7 @@ import ginseng.maths.linalg.*
 import ginseng.maths.linalg.matrices.*
 import ginseng.maths.linalg.vectors.*
 import ginseng.maths.geometry.vectors.*
+import ginseng.maths.geometry.matrices.*
 
 import Mat.*
 
@@ -23,8 +24,18 @@ case class Edge[T <: Primitive](val a: Vertex[T], val b: Vertex[T])
     def translate(v: Dir): Edge[T] = Edge(a.translate(v), b.translate(v))
 
     // Rotate edge around a position
-    def rotate(about: Pos, angle: Angle): Edge[T] = ???
-    def rotate(about: Vertex[T], angle: Angle): Edge[T] = rotate(about.pos, angle)
+    def rotate(about: Pos, theta: Angle, axis: Dir): Edge[T] = {
+        val translate = TranslateMat(about)
+        val transform = translate * RotateMat4(theta, axis) * translate.inverse
+        // Rotate the existing points
+        // TODO: should edge be represented by underlying mat similar to line 
+        val Mat(posA, posB) = transform * Mat[4, 2](a.pos, b.pos)
+        // Update the edge with new vertices in correct positions
+        new Edge(a.reposition(posA), b.reposition(posB))
+    }
+
+    def rotate(about: Vertex[T], theta: Angle, axis: Dir): Edge[T] = 
+        rotate(about.pos, theta, axis)
 
     // Invert edge
     def unary_- : Edge[T] = Edge(b, a) 
