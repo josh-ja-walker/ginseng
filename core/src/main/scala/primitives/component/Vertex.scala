@@ -15,6 +15,7 @@ case class Vertex[T <: Primitive](index: Int, pos: Pos)(using val host: T)
     extends Component[T] {
 
     def translate(v: Dir): Vertex[T] = Vertex(index, pos + v)
+    def reposition(pos: Pos): Vertex[T] = Vertex(index, pos)
 
 }
 
