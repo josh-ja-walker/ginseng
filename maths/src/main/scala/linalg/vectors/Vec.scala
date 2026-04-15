@@ -15,6 +15,7 @@ type Vec[N <: Int] = SlashVec[N]
 object Vec {
     
     def apply[N <: Int](values: Double*)(using ValueOf[N]) = SlashVec[N](values*)
+
     def unapplySeq[N <: Int](vec: Vec[N]) = vec.toSeq
 
     extension[N <: Int] (v: Vec[N]) {
@@ -23,6 +24,8 @@ object Vec {
         
         // Convert to Matrix of dimensions N x 1
         def toMat(using ValueOf[N]): Mat[N, 1] = Mat[N, 1](v)
+        
+        def map(f: Double => Double)(using ValueOf[N]): Vec[N] = Vec[N](v.toSeq.map(f)*)
 
         // Divide by Euclidean norm for unit vector
         def normalized: Vec[N] = v / v.norm
