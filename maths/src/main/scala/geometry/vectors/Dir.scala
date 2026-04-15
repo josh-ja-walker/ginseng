@@ -26,9 +26,6 @@ object Dir {
     extension (s: Dir) {
         /** Compute angle between two direction vectors */
         infix def angle(t: Dir): Angle = Rad(math.acos(s.dot(t)))
-
-        /** Compute intersection between two direction vectors */
-        infix def intersect(t: Dir): Dir = ??? // TODO:
     }
-    
+
 }
