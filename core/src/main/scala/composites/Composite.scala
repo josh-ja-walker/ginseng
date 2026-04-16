@@ -90,7 +90,7 @@ case class Composite[N <: Int](mat: Mat[4, N * 3])(using ValueOf[N], ValueOf[N *
         Composite[N + M](compMat.asInstanceOf[Mat[4, (N + M) * 3]])
     }
 
-    
+    // TODO: add more positional groupings and add to trait     
     def rightOf[M <: Int](comp: Composite[M])
         (using ValueOf[N + M], ValueOf[M * 3], ValueOf[(N * 3) + (M * 3)], ValueOf[(N + M) * 3]): Composite[N + M] = {
             
