@@ -15,21 +15,24 @@ type Mat[M <: Int, N <: Int] = slash.Mat[M, N]
 object Mat {
 
     export slash.inverse // TODO: avoid requiring exports for extension methods such as inverse
-
+    
     // Note: use convention of composing Matrix from column Vectors
     // Requires constructing slash Mat from horizontal vectors and transposing
     def apply[M <: Int, N <: Int](vecs: Vec[M]*)(using ValueOf[M], ValueOf[N]): Mat[M, N] = 
         slash.Mat[N, M](vecs.toArray).transpose
 
-    def unapplySeq[M <: Int, N <: Int](mat: Mat[M, N]): Seq[Vec[M]] = 
-        mat.columnVectors.toSeq
+    def unapplySeq[M <: Int, N <: Int](mat: Mat[M, N]): Seq[Vec[M]] = mat.toSeq
     
 
     def identity[M <: Int, N <: Int](using ValueOf[M], ValueOf[N]): Mat[M, N] = slash.Mat.identity[M, N]
 
+
+    extension[M <: Int, N <: Int] (m: Mat[M, N]) {
+        def toSeq: Seq[Vec[M]] = m.columnVectors.toSeq
+    }
     
     extension[M <: Int, N <: Int] (m: Mat[M, N])(using ValueOf[M], ValueOf[N]) {
-
+    
         // Index into column vectors
         def apply(i: Int): Vec[M] = m.columnVectors(i)
 
