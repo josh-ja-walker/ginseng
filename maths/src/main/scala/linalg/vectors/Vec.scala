@@ -19,6 +19,8 @@ object Vec {
 
     extension[N <: Int] (v: Vec[N]) {
 
+        def sqrMagnitude: Double = v.magnitudeSquared
+
         // Divide by Euclidean norm for unit vector
         def normalized: Vec[N] = v / v.norm
 

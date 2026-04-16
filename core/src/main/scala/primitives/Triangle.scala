@@ -40,7 +40,9 @@ case class Triangle(mat: Mat[4, 3]) extends Primitive with Freeform[Triangle] {
     val C: Angle = ca.angle(cb)
 
     // Calculate centroid of triangle by intersection of medians
-    val center: Pos = Line(a, Line(b, c).mid) intersect Line(b, Line(a, c).mid)
+    val center: Pos = Line(a, Line(b, c).mid)
+        .intersect(Line(b, Line(a, c).mid))
+        .get
 
     // Transformations
     
@@ -119,9 +121,11 @@ object Triangle {
     def asa(a1: Angle, s: Double, a2: Angle): Triangle = {
         val a = Pos.origin
         val b = (Pos.origin + (Dir.right * s))
-        val c = Line(a, a + Dir.right.rotate(a1)) intersect Line(b, b + Dir.left.rotate(-a2.toRadians))
 
-        Triangle(a, b, c)
+        val c = Ray(a, Dir.right.rotate(a1))
+            .intersect(Ray(b, Dir.left.rotate(-a2.toRadians)))
+
+        Triangle(a, b, c.get)
     }
 
     // RHS - set adj as horizontal, center right-angle at origin
