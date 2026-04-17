@@ -68,7 +68,7 @@ import scala.util.Random
 
 
     // Animation timestep - start halfway through growth phase
-    var t = 25 
+    var t = 25
 
     context.run(() => {
         
@@ -81,17 +81,14 @@ import scala.util.Random
         // Increase animation timestep
         t += 1
         
-        // Determine resize factor
-        val factor = t match {
-            case grow if grow < 50 => (10d / 9d) // Grow by factor 1.11
-            case shrink => {
-                if (shrink > 100) { t = 0 } // Loop
-                0.9d // Shrink by factor 0.9
-            }
-        }
+        if (t > 100) { t = 0 }
 
-        // Resize triangle and rerender
-        tri = tri.scale(factor * Vec3.one)
+        // Move triangle vertexs and rerender
+        tri = tri.c.modify { vert => {
+                val dir = if t < 50 then Dir.right else Dir.left
+                vert.translate(dir * 0.05f)
+        }}
+
         TriangleRenderer(tri).render(triShader)
 
         // Sleep for 0.05s

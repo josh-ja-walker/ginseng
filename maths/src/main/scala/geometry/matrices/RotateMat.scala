@@ -27,10 +27,10 @@ type RotateMat3 = SqrMat[3]
 object RotateMat3 {
     // TODO: handle case where axis is not Right/Up/Forward
     def apply(theta: Angle, axis: Vec3): RotateMat3 = {
-        axis match {
+        axis.normalized.map(math.abs(_).round) match {
             case Vec3(1, 0, 0) => RotateMat3.x(theta) 
             case Vec3(0, 1, 0) => RotateMat3.y(theta) 
-            case Vec3(0, 0, 1) => RotateMat3.z(theta) 
+            case Vec3(0, 0, 1) | _ => RotateMat3.z(theta) 
         }
     }
 

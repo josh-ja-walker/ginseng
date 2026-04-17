@@ -25,7 +25,7 @@ object Dir {
 
     extension (s: Dir) {
         /** Compute angle between two direction vectors */
-        infix def angle(t: Dir): Angle = Rad(math.acos(s.dot(t)))
+        infix def angle(t: Dir): Angle = Rad(math.acos(s.normalized.dot(t.normalized)))
     }
 
 }
