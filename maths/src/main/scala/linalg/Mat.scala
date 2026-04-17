@@ -14,8 +14,8 @@ class Mat[R <: Int, C <: Int](val slashMat: slash.matrix.Mat[R, C])
     // Index into column vectors
     def apply(i: Int): Vec[R] = cols(i)
 
-    def rows: Seq[Vec[C]] = slashMat.rowVectors.map(new Vec[C](_)).toSeq
-    def cols: Seq[Vec[R]] = slashMat.columnVectors.map(new Vec[R](_)).toSeq
+    def rows: Seq[Vec[C]] = slashMat.rowVectors.map(Vec.fromSlash).toSeq
+    def cols: Seq[Vec[R]] = slashMat.columnVectors.map(Vec.fromSlash).toSeq
     
     def toSeq: Seq[Vec[R]] = cols
 
@@ -23,7 +23,7 @@ class Mat[R <: Int, C <: Int](val slashMat: slash.matrix.Mat[R, C])
 
 
     // Mathematic operations
-    def *(vec: Vec[C]): Vec[C] = new Vec(slashMat * vec.slashVec)
+    def *(vec: Vec[C]): Vec[C] = Vec.fromSlash(slashMat * vec.slashVec)
 
     def *[N <: Int](mat: Mat[C, N])(using ValueOf[N]): Mat[R, N] = 
         new Mat(slashMat * mat.slashMat)
@@ -60,7 +60,6 @@ object Mat {
 
     def unapplySeq[M <: Int, N <: Int](mat: Mat[M, N]): Seq[Vec[M]] = mat.toSeq
     
-
 
     def identity[M <: Int, N <: Int](using ValueOf[M], ValueOf[N]): Mat[M, N] =
         new Mat(slash.matrix.Mat.identity[M, N])

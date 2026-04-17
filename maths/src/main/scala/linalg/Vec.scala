@@ -14,9 +14,13 @@ import Mat.*
 
 // TODO: possibly allow creation of separate row and column vectors
 
-class Vec[N <: Int](val slashVec: slash.vector.Vec[N]) {
+class Vec[N <: Int](val values: Seq[Double])(using ValueOf[N]) {
+
+    protected private[linalg] val slashVec: slash.vector.Vec[N] = slash.vector.Vec[N](values.toArray)
+
 
     def apply(index: Int): Double = slashVec(index)
+
 
     inline def norm: Double = slashVec.norm
     inline def magnitude: Double = norm
@@ -32,13 +36,13 @@ class Vec[N <: Int](val slashVec: slash.vector.Vec[N]) {
 
 
     // Mathematic operations
-    def unary_- : Vec[N] = new Vec(-slashVec)
+    def unary_- : Vec[N] = Vec.fromSlash(-slashVec)
 
-    def +(u: Vec[N]) : Vec[N] = new Vec(slashVec + u.slashVec)
-    def -(u: Vec[N]) : Vec[N] = new Vec(slashVec - u.slashVec)
+    def +(u: Vec[N]) : Vec[N] = Vec.fromSlash(slashVec + u.slashVec)
+    def -(u: Vec[N]) : Vec[N] = Vec.fromSlash(slashVec - u.slashVec)
 
-    def /(scalar: Double): Vec[N] = new Vec(slashVec / scalar)
-    def *(scalar: Double): Vec[N] = new Vec(slashVec * scalar)
+    def /(scalar: Double): Vec[N] = Vec.fromSlash(slashVec / scalar)
+    def *(scalar: Double): Vec[N] = Vec.fromSlash(slashVec * scalar)
 
 
     // Matrix operations
@@ -47,18 +51,17 @@ class Vec[N <: Int](val slashVec: slash.vector.Vec[N]) {
     def toMat(using ValueOf[N]): Mat[N, 1] = Mat[N, 1](this)
 
     // Transpose vector of size N into Matrix of size (1, N)
-    def transpose(using ValueOf[N]): Mat[1, N] = Mat(toSeq.map(Vec[1](_))*)
+    def transpose(using ValueOf[N]): Mat[1, N] = Mat(values.map(Vec[1](_))*)
 
 
     // TODO: implement following methods via Iterable interface 
 
     // Append value to vector
-    def :+(d: Double)(using ValueOf[N + 1]): Vec[N + 1] = 
-        Vec.fromSeq(toSeq :+ d)
+    def :+(d: Double)(using ValueOf[N + 1]): Vec[N + 1] = new Vec(values :+ d)
 
     // Concatenate two vectors
     def ++[M <: Int](u: Vec[M])(using ValueOf[N + M]): Vec[N + M] = 
-        Vec.fromSeq(toSeq ++ u.toSeq)
+        new Vec(values ++ u.values)
     
     // Prepend vector to matrix    
     def +:[C <: Int](m: Mat[N, C])(using ValueOf[N], ValueOf[1 + C]): Mat[N, 1 + C] = 
@@ -67,24 +70,22 @@ class Vec[N <: Int](val slashVec: slash.vector.Vec[N]) {
 
     // Take first M values of vector
     inline def take[M <: Int](using ValueOf[M], M < N =:= true): Vec[M] =
-        Vec(toSeq.take(valueOf[M])*)
+        new Vec(values.take(valueOf[M]))
     
-    
-    inline def toSeq: Seq[Double] = slashVec.asNativeArray.toSeq
-
 }
 
 
 object Vec {
     
-    def apply[N <: Int](values: Double*)(using ValueOf[N]): Vec[N] = 
-        new Vec[N](slash.vector.Vec[N](values*))
-
-    def fromSeq[N <: Int](values: Seq[Double])(using ValueOf[N]): Vec[N] = Vec(values*)
+    inline def apply[N <: Int](values: Double*)(using ValueOf[N]): Vec[N] = 
+        new Vec[N](values.toArray)
 
 
-    def unapplySeq[N <: Int](vec: Vec[N]) = vec.toSeq
+    private[linalg] inline def fromSlash[N <: Int](slashVec: slash.vector.Vec[N])(using ValueOf[N]): Vec[N] = 
+        new Vec[N](slashVec.asNativeArray)
 
+    inline def unapplySeq[N <: Int](vec: Vec[N]) = vec.values
+    
 
     // FIXME: possibly reparameterise viewpoint space such that origin is (0, 0)  
 
@@ -118,7 +119,7 @@ object Vec {
     extension[N <: Int] (d: Double) {
         // Prepend value to vector
         inline def +:(v: Vec[N])(using ValueOf[1 + N]): Vec[1 + N] = 
-            Vec.fromSeq(d +: v.toSeq)
+            new Vec(d +: v.values)
     }
 
 
@@ -127,7 +128,7 @@ object Vec {
         infix def rotate(angle: Angle): Vec[2] = {
             val u = v.slashVec.copy
             slash.vector.Vec.rotate[2](v.slashVec)(angle.toRadians) // apply slash's rotate method in-place
-            new Vec[2](u) // return rotated u
+            Vec.fromSlash[2](u) // return rotated u
         }
     }
 
