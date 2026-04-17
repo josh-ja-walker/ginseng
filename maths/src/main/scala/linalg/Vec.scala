@@ -1,4 +1,4 @@
-package ginseng.maths.linalg.vectors
+package ginseng.maths.linalg
 
 import scala.compiletime.ops.any.==
 import scala.compiletime.ops.int.*
@@ -7,13 +7,16 @@ import scala.annotation.targetName
 import ginseng.maths.angle.*
 import ginseng.maths.linalg.matrices.*
 import ginseng.maths.geometry.matrices.*
+import ginseng.maths.geometry.vectors.*
 
 import Mat.*
 
 
-// type Vec[N <: Int] = SlashVec[N]
+// TODO: possibly allow creation of separate row and column vectors
 
-case class Vec[N <: Int](private val slashVec: slash.vector.Vec[N]) {
+class Vec[N <: Int](val slashVec: slash.vector.Vec[N]) {
+
+    def apply(index: Int): Double = slashVec(index)
 
     inline def norm: Double = slashVec.norm
     inline def magnitude: Double = norm
@@ -29,13 +32,13 @@ case class Vec[N <: Int](private val slashVec: slash.vector.Vec[N]) {
 
 
     // Mathematic operations
-    inline def unary_- : Vec[N] = new Vec(-slashVec)
+    def unary_- : Vec[N] = new Vec(-slashVec)
 
-    inline def +(u: Vec[N]) : Vec[N] = new Vec(slashVec + u.slashVec)
-    inline def -(u: Vec[N]) : Vec[N] = new Vec(slashVec - u.slashVec)
+    def +(u: Vec[N]) : Vec[N] = new Vec(slashVec + u.slashVec)
+    def -(u: Vec[N]) : Vec[N] = new Vec(slashVec - u.slashVec)
 
-    inline def /(scalar: Double): Vec[N] = new Vec(slashVec / scalar)
-    inline def *(scalar: Double): Vec[N] = new Vec(slashVec * scalar)
+    def /(scalar: Double): Vec[N] = new Vec(slashVec / scalar)
+    def *(scalar: Double): Vec[N] = new Vec(slashVec * scalar)
 
 
     // Matrix operations
@@ -44,24 +47,27 @@ case class Vec[N <: Int](private val slashVec: slash.vector.Vec[N]) {
     def toMat(using ValueOf[N]): Mat[N, 1] = Mat[N, 1](this)
 
     // Transpose vector of size N into Matrix of size (1, N)
-    def transpose(using ValueOf[N]): Mat[1, N] = Mat(toSeq.map(Vec[1](_)))
-
+    def transpose(using ValueOf[N]): Mat[1, N] = Mat(toSeq.map(Vec[1](_))*)
 
 
     // TODO: implement following methods via Iterable interface 
 
     // Append value to vector
-    inline def :+(d: Double)(using ValueOf[+[N, 1]]): Vec[+[N, 1]] = 
-        Vec(toSeq :+ d)
+    def :+(d: Double)(using ValueOf[N + 1]): Vec[N + 1] = 
+        Vec.fromSeq(toSeq :+ d)
 
     // Concatenate two vectors
-    inline def ++[M <: Int](u: Vec[M])(using ValueOf[+[N, M]]): Vec[+[N, M]] = 
-        Vec(toSeq ++ u.toSeq)
+    def ++[M <: Int](u: Vec[M])(using ValueOf[N + M]): Vec[N + M] = 
+        Vec.fromSeq(toSeq ++ u.toSeq)
     
-    
+    // Prepend vector to matrix    
+    def +:[C <: Int](m: Mat[N, C])(using ValueOf[N], ValueOf[1 + C]): Mat[N, 1 + C] = 
+        Mat.fromSeq(this +: m.cols)
+
+
     // Take first M values of vector
     inline def take[M <: Int](using ValueOf[M], M < N =:= true): Vec[M] =
-        Vec(toSeq.take(valueOf[M]))
+        Vec(toSeq.take(valueOf[M])*)
     
     
     inline def toSeq: Seq[Double] = slashVec.asNativeArray.toSeq
@@ -74,8 +80,7 @@ object Vec {
     def apply[N <: Int](values: Double*)(using ValueOf[N]): Vec[N] = 
         new Vec[N](slash.vector.Vec[N](values*))
 
-    @targetName("fromSeq")
-    def apply[N <: Int](values: Seq[Double])(using ValueOf[N]): Vec[N] = Vec(values*)
+    def fromSeq[N <: Int](values: Seq[Double])(using ValueOf[N]): Vec[N] = Vec(values*)
 
 
     def unapplySeq[N <: Int](vec: Vec[N]) = vec.toSeq
@@ -112,11 +117,11 @@ object Vec {
 
     extension[N <: Int] (d: Double) {
         // Prepend value to vector
-        inline def +:(v: Vec[N])(using ValueOf[+[1, N]]): Vec[+[1, N]] = 
-            Vec(d +: v.toSeq)
+        inline def +:(v: Vec[N])(using ValueOf[1 + N]): Vec[1 + N] = 
+            Vec.fromSeq(d +: v.toSeq)
     }
 
-    
+
     extension (v: Vec[2]) {
         @targetName("rotate2")
         infix def rotate(angle: Angle): Vec[2] = {
@@ -138,9 +143,26 @@ object Vec {
         
         /* Rotate by angle anticlockwise */
         @targetName("rotate3")
-        infix def rotate(angle: Angle, axis: Vec[3] = Vec3.forward): Vec[3] = 
+        infix def rotate(angle: Angle, axis: Dir = Dir.forward): Vec[3] = 
             RotateMat3(angle, axis) * v
 
+    }
+
+
+    extension[N <: Int] (v: Vec[N])(using ValueOf[N], N >= 1 =:= true) {
+        inline def x: Double = v(0)
+    }
+
+    extension[N <: Int] (v: Vec[N])(using ValueOf[N], N >= 2 =:= true) {
+        inline def y: Double = v(1)
+    }
+
+    extension[N <: Int] (v: Vec[N])(using ValueOf[N], N >= 3 =:= true) {
+        inline def z: Double = v(2)
+    }
+
+    extension[N <: Int] (v: Vec[N])(using ValueOf[N], N >= 4 =:= true) {
+        inline def w: Double = v(3)
     }
 
 
