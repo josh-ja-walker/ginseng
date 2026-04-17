@@ -9,14 +9,13 @@ import ginseng.maths.linalg.matrices.*
 import ginseng.maths.geometry.matrices.*
 import ginseng.maths.geometry.vectors.*
 
-import Mat.*
-
 
 // TODO: possibly allow creation of separate row and column vectors
 
-class Vec[N <: Int](val values: Seq[Double])(using ValueOf[N]) {
+class Vec[N <: Int](val values: Array[Double])(using ValueOf[N]) {
 
-    protected private[linalg] val slashVec: slash.vector.Vec[N] = slash.vector.Vec[N](values.toArray)
+    protected private[linalg] val slashVec: slash.vector.Vec[N] = 
+        slash.vector.Vec[N](values)
 
 
     def apply(index: Int): Double = slashVec(index)
@@ -80,73 +79,22 @@ object Vec {
     inline def apply[N <: Int](values: Double*)(using ValueOf[N]): Vec[N] = 
         new Vec[N](values.toArray)
 
-
-    private[linalg] inline def fromSlash[N <: Int](slashVec: slash.vector.Vec[N])(using ValueOf[N]): Vec[N] = 
-        new Vec[N](slashVec.asNativeArray)
+    private[linalg] inline def fromSlash[N <: Int](slashVec: slash.vector.Vec[N])
+        (using ValueOf[N]): Vec[N] = 
+            new Vec[N](slashVec.asNativeArray)
 
     inline def unapplySeq[N <: Int](vec: Vec[N]) = vec.values
     
 
-    // FIXME: possibly reparameterise viewpoint space such that origin is (0, 0)  
-
-    // Move to Pos
-    // def origin = Vec4(-1, -1, 0, 1) 
-
-    // def up = Vec4(0, 1, 0, 0)
-    // def down = Vec4(0, -1, 0, 0)
-    
-    // def left = Vec4(-1, 0, 0, 0)
-    // def right = Vec4(1, 0, 0, 0)
-
-    // def forward = Vec4(0, 0, 1, 0)
-    // def back = Vec4(0, 0, -1, 0)
-
-    // def one = Vec4(1, 1, 1, 0)
-    // def zero = Vec4(0, 0, 0, 0)
-
-
-    // extension[N <: Int] (v: Vec[4]) {
-    
-    //     /* Transformations */
-    
-    //     /* Rotate by angle anticlockwise */
-    //     infix def rotate(angle: Angle): Vec[4] = rotate(angle, Vec4.forward)
-    //     infix def rotate(angle: Angle, axis: Vec[4]): Vec[4] = RotateMat4(angle, axis) * v
-        
-    // }
+    extension (d: Double) {
+        def *[N <: Int](v: Vec[N]): Vec[N] = v * d
+    }
 
 
     extension[N <: Int] (d: Double) {
         // Prepend value to vector
         inline def +:(v: Vec[N])(using ValueOf[1 + N]): Vec[1 + N] = 
             new Vec(d +: v.values)
-    }
-
-
-    extension (v: Vec[2]) {
-        @targetName("rotate2")
-        infix def rotate(angle: Angle): Vec[2] = {
-            val u = v.slashVec.copy
-            slash.vector.Vec.rotate[2](v.slashVec)(angle.toRadians) // apply slash's rotate method in-place
-            Vec.fromSlash[2](u) // return rotated u
-        }
-    }
-
-
-    extension (v: Vec[3]) {
-
-        /** Compute angle between two vectors */
-        infix def angle(u: Vec[3]): Angle = 
-            Rad(math.acos((v dot u) / (v.norm * u.norm)))
-
-
-        /* Transformations */
-        
-        /* Rotate by angle anticlockwise */
-        @targetName("rotate3")
-        infix def rotate(angle: Angle, axis: Dir = Dir.forward): Vec[3] = 
-            RotateMat3(angle, axis) * v
-
     }
 
 
