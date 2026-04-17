@@ -1,68 +1,76 @@
-package ginseng.maths.linalg.matrices
+package ginseng.maths.linalg
 
 import scala.compiletime.ops.any.==
 import scala.compiletime.ops.int.*
 import scala.annotation.targetName
 
-import slash.matrix as slash
 
-import ginseng.maths.linalg.vectors.*
+export Mat.*
 
 
-type Mat[M <: Int, N <: Int] = slash.Mat[M, N]
+class Mat[R <: Int, C <: Int](val slashMat: slash.matrix.Mat[R, C])
+    (using ValueOf[R], ValueOf[C]) {
+
+    // Index into column vectors
+    def apply(i: Int): Vec[R] = cols(i)
+
+    def rows: Seq[Vec[C]] = slashMat.rowVectors.map(new Vec[C](_)).toSeq
+    def cols: Seq[Vec[R]] = slashMat.columnVectors.map(new Vec[R](_)).toSeq
+    
+    def toSeq: Seq[Vec[R]] = cols
+
+    def transpose: Mat[C, R] = new Mat(slashMat.transpose)
+
+
+    // Mathematic operations
+    def *(vec: Vec[C]): Vec[C] = new Vec(slashMat * vec.slashVec)
+
+    def *[N <: Int](mat: Mat[C, N])(using ValueOf[N]): Mat[R, N] = 
+        new Mat(slashMat * mat.slashMat)
+
+
+    // TODO: implement following methods via Iterable interface 
+    
+    def :+(v: Vec[R])(using ValueOf[C + 1]): Mat[R, C + 1] = Mat.fromSeq(cols :+ v)
+
+    infix def ++[N <: Int](n: Mat[R, N])(using ValueOf[N], ValueOf[C + N]): Mat[R, C + N] = 
+        new Mat(slashMat.concatenateColumns[N](n.slashMat))
+
+    infix def concatRows[N <: Int](n: Mat[N, C])(using ValueOf[N], ValueOf[R + N]): Mat[R + N, C] = 
+        new Mat(slashMat.concatenateRows[N](n.slashMat))
+
+
+    // Take first R vectors
+    def take[N <: Int](using ValueOf[N], N < C =:= true): Mat[R, N] =
+        Mat.fromSlashVecs(slashMat.columnVectors.take(valueOf[N]))
+
+
+}
 
 
 object Mat {
 
-    export slash.inverse // TODO: avoid requiring exports for extension methods such as inverse
+    def apply[R <: Int, C <: Int](vecs: Vec[R]*)
+        (using ValueOf[R], ValueOf[C]): Mat[R, C] = 
+            Mat.fromSlashVecs(vecs.map(_.slashVec).toArray)
+
+    def fromSeq[R <: Int, C <: Int](vecs: Seq[Vec[R]])
+        (using ValueOf[R], ValueOf[C]): Mat[R, C] = Mat(vecs*)
+
+
+    def unapplySeq[M <: Int, N <: Int](mat: Mat[M, N]): Seq[Vec[M]] = mat.toSeq
+    
+
+
+    def identity[M <: Int, N <: Int](using ValueOf[M], ValueOf[N]): Mat[M, N] =
+        new Mat(slash.matrix.Mat.identity[M, N])
+
 
     // Note: use convention of composing Matrix from column Vectors
     // Requires constructing slash Mat from horizontal vectors and transposing
-    def apply[M <: Int, N <: Int](vecs: Vec[M]*)(using ValueOf[M], ValueOf[N]): Mat[M, N] = 
-        slash.Mat[N, M](vecs.toArray).transpose
+    private def fromSlashVecs[R <: Int, C <: Int](vecs: Array[slash.vector.Vec[R]])
+        (using ValueOf[R], ValueOf[C]): Mat[R, C] = 
+            new Mat(slash.matrix.Mat(vecs).transpose)
 
-    def unapplySeq[M <: Int, N <: Int](mat: Mat[M, N]): Seq[Vec[M]] = 
-        mat.columnVectors.toSeq
-    
-
-    def identity[M <: Int, N <: Int](using ValueOf[M], ValueOf[N]): Mat[M, N] = slash.Mat.identity[M, N]
-
-    
-    extension[M <: Int, N <: Int] (m: Mat[M, N])(using ValueOf[M], ValueOf[N]) {
-
-        // Index into column vectors
-        def apply(i: Int): Vec[M] = m.columnVectors(i)
-
-        // TODO: implement following methods via Iterable interface 
-        // TODO: define :+, etc., operators for following collection operators
-        
-        infix def appendColumn(v: Vec[M])(using ValueOf[+[N, 1]]): Mat[M, +[N, 1]] = 
-            slash.Mat(m.columnVectors :+ v).transpose 
-
-        infix def appendRow(v: Vec[N])(using ValueOf[+[M, 1]]): Mat[+[M, 1], N] = 
-            slash.Mat(m.rowVectors :+ v)
-
-        infix def concatColumns[R <: Int](n: Mat[M, R])(using ValueOf[R], ValueOf[+[N, R]]): Mat[M, +[N, R]] = 
-            m.concatenateColumns(n)
-
-        infix def concatRows[R <: Int](n: Mat[R, N])(using ValueOf[R], ValueOf[+[M, R]]): Mat[+[M, R], N] = 
-            m.concatenateRows(n)
-
-        // Take first R vectors
-        def take[R <: Int](using ValueOf[R], R < N =:= true): Mat[M, R] =
-            slash.Mat(m.columnVectors.take(valueOf[R])).transpose
-
-    }
-
-    extension[N <: Int] (v: Vec[N])(using ValueOf[N]) {
-        @targetName("prependRow")
-        infix def prependRow[M <: Int](m: Mat[M, N])(using ValueOf[M], ValueOf[+[1, M]]): Mat[+[1, M], N] = 
-            slash.Mat(v +: m.rowVectors)
-    }
-    
-    extension[M <: Int] (v: Vec[M])(using ValueOf[M]) {
-        infix def prependColumn[N <: Int](m: Mat[M, N])(using ValueOf[N], ValueOf[+[1, N]]): Mat[M, +[1, N]] = 
-            slash.Mat(v +: m.columnVectors).transpose
-    }
 
 }
