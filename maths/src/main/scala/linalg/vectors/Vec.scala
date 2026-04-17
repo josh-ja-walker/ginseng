@@ -20,6 +20,9 @@ object Vec {
     extension[N <: Int] (v: Vec[N]) {
 
         def sqrMagnitude: Double = v.magnitudeSquared
+        
+        // Convert to Matrix of dimensions N x 1
+        def toMat(using ValueOf[N]): Mat[N, 1] = Mat[N, 1](v)
 
         // Divide by Euclidean norm for unit vector
         def normalized: Vec[N] = v / v.norm
