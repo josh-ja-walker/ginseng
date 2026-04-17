@@ -18,22 +18,3 @@ object HouseholderMat {
     }
 
 }
-
-
-type ReflectMat = SqrMat[4]
-
-object ReflectMat {
-
-    // FIXME: does not allow reflection with respect to position of plane
-    // i.e., assumes origin-positioned plane
-
-    def apply(n: Vec3, d: Double): ReflectMat = {
-        // TODO:
-        // transform world space such that plane passes through origin
-        // apply householder matrix reflection transformation
-        // transform world space back
-        
-        ???
-    }
-
-}
