@@ -14,8 +14,8 @@ class Mat[R <: Int, C <: Int](protected val vectors: Seq[Vec[R]])(using ValueOf[
     // Index into column vectors
     def apply(i: Int): Vec[R] = cols(i)
 
-    def rows: Seq[Vec[C]] = slashMat.rowVectors.map(Vec.fromSlash).toSeq
-    def cols: Seq[Vec[R]] = slashMat.columnVectors.map(Vec.fromSlash).toSeq
+    def rows: Seq[Vec[C]] = slashMat.rowVectors.map(Vec.fromSlash)
+    def cols: Seq[Vec[R]] = slashMat.columnVectors.map(Vec.fromSlash)
     
     def toSeq: Seq[Vec[R]] = cols
 
@@ -34,8 +34,7 @@ class Mat[R <: Int, C <: Int](protected val vectors: Seq[Vec[R]])(using ValueOf[
 
     // TODO: implement following methods via Iterable interface 
     
-    def :+(v: Vec[R])(using ValueOf[C + 1]): Mat[R, C + 1] = 
-        Mat((cols :+ v)*)
+    def :+(v: Vec[R])(using ValueOf[C + 1]): Mat[R, C + 1] = new Mat(cols :+ v)
 
     infix def ++[N <: Int](n: Mat[R, N])(using ValueOf[N], ValueOf[C + N]): Mat[R, C + N] = 
         Mat.fromSlash(slashMat.concatenateColumns[N](n.slashMat))
@@ -46,7 +45,7 @@ class Mat[R <: Int, C <: Int](protected val vectors: Seq[Vec[R]])(using ValueOf[
 
     // Take first R vectors
     def take[N <: Int](using ValueOf[N], N < C =:= true): Mat[R, N] =
-        Mat(cols.take(valueOf[N])*)
+        new Mat(cols.take(valueOf[N]))
 
 }
 
@@ -57,8 +56,7 @@ object Mat {
     def apply[R <: Int](v1: Vec[R], v2: Vec[R])(using ValueOf[R]): Mat[R, 2] = Mat(v1, v2)
     def apply[R <: Int](v1: Vec[R], v2: Vec[R], v3: Vec[R])(using ValueOf[R]): Mat[R, 3] = Mat(v1, v2, v3)
     
-    def apply[R <: Int, C <: Int](vectors: Vec[R]*)(using ValueOf[R], ValueOf[C]): Mat[R, C] = 
-        new Mat(vectors.toArray)
+    def apply[R <: Int, C <: Int](vectors: Vec[R]*)(using ValueOf[R], ValueOf[C]): Mat[R, C] = new Mat(vectors)
 
 
     def unapplySeq[M <: Int, N <: Int](mat: Mat[M, N]): Seq[Vec[M]] = mat.toSeq
