@@ -11,7 +11,7 @@ class Mat[R <: Int, C <: Int](vectors: Seq[Vec[R]])(using ValueOf[R], ValueOf[C]
 
     // Underlying matrix implemented by slash library
     private[maths] val underlying: slash.matrix.Mat[R, C] = 
-        slash.matrix.Mat[C, R](vectors.map(_.slashVec).toArray).transpose
+        slash.matrix.Mat[C, R](vectors.map(_.underlying).toArray).transpose
 
 
     // Index into column vectors
@@ -26,7 +26,7 @@ class Mat[R <: Int, C <: Int](vectors: Seq[Vec[R]])(using ValueOf[R], ValueOf[C]
 
 
     // Mathematic operations
-    def *(vec: Vec[C]): Vec[C] = Vec.fromSlash(underlying * vec.slashVec)
+    def *(vec: Vec[C]): Vec[C] = Vec.fromSlash(underlying * vec.underlying)
 
     def *[N <: Int](mat: Mat[C, N])(using ValueOf[N]): Mat[R, N] = 
         Mat.fromSlash(underlying * mat.underlying)

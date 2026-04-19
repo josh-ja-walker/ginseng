@@ -12,34 +12,34 @@ import ginseng.maths.geometry.*
 
 class Vec[N <: Int](private val values: Seq[Double])(using ValueOf[N]) {
 
-    protected private[linalg] val slashVec: slash.vector.Vec[N] = 
+    protected private[linalg] val underlying: slash.vector.Vec[N] = 
         slash.vector.Vec[N](values.toArray)
 
 
-    def apply(index: Int): Double = slashVec(index)
+    def apply(index: Int): Double = underlying(index)
 
 
-    inline def norm: Double = slashVec.norm
+    inline def norm: Double = underlying.norm
     inline def magnitude: Double = norm
     
-    inline def sqrMagnitude: Double = slashVec.magnitudeSquared
+    inline def sqrMagnitude: Double = underlying.magnitudeSquared
 
     // Divide by Euclidean norm for unit vector
     inline def normalized: Vec[N] = this / norm
-    
+
 
     // Compute dot product
-    inline infix def dot(u: Vec[N]): Double = slashVec.dot(u.slashVec)
+    inline infix def dot(u: Vec[N]): Double = underlying.dot(u.underlying)
 
 
     // Mathematic operations
-    def unary_- : Vec[N] = Vec.fromSlash(-slashVec)
+    def unary_- : Vec[N] = Vec.fromSlash(-underlying)
 
-    def +(u: Vec[N]) : Vec[N] = Vec.fromSlash(slashVec + u.slashVec)
-    def -(u: Vec[N]) : Vec[N] = Vec.fromSlash(slashVec - u.slashVec)
+    def +(u: Vec[N]) : Vec[N] = Vec.fromSlash(underlying + u.underlying)
+    def -(u: Vec[N]) : Vec[N] = Vec.fromSlash(underlying - u.underlying)
 
-    def /(scalar: Double): Vec[N] = Vec.fromSlash(slashVec / scalar)
-    def *(scalar: Double): Vec[N] = Vec.fromSlash(slashVec * scalar)
+    def /(scalar: Double): Vec[N] = Vec.fromSlash(underlying / scalar)
+    def *(scalar: Double): Vec[N] = Vec.fromSlash(underlying * scalar)
 
 
     // Matrix operations
@@ -59,7 +59,7 @@ class Vec[N <: Int](private val values: Seq[Double])(using ValueOf[N]) {
     // Concatenate two vectors
     def ++[M <: Int](u: Vec[M])(using ValueOf[N + M]): Vec[N + M] = 
         new Vec(values ++ u.values)
-    
+
     // Prepend vector to matrix    
     def +:[C <: Int](m: Mat[N, C])(using ValueOf[N], ValueOf[1 + C]): Mat[N, 1 + C] = 
         new Mat(this +: m.cols)
@@ -76,7 +76,7 @@ class Vec[N <: Int](private val values: Seq[Double])(using ValueOf[N]) {
     def extend[M <: Int](value: Double)(using ValueOf[M], M >= N =:= true): Vec[M] = {
         val pad = Vec.fill[M](value)
         new Vec(values ++ pad.values.drop(valueOf[N]))
-    } 
+    }
 
 
     def toSeq: Seq[Double] = values
@@ -85,7 +85,7 @@ class Vec[N <: Int](private val values: Seq[Double])(using ValueOf[N]) {
 
 
 object Vec {
-    
+
     // Construct vector from vararg of values 
     def apply[N <: Int](values: Double*)(using ValueOf[N]): Vec[N] = new Vec[N](values)
 
@@ -155,7 +155,7 @@ object Vec {
     def right[N <: Int](using ValueOf[N], N >= 2 =:= true): Vec[N] = Vec[2](1, 0).extend[N]
 
     // Vec[3] directional vectors
-    
+
     def forward[N <: Int](using ValueOf[N], N >= 3 =:= true): Vec[N] = Vec[3](0, 0, 1).extend[N]
     def backward[N <: Int](using ValueOf[N], N >= 3 =:= true): Vec[N] = Vec[3](0, 0, -1).extend[N]
 
