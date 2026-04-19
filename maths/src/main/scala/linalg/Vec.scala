@@ -78,21 +78,24 @@ class Vec[N <: Int](private val values: Seq[Double])(using ValueOf[N]) {
         new Vec(values ++ pad.values.drop(valueOf[N]))
     } 
 
+
+    def toSeq: Seq[Double] = values
+
 }
 
 
 object Vec {
     
     // Construct vector from vararg of values 
-    def apply[N <: Int](values: Double*)(using ValueOf[N]): Vec[N] = new Vec[N](values.toArray)
+    def apply[N <: Int](values: Double*)(using ValueOf[N]): Vec[N] = new Vec[N](values)
 
     // Deconstructor for Vec into Seq of values 
-    def unapplySeq[N <: Int](vec: Vec[N]): Seq[Double] = vec.values.toSeq
+    def unapplySeq[N <: Int](vec: Vec[N]): Seq[Double] = vec.values
 
 
     // Construct vector from wrapped slash library vector
     private[maths] inline def fromSlash[N <: Int](slashVec: slash.vector.Vec[N])(using ValueOf[N]): Vec[N] = 
-            new Vec[N](slashVec.asNativeArray)
+        new Vec[N](slashVec.asNativeArray)
 
 
     extension[N <: Int] (d: Double) {

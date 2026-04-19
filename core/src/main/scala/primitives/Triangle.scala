@@ -15,9 +15,9 @@ case class Triangle(mat: Mat[4, 3]) extends Primitive with Freeform[Triangle] {
     // /\ = side 2, angle 3, side 3
 
     // helpers for referencing vertices
-    val a: Pos = mat(0).toPos
-    val b: Pos = mat(1).toPos
-    val c: Pos = mat(2).toPos
+    val a: Pos = mat.pos(0)
+    val b: Pos = mat.pos(1)
+    val c: Pos = mat.pos(2)
     
     // TODO: allow modification of referenced sides
     // TODO: reimplement maths for dir so that toDir call not required
@@ -82,7 +82,7 @@ object Triangle {
 
     // Pointwise construction of triangle
     def apply(a: Pos, b: Pos, c: Pos): Triangle = new Triangle(Mat(a, b, c))
-    def unapplySeq(tri: Triangle): Seq[Pos] = Mat.unapplySeq(tri.mat).map(_.toPos)
+    def unapplySeq(tri: Triangle): Seq[Pos] = tri.mat.toPositions
 
     // SSS - set side 1 as horizontal, center angle 1 at origin
     def sss(s1: Double, s2: Double, s3: Double): Triangle = {

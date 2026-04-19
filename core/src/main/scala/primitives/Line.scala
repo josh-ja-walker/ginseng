@@ -12,8 +12,8 @@ import Mat.*
 
 case class Line(val mat: Mat[4, 2]) extends Primitive with Freeform[Line] {
 
-    val a: Pos = mat(0).toPos
-    val b: Pos = mat(1).toPos
+    val a: Pos = mat.pos(0)
+    val b: Pos = mat.pos(1)
     
     val ab: Dir = b - a
     val ba: Dir = (-ab)
@@ -72,8 +72,8 @@ case class Line(val mat: Mat[4, 2]) extends Primitive with Freeform[Line] {
 object Line {
 
     def apply(a: Pos, b: Pos): Line = new Line(Mat(a, b))
-    def apply(p: Pos, s: Double, d: Dir): Line = Line(p, p + (s * d))
+    def apply(p: Pos, d: Dir): Line = Line(p, p + d)
     
-    def unapplySeq(line: Line): Seq[Pos] = Mat.unapplySeq(line.mat).map(_.toPos)
+    def unapplySeq(line: Line): Seq[Pos] = line.mat.toPositions
 
 }

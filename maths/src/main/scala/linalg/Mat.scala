@@ -4,6 +4,8 @@ import scala.compiletime.ops.any.==
 import scala.compiletime.ops.int.*
 import scala.annotation.targetName
 
+import ginseng.maths.geometry.*
+
 
 class Mat[R <: Int, C <: Int](vectors: Seq[Vec[R]])(using ValueOf[R], ValueOf[C]) {
 
@@ -102,6 +104,14 @@ object Mat {
             Mat.fromSlash(extended)
         }
         
+    }
+
+
+    // Methods for operating on a matrix of positions
+
+    extension[N <: Int] (mat: Mat[4, N]) {
+        def pos(index: Int): Pos = mat(index).toPos
+        def toPositions: Seq[Pos] = mat.toSeq.map(_.toPos)
     }
 
 
