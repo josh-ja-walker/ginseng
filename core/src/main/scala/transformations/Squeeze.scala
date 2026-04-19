@@ -1,8 +1,9 @@
 package ginseng.core.transformations
 
-import ginseng.core.primitives.Primitive
-import ginseng.maths.geometry.vectors.Dir
-import ginseng.maths.linalg.vectors.Vec2
+import ginseng.core.primitives.*
+
+import ginseng.maths.linalg.*
+import ginseng.maths.geometry.*
 
 
 trait Squeeze[A <: Primitive & Squeeze[A]] {
@@ -10,5 +11,5 @@ trait Squeeze[A <: Primitive & Squeeze[A]] {
     def squeeze(f: Double): A
     
     // TODO: helpers for specifying x and y, x and z, or y and z
-    def squeeze(f: Vec2): A
+    def squeeze(f: Vec[2]): A
 }

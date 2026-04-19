@@ -91,7 +91,7 @@ import scala.util.Random
         }
 
         // Resize triangle and rerender
-        tri = tri.scale(factor * Vec3.one)
+        tri = tri.scale(factor * Vec[3].one)
         TriangleRenderer(tri).render(triShader)
 
         // Sleep for 0.05s
