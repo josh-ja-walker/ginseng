@@ -1,4 +1,4 @@
-package ginseng.maths.geometry.vectors
+package ginseng.maths.geometry
 
 import ginseng.maths.*
 import ginseng.maths.angle.*
@@ -26,19 +26,19 @@ case class Pos(x: Double, y: Double, z: Double, w: Double = 1.0d)
     // TODO: neaten the following maths ops
 
     // Compute direction from p to current vector
-    override def -(p: Pos): Dir = {
+    def -(p: Pos): Dir = {
         val Vec[4](x, y, z, w) = this - (p: Vec[4])
         Dir(x, y, z)
     }
 
     // Move position vector in direction d
-    override def +(d: Dir): Pos = {
+    def +(d: Dir): Pos = {
         val Vec[4](x, y, z, w) = (this: Vec[4]) - (d: Vec[4])
         Pos(x, y, z, this.w)
     }
 
     // Move position vector in direction -d
-    override def -(d: Dir): Pos = {
+    def -(d: Dir): Pos = {
         val Vec[4](x, y, z, _) = -d
         this + Dir(x, y, z)
     }

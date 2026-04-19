@@ -1,4 +1,4 @@
-package ginseng.maths.geometry.vectors
+package ginseng.maths.geometry
 
 import ginseng.maths.angle.*
 import ginseng.maths.linalg.*
