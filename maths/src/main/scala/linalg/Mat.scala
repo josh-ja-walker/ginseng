@@ -4,14 +4,11 @@ import scala.compiletime.ops.any.==
 import scala.compiletime.ops.int.*
 import scala.annotation.targetName
 
-export Mat.*
-export SqrMat.*
 
+class Mat[R <: Int, C <: Int](protected val vectors: Seq[Vec[R]])(using ValueOf[R], ValueOf[C]) {
 
-class Mat[R <: Int, C <: Int](val vectors: Array[Array[Double]])(using ValueOf[R], ValueOf[C]) {
-
-    protected private[linalg] val slashMat: slash.matrix.Mat[R, C] = 
-        slash.matrix.Mat[C, R](vectors.flatten).transpose
+    protected val slashMat: slash.matrix.Mat[R, C] = 
+        slash.matrix.Mat[C, R](vectors.map(_.slashVec).toArray).transpose
 
 
     // Index into column vectors
@@ -31,10 +28,14 @@ class Mat[R <: Int, C <: Int](val vectors: Array[Array[Double]])(using ValueOf[R
     def *[N <: Int](mat: Mat[C, N])(using ValueOf[N]): Mat[R, N] = 
         Mat.fromSlash(slashMat * mat.slashMat)
 
+    def +(mat: Mat[R, C]): Mat[R, C] = Mat.fromSlash(slashMat + mat.slashMat)
+    def -(mat: Mat[R, C]): Mat[R, C] = Mat.fromSlash(slashMat - mat.slashMat)
+
 
     // TODO: implement following methods via Iterable interface 
     
-    def :+(v: Vec[R])(using ValueOf[C + 1]): Mat[R, C + 1] = Mat.fromSeq(cols :+ v)
+    def :+(v: Vec[R])(using ValueOf[C + 1]): Mat[R, C + 1] = 
+        Mat((cols :+ v)*)
 
     infix def ++[N <: Int](n: Mat[R, N])(using ValueOf[N], ValueOf[C + N]): Mat[R, C + N] = 
         Mat.fromSlash(slashMat.concatenateColumns[N](n.slashMat))
@@ -45,19 +46,19 @@ class Mat[R <: Int, C <: Int](val vectors: Array[Array[Double]])(using ValueOf[R
 
     // Take first R vectors
     def take[N <: Int](using ValueOf[N], N < C =:= true): Mat[R, N] =
-        Mat.fromSlashVecs(slashMat.columnVectors.take(valueOf[N]))
+        Mat(cols.take(valueOf[N])*)
 
 }
 
 
 object Mat {
 
-    def apply[R <: Int, C <: Int](vecs: Vec[R]*)
-        (using ValueOf[R], ValueOf[C]): Mat[R, C] = 
-            Mat.fromSlashVecs(vecs.map(_.slashVec).toArray)
-
-    def fromSeq[R <: Int, C <: Int](vecs: Seq[Vec[R]])
-        (using ValueOf[R], ValueOf[C]): Mat[R, C] = Mat(vecs*)
+    def apply[R <: Int](vec: Vec[R])(using ValueOf[R]): Mat[R, 1] = Mat(vec)
+    def apply[R <: Int](v1: Vec[R], v2: Vec[R])(using ValueOf[R]): Mat[R, 2] = Mat(v1, v2)
+    def apply[R <: Int](v1: Vec[R], v2: Vec[R], v3: Vec[R])(using ValueOf[R]): Mat[R, 3] = Mat(v1, v2, v3)
+    
+    def apply[R <: Int, C <: Int](vectors: Vec[R]*)(using ValueOf[R], ValueOf[C]): Mat[R, C] = 
+        new Mat(vectors.toArray)
 
 
     def unapplySeq[M <: Int, N <: Int](mat: Mat[M, N]): Seq[Vec[M]] = mat.toSeq
@@ -67,14 +68,48 @@ object Mat {
         Mat.fromSlash(slash.matrix.Mat.identity[M, N])
 
 
-    private[linalg] inline def fromSlash[R <: Int, C <: Int](slashMat: slash.matrix.Mat[R, C])
+    protected def fromSlash[R <: Int, C <: Int](slashMat: slash.matrix.Mat[R, C])
         (using ValueOf[R], ValueOf[C]): Mat[R, C] = 
-            new Mat[R, C](slashMat.transpose.asNativeArray2D)
+            Mat.fromSlashVectors[R, C](slashMat.columnVectors)
 
     // Note: use convention of composing Matrix from column Vectors
     // Requires constructing slash Mat from horizontal vectors and transposing
-    private def fromSlashVecs[R <: Int, C <: Int](vecs: Array[slash.vector.Vec[R]])
+    private def fromSlashVectors[R <: Int, C <: Int](vecs: Array[slash.vector.Vec[R]])
         (using ValueOf[R], ValueOf[C]): Mat[R, C] = 
             Mat.fromSlash(slash.matrix.Mat(vecs).transpose)
+
+
+    extension (d: Double) {
+        def *[R <: Int, C <: Int](m: Mat[R, C])(using ValueOf[R], ValueOf[C]): Mat[R, C] = {
+            Mat.fromSlash(m.slashMat * d)
+        }
+    }
+
+
+    // Methods for operating on square matrices 
+    
+    extension[M <: Int] (mat: Mat[M, M])(using ValueOf[M]) {
+
+        // Compute the inverse of the matrix
+        def inverse: Mat[M, M] = {
+            import slash.matrix.{inverse as slashInverse}
+            Mat.fromSlash(mat.slashMat.slashInverse)
+        }
+                    
+        def solve[N <: Int](b: Mat[M, N])(using ValueOf[N]): Mat[M, N] = {
+            import slash.matrix.{solve as slashSolve}
+            Mat.fromSlash(mat.slashMat.slashSolve(b.slashMat))
+        }
+
+
+        // Extend to R dimensions with new values filled in from identity matrix
+        def extend[R <: Int](using ValueOf[R], R > M =:= true): Mat[R, R] = {
+            val extended = Mat.identity[R, R].slashMat
+            extended.setMatrix[M, M](0, 0, mat.slashMat)
+            Mat.fromSlash(extended)
+        }
+        
+    }
+
 
 }
