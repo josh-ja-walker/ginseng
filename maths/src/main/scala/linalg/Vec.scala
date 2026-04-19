@@ -123,6 +123,19 @@ object Vec {
     }
 
 
+    // Helper conversion methods to Pos and Dir
+
+    extension (v: Vec[3]) {
+        @targetName("dirFromVec3")
+        def toDir: Dir = Dir(v.x, v.y, v.z)
+    }
+
+    extension (v: Vec[4]) {
+        def toDir: Dir = Dir(v.x, v.y, v.z)
+        def toPos: Pos = Pos(v.x, v.y, v.z, v.w)
+    }
+
+
     // Helper constructors
 
     def fill[N <: Int](value: Double)(using ValueOf[N]): Vec[N] = new Vec(Seq.fill(valueOf[N])(value))
