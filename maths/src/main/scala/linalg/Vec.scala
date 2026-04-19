@@ -12,10 +12,10 @@ import ginseng.maths.geometry.vectors.*
 
 // TODO: possibly allow creation of separate row and column vectors
 
-class Vec[N <: Int](val values: Array[Double])(using ValueOf[N]) {
+class Vec[N <: Int](private val values: Seq[Double])(using ValueOf[N]) {
 
     protected private[linalg] val slashVec: slash.vector.Vec[N] = 
-        slash.vector.Vec[N](values)
+        slash.vector.Vec[N](values.toArray)
 
 
     def apply(index: Int): Double = slashVec(index)
@@ -64,39 +64,48 @@ class Vec[N <: Int](val values: Array[Double])(using ValueOf[N]) {
     
     // Prepend vector to matrix    
     def +:[C <: Int](m: Mat[N, C])(using ValueOf[N], ValueOf[1 + C]): Mat[N, 1 + C] = 
-        Mat.fromSeq(this +: m.cols)
+        new Mat(this +: m.cols)
 
 
     // Take first M values of vector
-    inline def take[M <: Int](using ValueOf[M], M < N =:= true): Vec[M] =
+    def take[M <: Int](using ValueOf[M], M < N =:= true): Vec[M] =
         new Vec(values.take(valueOf[M]))
     
+    // Pad the vector with zeros to a size of M
+    def extend[M <: Int](using ValueOf[M], M >= N =:= true): Vec[M] = extend[M](0.0d)
+
+    // Pad the vector with a value to a size of M
+    def extend[M <: Int](value: Double)(using ValueOf[M], M >= N =:= true): Vec[M] = {
+        val pad = Vec.fill[M](value)
+        new Vec(values ++ pad.values.drop(valueOf[N]))
+    } 
+
 }
 
 
 object Vec {
     
-    inline def apply[N <: Int](values: Double*)(using ValueOf[N]): Vec[N] = 
-        new Vec[N](values.toArray)
+    // Construct vector from vararg of values 
+    def apply[N <: Int](values: Double*)(using ValueOf[N]): Vec[N] = new Vec[N](values.toArray)
 
-    private[linalg] inline def fromSlash[N <: Int](slashVec: slash.vector.Vec[N])
-        (using ValueOf[N]): Vec[N] = 
+    // Deconstructor for Vec into Seq of values 
+    def unapplySeq[N <: Int](vec: Vec[N]): Seq[Double] = vec.values.toSeq
+
+    // Construct vector from wrapped slash library vector
+    private[linalg] inline def fromSlash[N <: Int](slashVec: slash.vector.Vec[N])(using ValueOf[N]): Vec[N] = 
             new Vec[N](slashVec.asNativeArray)
-
-    inline def unapplySeq[N <: Int](vec: Vec[N]) = vec.values
-    
-
-    extension (d: Double) {
-        def *[N <: Int](v: Vec[N]): Vec[N] = v * d
-    }
 
 
     extension[N <: Int] (d: Double) {
+        // Multiply vector by scalar
+        def *(v: Vec[N]): Vec[N] = v * d
+
         // Prepend value to vector
-        inline def +:(v: Vec[N])(using ValueOf[1 + N]): Vec[1 + N] = 
-            new Vec(d +: v.values)
+        inline def +:(v: Vec[N])(using ValueOf[1 + N]): Vec[1 + N] = new Vec(d +: v.values)
     }
 
+
+    // Helper variables for accessing coordinate values
 
     extension[N <: Int] (v: Vec[N])(using ValueOf[N], N >= 1 =:= true) {
         inline def x: Double = v(0)
@@ -115,22 +124,25 @@ object Vec {
     }
 
 
+    // Helper constructors
+
+    def fill[N <: Int](value: Double)(using ValueOf[N]): Vec[N] = new Vec(Seq.fill(valueOf[N])(value))
+
+    def zero[N <: Int](using ValueOf[N]): Vec[N] = Vec.fill[N](0)
+    def one[N <: Int](using ValueOf[N]): Vec[N] = Vec.fill[N](1)
+
+    // Vec[2] directional vectors
+
+    def up[N <: Int](using ValueOf[N], N >= 2 =:= true): Vec[N] = Vec[2](0, 1).extend[N]
+    def down[N <: Int](using ValueOf[N], N >= 2 =:= true): Vec[N] = -Vec.up[N]
+    
+    def left[N <: Int](using ValueOf[N], N >= 2 =:= true): Vec[N] = Vec[2](-1, 0).extend[N]
+    def right[N <: Int](using ValueOf[N], N >= 2 =:= true): Vec[N] = Vec[2](1, 0).extend[N]
+
+    // Vec[3] directional vectors
+    
+    def forward[N <: Int](using ValueOf[N], N >= 3 =:= true): Vec[N] = Vec[3](0, 0, 1).extend[N]
+    def backward[N <: Int](using ValueOf[N], N >= 3 =:= true): Vec[N] = Vec[3](0, 0, -1).extend[N]
+
 }
 
-
-
-object Vec3 {
-    
-    def up: Vec[3] = Vec(0, 1, 0)
-    def down: Vec[3] = Vec(0, -1, 0)
-    
-    def left: Vec[3] = Vec(-1, 0, 0)
-    def right: Vec[3] = Vec(1, 0, 0)
-
-    def forward: Vec[3] = Vec(0, 0, 1)
-    def back: Vec[3] = Vec(0, 0, -1)
-
-    def one: Vec[3] = Vec(1, 1, 1)
-    def zero: Vec[3] = Vec(0, 0, 0)
-
-}
