@@ -23,8 +23,6 @@ case class Pos(x: Double, y: Double, z: Double, w: Double = 1.0d)
     // Compute direction from current vector to other vector p
     def ->(p: Pos): Dir = p - this
 
-    // TODO: neaten the following maths ops
-
     // Compute direction from p to current vector
     def -(p: Pos): Dir = super.-(p).toDir
 
@@ -37,7 +35,8 @@ case class Pos(x: Double, y: Double, z: Double, w: Double = 1.0d)
 
     /* Transformations */
 
-    // TODO: check if rotation around origin is equal to no translation
+    // Note: when rotating around Position (0, 0, 0), it is possible to omit translation step
+    // TODO: default to rotation around origin AND reparameterise such that origin is (0, 0, 0)
 
     /** Rotate position by counterclockwise angle in Z axis */
     infix def rotate(theta: Angle): Pos = rotate(theta, Dir.forward)
@@ -66,7 +65,8 @@ object Pos {
     def bottomLeft = Pos(-1, -1, 0)
     def bottomRight = Pos(1, -1, 0)
 
-    // FIXME: possibly reparameterise viewpoint space such that origin is (0, 0)  )
+    // FIXME: possibly reparameterise viewpoint space such that origin is (0, 0)
+
     def origin = bottomLeft
     def center = Pos(0, 0, 0)
 

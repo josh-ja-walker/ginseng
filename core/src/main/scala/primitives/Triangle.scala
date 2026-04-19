@@ -20,8 +20,6 @@ case class Triangle(mat: Mat[4, 3]) extends Primitive with Freeform[Triangle] {
     val c: Pos = mat.pos(2)
     
     // TODO: allow modification of referenced sides
-    // TODO: reimplement maths for dir so that toDir call not required
-    //      most likely have VecOps[T <: VecOps] implemented by Dir i.e., extends VecOps[Dir]
     val ab: Dir = b - a ; val ba: Dir = -ab 
     val bc: Dir = c - b ; val cb: Dir = -bc
     val ac: Dir = c - a ; val ca: Dir = -ac
