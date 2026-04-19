@@ -16,9 +16,9 @@ case class Line(val mat: Mat[4, 2]) extends Primitive with Freeform[Line] {
     val b: Pos = mat(1).toPos
     
     val ab: Dir = b - a
-    val ba: Dir = (-ab).toDir
+    val ba: Dir = (-ab)
 
-    val mid: Pos = a + (0.5 * ab).toDir
+    val mid: Pos = a + (0.5 * ab)
 
 
     infix def intersect(other: Line): Option[Pos] = {
@@ -72,7 +72,7 @@ case class Line(val mat: Mat[4, 2]) extends Primitive with Freeform[Line] {
 object Line {
 
     def apply(a: Pos, b: Pos): Line = new Line(Mat(a, b))
-    def apply(p: Pos, s: Double, d: Dir): Line = Line(p, p + (s * d).toDir)
+    def apply(p: Pos, s: Double, d: Dir): Line = Line(p, p + (s * d))
     
     def unapplySeq(line: Line): Seq[Pos] = Mat.unapplySeq(line.mat).map(_.toPos)
 

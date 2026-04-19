@@ -22,9 +22,9 @@ case class Triangle(mat: Mat[4, 3]) extends Primitive with Freeform[Triangle] {
     // TODO: allow modification of referenced sides
     // TODO: reimplement maths for dir so that toDir call not required
     //      most likely have VecOps[T <: VecOps] implemented by Dir i.e., extends VecOps[Dir]
-    val ab: Dir = b - a ; val ba: Dir = (-ab).toDir 
-    val bc: Dir = c - b ; val cb: Dir = (-bc).toDir
-    val ac: Dir = c - a ; val ca: Dir = (-ac).toDir
+    val ab: Dir = b - a ; val ba: Dir = -ab 
+    val bc: Dir = c - b ; val cb: Dir = -bc
+    val ac: Dir = c - a ; val ca: Dir = -ac
 
     // TODO: allow modification of referenced angles
     val A: Angle = ab.angle(ac)
@@ -87,7 +87,7 @@ object Triangle {
     // SSS - set side 1 as horizontal, center angle 1 at origin
     def sss(s1: Double, s2: Double, s3: Double): Triangle = {
         val a = Pos.origin
-        val b = Pos.origin + (Dir.right * s1).toDir
+        val b = Pos.origin + (Dir.right * s1)
         
         def computeAngle(a: Double, b: Double, c: Double): Rad = {
             val a2 = math.pow(a, 2)
@@ -98,7 +98,7 @@ object Triangle {
         }
         
         val angleA: Rad = computeAngle(s1, s2, s3)
-        val c = a + (Dir.right.rotate(angleA) * s3).toDir
+        val c = a + (Dir.right.rotate(angleA) * s3)
 
         Triangle(a, b, c)
     }
@@ -106,8 +106,8 @@ object Triangle {
     // SAS - set side 1 as horizontal, center angle at origin
     def sas(s1: Double, angle: Angle, s2: Double): Triangle = {
         val a = Pos.origin
-        val b = a + (Dir.right * s1).toDir
-        val c = a + (Dir.right.rotate(angle) * s2).toDir
+        val b = a + (Dir.right * s1)
+        val c = a + (Dir.right.rotate(angle) * s2)
         
         Triangle(a, b, c)
     }
@@ -115,7 +115,7 @@ object Triangle {
     // ASA - set side as horizontal, center angle between s1 and s2 at origin
     def asa(a1: Angle, s: Double, a2: Angle): Triangle = {
         val a = Pos.origin
-        val b = Pos.origin + (Dir.right * s).toDir
+        val b = Pos.origin + (Dir.right * s)
 
         val c = Ray(a, Dir.right.rotate(a1))
             .intersect(Ray(b, Dir.left.rotate(-a2.toRadians)))

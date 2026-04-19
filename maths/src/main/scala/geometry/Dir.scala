@@ -11,6 +11,7 @@ case class Dir(x: Double, y: Double, z: Double)
     // Note: homogenous coordinate value must be 0 for a Direction Vector
     require(this.w == 0.0d)
    
+   
     /** Compute angle between two direction vectors */
     infix def angle(t: Dir): Angle = Rad(math.acos(this.dot(t)))
     
@@ -19,6 +20,12 @@ case class Dir(x: Double, y: Double, z: Double)
         val newDir: Vec[3] = RotateMat3(theta, Dir.forward.take[3]) * this.take[3]
         (newDir :+ 0).toDir
     }
+
+
+    override def unary_- : Dir = -(this: Vec[4]).toDir
+
+    override def *(scalar: Double): Dir = ((this: Vec[4]) * scalar).toDir
+
 }
 
 
@@ -35,5 +42,10 @@ object Dir {
 
     val one = Dir(1, 1, 1)
     val zero = Dir(0, 0, 0)
+
+
+    extension (scalar: Double) {
+        def *(d: Dir): Dir = d * scalar
+    }
 
 }
