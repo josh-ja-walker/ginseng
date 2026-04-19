@@ -48,15 +48,13 @@ case class Pos(x: Double, y: Double, z: Double, w: Double = 1.0d)
     infix def rotate(theta: Angle, around: Pos, axis: Dir = Dir.forward): Pos = {
         // Translate coordinates so around is at origin, then rotate and translate back 
         val translation: Mat[4, 4] = TranslateMat(around.take[3])
-        Pos((translation.inverse * RotateMat4(theta, axis) * translation) * this)
+        ((translation.inverse * RotateMat4(theta, axis) * translation) * this).toPos
     }
 
 }
 
 
 object Pos {
-
-    def apply(v: Vec[4]): Pos = Pos(v.x, v.y, v.z, v.w)
 
     // TODO: move window specific positions to Window? 
     

@@ -16,7 +16,7 @@ case class Ray(p: Pos, d: Dir) {
         val b = Mat[2, 1]((q - p).take[2])
         val Mat(Vec[2](s, t)) = A.solve(b)
 
-        val intersection = Pos(p + (s * d))
+        val intersection = p + (s * d)
         Option.when(intersection.z == (other.p.z + (t * other.d.z)))(intersection)
     }
 
