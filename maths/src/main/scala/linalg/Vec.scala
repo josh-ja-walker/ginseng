@@ -5,9 +5,7 @@ import scala.compiletime.ops.int.*
 import scala.annotation.targetName
 
 import ginseng.maths.angle.*
-import ginseng.maths.linalg.matrices.*
-import ginseng.maths.geometry.matrices.*
-import ginseng.maths.geometry.vectors.*
+import ginseng.maths.geometry.*
 
 
 // TODO: possibly allow creation of separate row and column vectors
@@ -91,8 +89,9 @@ object Vec {
     // Deconstructor for Vec into Seq of values 
     def unapplySeq[N <: Int](vec: Vec[N]): Seq[Double] = vec.values.toSeq
 
+
     // Construct vector from wrapped slash library vector
-    private[linalg] inline def fromSlash[N <: Int](slashVec: slash.vector.Vec[N])(using ValueOf[N]): Vec[N] = 
+    private[maths] inline def fromSlash[N <: Int](slashVec: slash.vector.Vec[N])(using ValueOf[N]): Vec[N] = 
             new Vec[N](slashVec.asNativeArray)
 
 
