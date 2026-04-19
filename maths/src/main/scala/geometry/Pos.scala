@@ -26,22 +26,13 @@ case class Pos(x: Double, y: Double, z: Double, w: Double = 1.0d)
     // TODO: neaten the following maths ops
 
     // Compute direction from p to current vector
-    def -(p: Pos): Dir = {
-        val Vec[4](x, y, z, w) = this - (p: Vec[4])
-        Dir(x, y, z)
-    }
+    def -(p: Pos): Dir = super.-(p).toDir
 
     // Move position vector in direction d
-    def +(d: Dir): Pos = {
-        val Vec[4](x, y, z, w) = (this: Vec[4]) - (d: Vec[4])
-        Pos(x, y, z, this.w)
-    }
+    def +(d: Dir): Pos = super.+(d).toPos
 
     // Move position vector in direction -d
-    def -(d: Dir): Pos = {
-        val Vec[4](x, y, z, _) = -d
-        this + Dir(x, y, z)
-    }
+    def -(d: Dir): Pos = super.-(d).toPos
 
 
     /* Transformations */

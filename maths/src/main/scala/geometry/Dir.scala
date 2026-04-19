@@ -22,10 +22,10 @@ case class Dir(x: Double, y: Double, z: Double)
     }
 
 
-    override def unary_- : Dir = -(this: Vec[4]).toDir
+    override def unary_- : Dir = super.-(this).toDir
 
-    override def *(scalar: Double): Dir = ((this: Vec[4]) * scalar).toDir
-
+    override def *(scalar: Double): Dir = super.*(scalar).toDir
+    
 }
 
 
