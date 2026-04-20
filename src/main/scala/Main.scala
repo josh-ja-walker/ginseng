@@ -7,11 +7,8 @@ import ginseng.core.primitives.*
 import ginseng.core.colours.*
 
 import ginseng.maths.angle.*
-import ginseng.maths.linalg.vectors.*
-import ginseng.maths.geometry.vectors.*
-
-import Vec.*
-import Dir.*
+import ginseng.maths.linalg.*
+import ginseng.maths.geometry.*
 
 import ginseng.renderer.*
 import ginseng.renderer.shaders.*

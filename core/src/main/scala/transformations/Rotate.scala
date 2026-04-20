@@ -1,10 +1,10 @@
 package ginseng.core.transformations
 
-import ginseng.maths.*
-import ginseng.maths.angle.*
-import ginseng.maths.geometry.vectors.*
+import ginseng.core.primitives.*
 
-import ginseng.core.primitives.Primitive
+import ginseng.maths.angle.*
+import ginseng.maths.linalg.*
+import ginseng.maths.geometry.*
 
 
 trait Rotate[A <: Primitive & Rotate[A]] {

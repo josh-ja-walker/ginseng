@@ -6,12 +6,12 @@ import scala.scalanative.unsigned.*
 import opengl.bindings.glad.*
 import opengl.bindings.glfw.*
 
-import ginseng.renderer.shaders.*
-import ginseng.renderer.rendering.*
 import ginseng.core.primitives.Triangle
 
-import ginseng.maths.linalg.matrices.*
-import ginseng.maths.linalg.vectors.Vec.*
+import ginseng.maths.linalg.*
+
+import ginseng.renderer.shaders.*
+import ginseng.renderer.rendering.*
 
 
 class TriangleRenderer(private val num: Int, private val vao: Ptr[UInt]) extends Renderer[Triangle] {
