@@ -7,11 +7,8 @@ import ginseng.core.primitives.*
 import ginseng.core.colours.*
 
 import ginseng.maths.angle.*
-import ginseng.maths.linalg.vectors.*
-import ginseng.maths.geometry.vectors.*
-
-import Vec.*
-import Dir.*
+import ginseng.maths.linalg.*
+import ginseng.maths.geometry.*
 
 import ginseng.renderer.*
 import ginseng.renderer.shaders.*
@@ -91,7 +88,7 @@ import scala.util.Random
         }
 
         // Resize triangle and rerender
-        tri = tri.scale(factor * Vec3.one)
+        tri = tri.scale(factor * Vec.one[3])
         TriangleRenderer(tri).render(triShader)
 
         // Sleep for 0.05s

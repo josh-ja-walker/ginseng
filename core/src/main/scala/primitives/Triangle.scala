@@ -1,20 +1,10 @@
 package ginseng.core.primitives
 
-import ginseng.maths.*
-import ginseng.maths.angle.*
-
-import ginseng.maths.geometry.vectors.*
-import ginseng.maths.geometry.matrices.*
-
-import ginseng.maths.linalg.vectors.*
-import ginseng.maths.linalg.matrices.* 
-
 import ginseng.core.transformations.*
 
-import Vec.* 
-import Mat.* 
-import Dir.*
-import Pos.*
+import ginseng.maths.angle.*
+import ginseng.maths.linalg.*
+import ginseng.maths.geometry.*
 
 
 //TODO: make mat private - currently used by TriangleRenderer
@@ -25,12 +15,12 @@ case class Triangle(mat: Mat[4, 3]) extends Primitive with Freeform[Triangle] {
     // /\ = side 2, angle 3, side 3
 
     // helpers for referencing vertices
-    val a: Pos = mat(0)
-    val b: Pos = mat(1)
-    val c: Pos = mat(2)
+    val a: Pos = mat.pos(0)
+    val b: Pos = mat.pos(1)
+    val c: Pos = mat.pos(2)
     
     // TODO: allow modification of referenced sides
-    val ab: Dir = b - a ; val ba: Dir = -ab
+    val ab: Dir = b - a ; val ba: Dir = -ab 
     val bc: Dir = c - b ; val cb: Dir = -bc
     val ac: Dir = c - a ; val ca: Dir = -ac
 
@@ -54,7 +44,7 @@ case class Triangle(mat: Mat[4, 3]) extends Primitive with Freeform[Triangle] {
         new Triangle(transformation * mat)
     }
 
-    override def scale(v: Vec3): Triangle = new Triangle(ScaleMat4(v) * mat)
+    override def scale(v: Vec[3]): Triangle = new Triangle(ScaleMat(v) * mat)
 
     override def skew(f: Double, plane: Dir): Triangle = {
         val skewMat = plane match {
@@ -67,13 +57,13 @@ case class Triangle(mat: Mat[4, 3]) extends Primitive with Freeform[Triangle] {
 
     // Area preserving with unmodified Z axis 
     override def squeeze(f: Double): Triangle = {
-        val squeezeMat = ScaleMat4(Vec3(f, 1/f, 1))
+        val squeezeMat = ScaleMat(Vec[3](f, 1/f, 1))
         new Triangle(squeezeMat * mat)
     }
 
     // Volume preserving with full X, Y, Z degrees of freedom 
-    override def squeeze(f: Vec2): Triangle = {
-        val squeezeMat = ScaleMat4(f :+ 1 / (f.x * f.y))
+    override def squeeze(f: Vec[2]): Triangle = {
+        val squeezeMat = ScaleMat(f :+ 1 / (f.x * f.y))
         new Triangle(squeezeMat * mat)
     }
 
@@ -90,7 +80,7 @@ object Triangle {
 
     // Pointwise construction of triangle
     def apply(a: Pos, b: Pos, c: Pos): Triangle = new Triangle(Mat(a, b, c))
-    def unapplySeq(tri: Triangle): Seq[Pos] = Mat.unapplySeq(tri.mat)
+    def unapplySeq(tri: Triangle): Seq[Pos] = tri.mat.toPositions
 
     // SSS - set side 1 as horizontal, center angle 1 at origin
     def sss(s1: Double, s2: Double, s3: Double): Triangle = {
@@ -123,7 +113,7 @@ object Triangle {
     // ASA - set side as horizontal, center angle between s1 and s2 at origin
     def asa(a1: Angle, s: Double, a2: Angle): Triangle = {
         val a = Pos.origin
-        val b = (Pos.origin + (Dir.right * s))
+        val b = Pos.origin + (Dir.right * s)
 
         val c = Ray(a, Dir.right.rotate(a1))
             .intersect(Ray(b, Dir.left.rotate(-a2.toRadians)))

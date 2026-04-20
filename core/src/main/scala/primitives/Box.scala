@@ -1,13 +1,12 @@
 package ginseng.core.primitives
 
+import ginseng.core.colour.*
+import ginseng.core.transformations.*
+
 import ginseng.maths.*
 import ginseng.maths.angle.*
+import ginseng.maths.linalg.*
 import ginseng.maths.geometry.*
-import ginseng.maths.geometry.vectors.*
-import ginseng.maths.linalg.vectors.*
-
-import ginseng.core.transformations.*
-import ginseng.core.colour.*
 
 
 // TODO: implement Box 
@@ -23,10 +22,10 @@ case class Box(private val topLeft: Pos, private val topRight: Pos, private val 
     // FIXME: this makes a parallelogram (not a box) - i.e., return Quad
     override def skew(f: Double, plane: Dir): Box = ???
     
-    override def scale(v: Vec3): Box = ???
+    override def scale(v: Vec[3]): Box = ???
 
     override def squeeze(f: Double): Box = ???
-    override def squeeze(f: Vec2): Box = ???
+    override def squeeze(f: Vec[2]): Box = ???
 
     override def reflect(n: Dir, p: Pos): Box = ???
 
