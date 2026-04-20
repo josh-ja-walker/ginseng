@@ -1,17 +1,11 @@
 package ginseng.core.primitives.component
 
-import ginseng.maths.angle.*
-import ginseng.maths.linalg.*
-import ginseng.maths.linalg.matrices.*
-import ginseng.maths.linalg.vectors.*
-import ginseng.maths.geometry.vectors.*
-import ginseng.maths.geometry.matrices.*
-
-import Mat.*
-import Vec.*
-
 import ginseng.core.primitives.*
 import ginseng.core.transformations.*
+
+import ginseng.maths.angle.*
+import ginseng.maths.linalg.*
+import ginseng.maths.geometry.*
 
 
 case class Edge[T <: Primitive](val a: Vertex[T], val b: Vertex[T])
@@ -30,9 +24,9 @@ case class Edge[T <: Primitive](val a: Vertex[T], val b: Vertex[T])
         val transform = translate * RotateMat4(theta, axis) * translate.inverse
         // Rotate the existing points
         // TODO: should edge be represented by underlying mat similar to line 
-        val Mat(posA, posB) = transform * Mat[4, 2](a.pos, b.pos)
+        val Mat(vecA, vecB) = transform * Mat[4, 2](a.pos, b.pos)
         // Update the edge with new vertices in correct positions
-        new Edge(a.reposition(posA), b.reposition(posB))
+        new Edge(a.reposition(vecA.toPos), b.reposition(vecB.toPos))
     }
 
     def rotate(about: Vertex[T], theta: Angle, axis: Dir): Edge[T] = 
@@ -56,7 +50,7 @@ object Edge {
 
     extension (edge: Edge[Triangle]) {
         def modify(f: Edge[Triangle] => Edge[Triangle]): Triangle = {
-            val verts = edge.host.mat.columnVectors
+            val verts = edge.host.mat.cols
             val newEdge = f(edge)
             verts(edge.a.index) = newEdge.a.pos
             verts(edge.b.index) = newEdge.b.pos

@@ -4,12 +4,8 @@ import ginseng.core.primitives.*
 import ginseng.core.transformations.*
 
 import ginseng.maths.angle.*
-import ginseng.maths.linalg.matrices.*
-import ginseng.maths.linalg.vectors.*
-import ginseng.maths.geometry.vectors.*
-
-import Vec.*
-import Dir.*
+import ginseng.maths.linalg.*
+import ginseng.maths.geometry.*
 
 
 case class AngleComponent[T <: Primitive](ab: Edge[T], bc: Edge[T])
@@ -23,7 +19,7 @@ case class AngleComponent[T <: Primitive](ab: Edge[T], bc: Edge[T])
     require(ab.host == bc.host)
     val host: T = ab.host
 
-    val angle: Angle = Dir.angle(-ab.dir)(bc.dir)
+    val angle: Angle = (-ab.dir).angle(bc.dir)
 
     // Helpers for accessing vertices of angle
     val a: Vertex[T] = ab.a
@@ -54,7 +50,7 @@ case class AngleComponent[T <: Primitive](ab: Edge[T], bc: Edge[T])
     // Rotate edge AB an additional theta anticlockwise around B
     // Rotate edge BC an additional phi anticlockwise around B
     private def rotate(theta: Angle, phi: Angle): AngleComponent[T] = {
-        val perp: Dir = (ab.dir.take[3]).cross(bc.dir.take[3]) :+ 0
+        val perp: Dir = (ab.dir.take[3]).cross(bc.dir.take[3]).toDir
         AngleComponent(ab.rotate(ab.b, theta, perp), bc.rotate(bc.a, phi, perp))
     }
 
@@ -65,7 +61,7 @@ object AngleComponent {
 
     extension (angle: AngleComponent[Triangle]) {
         def modify(f: AngleComponent[Triangle] => AngleComponent[Triangle]): Triangle = {
-            val verts = angle.host.mat.columnVectors
+            val verts = angle.host.mat.cols
             val newAngle = f(angle)
             verts(angle.a.index) = newAngle.a.pos
             verts(angle.b.index) = newAngle.b.pos
