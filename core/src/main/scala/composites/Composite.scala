@@ -6,15 +6,8 @@ import ginseng.core.primitives.*
 import ginseng.core.transformations.*
 
 import ginseng.maths.angle.*
-import ginseng.maths.linalg.vectors.*
-import ginseng.maths.linalg.matrices.*
-
-import ginseng.maths.geometry.vectors.*
-import ginseng.maths.geometry.matrices.*
-
-import Vec.*
-import Mat.*
-import Pos.*
+import ginseng.maths.linalg.*
+import ginseng.maths.geometry.*
 
 
 // TODO: make individual triangles into modifiable components
@@ -27,22 +20,21 @@ case class Composite[N <: Int](mat: Mat[4, N * 3])(using ValueOf[N], ValueOf[N *
     // require(valueOf[N] > 1) // TODO: is this possible do at compiletime?
 
     // Index into a component triangle
-    def apply(index: Int): Triangle = Triangle(mat.subMatrix[4, 3](0, index))
+    def apply(index: Int): Triangle = Triangle(new Mat[4, 3](mat.toSeq.grouped(3).toSeq(index)))
 
 
     // Transformations
 
     override def translate(v: Dir): Composite[N] = 
-        Composite[N](TranslateMat(v) * mat)
+        Composite[N](TranslateMat(v.take[3]) * mat)
 
     override def rotate(theta: Angle, around: Pos, axis: Dir): Composite[N] = {
-        val translation = TranslateMat(around)
+        val translation = TranslateMat(around.take[3])
         val transformation = translation * RotateMat4(theta, axis) * translation.inverse
         Composite[N](transformation * mat)
     }
 
-    override def scale(v: Vec3): Composite[N] = 
-        Composite[N](ScaleMat4(v) * mat)
+    override def scale(v: Vec[3]): Composite[N] = Composite[N](ScaleMat(v) * mat)
 
     override def skew(f: Double, plane: Dir): Composite[N] = {
         val skewMat = plane match {
@@ -56,13 +48,13 @@ case class Composite[N <: Int](mat: Mat[4, N * 3])(using ValueOf[N], ValueOf[N *
 
     // Area preserving with unmodified Z axis 
     override def squeeze(f: Double): Composite[N] = {
-        val squeezeMat = ScaleMat4(Vec3(f, 1/f, 1))
+        val squeezeMat = ScaleMat(Vec[3](f, 1/f, 1))
         Composite[N](squeezeMat * mat)
     }
 
     // Volume preserving with full X, Y, Z degrees of freedom 
-    override def squeeze(f: Vec2): Composite[N] = {
-        val squeezeMat = ScaleMat4(f :+ 1 / (f.x * f.y))
+    override def squeeze(f: Vec[2]): Composite[N] = {
+        val squeezeMat = ScaleMat(f :+ 1 / (f.x * f.y))
         Composite[N](squeezeMat * mat)
     }
 
@@ -71,7 +63,7 @@ case class Composite[N <: Int](mat: Mat[4, N * 3])(using ValueOf[N], ValueOf[N *
 
     // TODO: add trait 
     def reposition(p: Pos, anchor: Pos): Composite[N] = 
-        Composite[N](TranslateMat(p - anchor) * mat)
+        Composite[N](TranslateMat((p - anchor).take[3]) * mat)
 
 
     // Join with other composites
@@ -81,12 +73,12 @@ case class Composite[N <: Int](mat: Mat[4, N * 3])(using ValueOf[N], ValueOf[N *
 
 
     def compose(tri: Triangle)(using ValueOf[N + 1], ValueOf[(N * 3) + 3], ValueOf[(N + 1) * 3]) = {
-        val compMat: Mat[4, (N * 3) + 3] = mat.concatenateColumns[3](tri.mat) 
+        val compMat: Mat[4, (N * 3) + 3] = mat ++ tri.mat 
         Composite[N + 1](compMat.asInstanceOf[Mat[4, (N + 1) * 3]])
     }
 
     def compose[M <: Int](comp: Composite[M])(using ValueOf[N + M], ValueOf[M * 3], ValueOf[(N * 3) + (M * 3)], ValueOf[(N + M) * 3]): Composite[N + M] = {
-        val compMat: Mat[4, (N * 3) + (M * 3)] = mat.concatenateColumns[M * 3](comp.mat)
+        val compMat: Mat[4, (N * 3) + (M * 3)] = mat ++ comp.mat
         Composite[N + M](compMat.asInstanceOf[Mat[4, (N + M) * 3]])
     }
 
@@ -102,14 +94,12 @@ case class Composite[N <: Int](mat: Mat[4, N * 3])(using ValueOf[N], ValueOf[N *
 
     // TODO: make cube of points and name vertices
     private val AABB: (Pos, Pos) = {
-        val rows = mat.rowVectors.toSeq
-            .dropRight(1)
-            .map(_.asNativeArray)
+        val rows = mat.rows.dropRight(1)
             
-        val min: Pos = Vec[3](rows.map(_.min).toSeq*) :+ 1
-        val max: Pos = Vec[3](rows.map(_.max).toSeq*) :+ 1
+        val min = new Vec[3](rows.map(_.toSeq.min)) :+ 1
+        val max = new Vec[3](rows.map(_.toSeq.max)) :+ 1
 
-        (min, max)
+        (min.toPos, max.toPos)
     }
 
 
@@ -123,7 +113,7 @@ object Composite {
     def apply(tri: Triangle): Composite[1] = Composite[1](tri.mat)
 
     def apply(tri: Triangle, tri2: Triangle): Composite[2] = 
-        Composite[2](tri.mat.concatColumns(tri2.mat))
+        Composite[2](tri.mat ++ tri2.mat)
     
     def apply(tri: Triangle, tri2: Triangle, tri3: Triangle): Composite[3] = 
         Composite(tri, tri2).compose(tri3)
