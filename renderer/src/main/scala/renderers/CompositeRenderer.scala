@@ -5,9 +5,7 @@ import scala.scalanative.unsafe.Zone
 import ginseng.core.composites.*
 import ginseng.core.primitives.*
 
-import ginseng.maths.linalg.matrices.*
-
-import Mat.*
+import ginseng.maths.linalg.*
 
 import ginseng.renderer.shaders.*
 import ginseng.renderer.rendering.*
