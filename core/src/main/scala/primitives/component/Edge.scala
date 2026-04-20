@@ -50,11 +50,10 @@ object Edge {
 
     extension (edge: Edge[Triangle]) {
         def modify(f: Edge[Triangle] => Edge[Triangle]): Triangle = {
-            val verts = edge.host.mat.cols
             val newEdge = f(edge)
-            verts(edge.a.index) = newEdge.a.pos
-            verts(edge.b.index) = newEdge.b.pos
-            new Triangle(Mat[4, 3](verts*))
+            edge.host
+                .update(newEdge.a)
+                .update(newEdge.b)
         }
     }
 

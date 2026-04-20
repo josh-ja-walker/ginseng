@@ -21,7 +21,12 @@ case class Triangle(mat: Mat[4, 3]) extends Primitive with Freeform[Triangle] {
     val a: Vertex[Triangle] = Vertex(0, mat.pos(0))(using this)
     val b: Vertex[Triangle] = Vertex(1, mat.pos(1))(using this)
     val c: Vertex[Triangle] = Vertex(2, mat.pos(2))(using this)
-    
+
+    // TODO: move to Primitive trait?
+    def update(v: Vertex[Triangle]): Triangle = 
+        new Triangle(v.host.mat.update(v.index, v.pos))
+
+
     // helpers for referencing edges
     val ab: Edge[Triangle] = (b - a) ; val ba: Edge[Triangle] = -ab
     val bc: Edge[Triangle] = (c - b) ; val cb: Edge[Triangle] = -bc

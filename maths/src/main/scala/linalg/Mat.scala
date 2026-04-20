@@ -25,6 +25,11 @@ class Mat[R <: Int, C <: Int](vectors: Seq[Vec[R]])(using ValueOf[R], ValueOf[C]
     def transpose: Mat[C, R] = Mat.fromSlash(underlying.transpose)
 
 
+    def map(f: Vec[R] => Vec[R]): Mat[R, C] = new Mat(vectors.map(f))
+    
+    def update(index: Int, v: Vec[R]): Mat[R, C] = new Mat(vectors.updated(index, v))
+
+
     // Mathematic operations
     def *(vec: Vec[C]): Vec[C] = Vec.fromSlash(underlying * vec.underlying)
 
