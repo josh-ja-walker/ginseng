@@ -31,6 +31,9 @@ class Vec[N <: Int](private val values: Seq[Double])(using ValueOf[N]) {
     // Compute dot product
     inline infix def dot(u: Vec[N]): Double = underlying.dot(u.underlying)
 
+    // Map over the values of the vector
+    def map(f: Double => Double): Vec[N] = new Vec[N](values.map(f))
+
 
     // Mathematic operations
     def unary_- : Vec[N] = Vec.fromSlash(-underlying)
@@ -131,6 +134,11 @@ object Vec {
     extension (v: Vec[3]) {
         @targetName("dirFromVec3")
         def toDir: Dir = Dir(v.x, v.y, v.z)
+
+        inline infix def cross(u: Vec[3]): Vec[3] = {
+            import slash.vector.{cross as slashCross}
+            Vec.fromSlash(v.underlying.slashCross(u.underlying))
+        }
     }
 
     extension (v: Vec[4]) {

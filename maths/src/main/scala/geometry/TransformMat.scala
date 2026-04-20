@@ -32,10 +32,10 @@ object RotateMat3 {
 
     // TODO: handle case where axis is not Right/Up/Forward
     def apply(theta: Angle, axis: Vec[3]): Mat[3, 3] = {
-        axis match {
+        axis.normalized.map(math.abs(_).round) match {
             case Vec[3](1, 0, 0) => RotateMat3.x(theta) 
             case Vec[3](0, 1, 0) => RotateMat3.y(theta) 
-            case Vec[3](0, 0, 1) => RotateMat3.z(theta) 
+            case Vec[3](0, 0, 1) | _ => RotateMat3.z(theta) 
         }
     }
 

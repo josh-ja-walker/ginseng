@@ -1,0 +1,49 @@
+package ginseng.core.primitives.component
+
+import ginseng.core.primitives.*
+import ginseng.core.transformations.*
+
+import ginseng.maths.linalg.*
+import ginseng.maths.geometry.*
+
+
+case class Vertex[T <: Primitive](index: Int, pos: Pos)(using val host: T) 
+    extends Component[T] {
+
+    def translate(v: Dir): Vertex[T] = Vertex(index, pos + v)
+    def reposition(pos: Pos): Vertex[T] = Vertex(index, pos)
+
+    override def equals(obj: Any): Boolean = obj match {
+        case v: Vertex[?] => {
+            v.host == host 
+                && v.index == index 
+                && v.pos.toSeq.zip(pos.toSeq)
+                    .forall((a, b) => (a - b).abs < Vertex.eps)
+        }
+
+        case _ => false
+    }
+
+}
+
+
+object Vertex {
+
+    // TODO: standardise for all equalities
+    // Floating point precision
+    val eps = 0.0001
+
+    extension (v: Vertex[Triangle]) {
+
+        def modify(f: Vertex[Triangle] => Vertex[Triangle]): Triangle = v.update(f(v))
+
+        def update(u: Vertex[Triangle]): Triangle = {
+            assert (v.index == u.index)
+            assert (v.host == u.host)
+
+            v.host.update(u)
+        }
+
+    }
+
+}

@@ -1,10 +1,13 @@
 package ginseng.core.primitives
 
 import ginseng.core.transformations.*
+import ginseng.core.primitives.component.*
 
 import ginseng.maths.angle.*
 import ginseng.maths.linalg.*
 import ginseng.maths.geometry.*
+
+import Edge.* 
 
 
 //TODO: make mat private - currently used by TriangleRenderer
@@ -15,23 +18,28 @@ case class Triangle(mat: Mat[4, 3]) extends Primitive with Freeform[Triangle] {
     // /\ = side 2, angle 3, side 3
 
     // helpers for referencing vertices
-    val a: Pos = mat.pos(0)
-    val b: Pos = mat.pos(1)
-    val c: Pos = mat.pos(2)
-    
-    // TODO: allow modification of referenced sides
-    val ab: Dir = b - a ; val ba: Dir = -ab 
-    val bc: Dir = c - b ; val cb: Dir = -bc
-    val ac: Dir = c - a ; val ca: Dir = -ac
+    val a: Vertex[Triangle] = Vertex(0, mat.pos(0))(using this)
+    val b: Vertex[Triangle] = Vertex(1, mat.pos(1))(using this)
+    val c: Vertex[Triangle] = Vertex(2, mat.pos(2))(using this)
 
-    // TODO: allow modification of referenced angles
-    val A: Angle = ab.angle(ac)
-    val B: Angle = ba.angle(bc)
-    val C: Angle = ca.angle(cb)
+    // TODO: move to Primitive trait?
+    def update(v: Vertex[Triangle]): Triangle = 
+        new Triangle(v.host.mat.update(v.index, v.pos))
+
+
+    // helpers for referencing edges
+    val ab: Edge[Triangle] = (b - a) ; val ba: Edge[Triangle] = -ab
+    val bc: Edge[Triangle] = (c - b) ; val cb: Edge[Triangle] = -bc
+    val ac: Edge[Triangle] = (c - a) ; val ca: Edge[Triangle] = -ac
+
+    // helpers for referencing angles
+    val A: AngleComponent[Triangle] = AngleComponent(ba, ac)
+    val B: AngleComponent[Triangle] = AngleComponent(ab, bc)
+    val C: AngleComponent[Triangle] = AngleComponent(ac, cb)
 
     // Calculate centroid of triangle by intersection of medians
-    val center: Pos = Line(a, Line(b, c).mid)
-        .intersect(Line(b, Line(a, c).mid))
+    val center: Pos = Line(a.pos, Line(b.pos, c.pos).mid)
+        .intersect(Line(b.pos, Line(a.pos, c.pos).mid))
         .get
 
     // Transformations
