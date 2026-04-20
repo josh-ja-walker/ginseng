@@ -61,12 +61,11 @@ object AngleComponent {
 
     extension (angle: AngleComponent[Triangle]) {
         def modify(f: AngleComponent[Triangle] => AngleComponent[Triangle]): Triangle = {
-            val verts = angle.host.mat.cols
             val newAngle = f(angle)
-            verts(angle.a.index) = newAngle.a.pos
-            verts(angle.b.index) = newAngle.b.pos
-            verts(angle.c.index) = newAngle.c.pos
-            new Triangle(Mat[4, 3](verts*))
+            angle.host
+                .update(newAngle.a)
+                .update(newAngle.b)
+                .update(newAngle.c)
         }
     }
 

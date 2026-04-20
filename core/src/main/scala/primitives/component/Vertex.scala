@@ -34,12 +34,16 @@ object Vertex {
     val eps = 0.0001
 
     extension (v: Vertex[Triangle]) {
-        def modify(f: Vertex[Triangle] => Vertex[Triangle]): Triangle = {
-            // TODO: do this inline
-            val verts = v.host.mat.cols
-            verts(v.index) = f(v).pos
-            new Triangle(Mat[4, 3](verts*))
+
+        def modify(f: Vertex[Triangle] => Vertex[Triangle]): Triangle = v.update(f(v))
+
+        def update(u: Vertex[Triangle]): Triangle = {
+            assert (v.index == u.index)
+            assert (v.host == u.host)
+
+            v.host.update(u)
         }
+
     }
 
 }
