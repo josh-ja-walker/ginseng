@@ -18,9 +18,9 @@ case class Triangle(mat: Mat[4, 3]) extends Primitive with Freeform[Triangle] {
     // /\ = side 2, angle 3, side 3
 
     // helpers for referencing vertices
-    val a: Vertex[Triangle] = Vertex(0, mat(0))(using this)
-    val b: Vertex[Triangle] = Vertex(1, mat(1))(using this)
-    val c: Vertex[Triangle] = Vertex(2, mat(2))(using this)
+    val a: Vertex[Triangle] = Vertex(0, mat.pos(0))(using this)
+    val b: Vertex[Triangle] = Vertex(1, mat.pos(1))(using this)
+    val c: Vertex[Triangle] = Vertex(2, mat.pos(2))(using this)
     
     // helpers for referencing edges
     val ab: Edge[Triangle] = (b - a) ; val ba: Edge[Triangle] = -ab

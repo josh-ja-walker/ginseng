@@ -1,15 +1,10 @@
 package ginseng.core.primitives.component
 
-import ginseng.maths.linalg.matrices.*
-import ginseng.maths.linalg.vectors.*
-
-import ginseng.maths.geometry.vectors.*
-
-import Mat.*
-import Vec.*
-
 import ginseng.core.primitives.*
 import ginseng.core.transformations.*
+
+import ginseng.maths.linalg.*
+import ginseng.maths.geometry.*
 
 
 case class Vertex[T <: Primitive](index: Int, pos: Pos)(using val host: T) 
@@ -41,7 +36,7 @@ object Vertex {
     extension (v: Vertex[Triangle]) {
         def modify(f: Vertex[Triangle] => Vertex[Triangle]): Triangle = {
             // TODO: do this inline
-            val verts = v.host.mat.columnVectors
+            val verts = v.host.mat.cols
             verts(v.index) = f(v).pos
             new Triangle(Mat[4, 3](verts*))
         }
