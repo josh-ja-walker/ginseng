@@ -34,6 +34,12 @@ case class Colour(r: Float, g: Float, b: Float, a: Float) {
     // Return colour complement (invert r g and b)
     def complement: Colour = Colour(1 - r, 1 - g, 1 - b, a)
 
+    // Normalise colour on all channels
+    def grayscale: Colour = {
+        val avg = (r + g + b) / 3
+        Colour(avg, avg, avg, a)
+    }
+
 }
 
 
