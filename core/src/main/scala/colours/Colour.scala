@@ -30,8 +30,12 @@ case class Colour(r: Float, g: Float, b: Float, a: Float) {
     val green: Double = g
     val blue: Double = b
     val alpha: Double = a
-    
+
+    // Return colour complement (invert r g and b)
+    def complement: Colour = Colour(1 - r, 1 - g, 1 - b, a)
+
 }
+
 
 
 object Colour {
