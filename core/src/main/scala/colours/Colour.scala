@@ -1,6 +1,7 @@
 package ginseng.core.colours
 
 import ginseng.maths.angle.*
+import scala.util.Random
 
 
 // TODO: make different colour modes individual case classes
@@ -37,6 +38,13 @@ object Colour {
 
     private val maxIntRGB: Int = 255
     private val maxAlpha: Float = 1.0f
+
+    // Construct random colour
+    def random: Colour = {
+        val rand = Random()
+        def v = rand.between(0, maxIntRGB + 1)
+        Colour.rgb(v, v, v)
+    }
 
 
     // Construct colour using integer RGB model (with values 0 - 255 for red, green and blue)
