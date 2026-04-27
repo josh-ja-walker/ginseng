@@ -48,13 +48,4 @@ object Edge {
         def ->(u: Vertex[T]): Edge[T] = Edge(v, u)
     }
 
-    extension (edge: Edge[Triangle]) {
-        def modify(f: Edge[Triangle] => Edge[Triangle]): Triangle = {
-            val newEdge = f(edge)
-            edge.host
-                .update(newEdge.a)
-                .update(newEdge.b)
-        }
-    }
-
 }

@@ -32,18 +32,5 @@ object Vertex {
     // TODO: standardise for all equalities
     // Floating point precision
     val eps = 0.0001
-
-    extension (v: Vertex[Triangle]) {
-
-        def modify(f: Vertex[Triangle] => Vertex[Triangle]): Triangle = v.update(f(v))
-
-        def update(u: Vertex[Triangle]): Triangle = {
-            assert (v.index == u.index)
-            assert (v.host == u.host)
-
-            v.host.update(u)
-        }
-
-    }
-
+    
 }

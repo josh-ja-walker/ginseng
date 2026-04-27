@@ -59,14 +59,4 @@ case class AngleComponent[T <: Primitive](ab: Edge[T], bc: Edge[T])
 
 object AngleComponent {
 
-    extension (angle: AngleComponent[Triangle]) {
-        def modify(f: AngleComponent[Triangle] => AngleComponent[Triangle]): Triangle = {
-            val newAngle = f(angle)
-            angle.host
-                .update(newAngle.a)
-                .update(newAngle.b)
-                .update(newAngle.c)
-        }
-    }
-
 }

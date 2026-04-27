@@ -11,7 +11,7 @@ import Edge.*
 
 
 //TODO: make mat private - currently used by TriangleRenderer
-case class Triangle(mat: Mat[4, 3]) extends Primitive with Freeform[Triangle] {
+case class Triangle(mat: Mat[4, 3]) extends Polygon with Freeform[Triangle] {
 
     // /_ = side 2, angle 1, side 1
     // _\ = side 1, angle 2, side 3
@@ -21,11 +21,6 @@ case class Triangle(mat: Mat[4, 3]) extends Primitive with Freeform[Triangle] {
     val a: Vertex[Triangle] = Vertex(0, mat.pos(0))(using this)
     val b: Vertex[Triangle] = Vertex(1, mat.pos(1))(using this)
     val c: Vertex[Triangle] = Vertex(2, mat.pos(2))(using this)
-
-    // TODO: move to Primitive trait?
-    def update(v: Vertex[Triangle]): Triangle = 
-        new Triangle(v.host.mat.update(v.index, v.pos))
-
 
     // helpers for referencing edges
     val ab: Edge[Triangle] = (b - a) ; val ba: Edge[Triangle] = -ab

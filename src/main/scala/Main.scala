@@ -20,6 +20,7 @@ import opengl.bindings.glfw.*
 
 import scala.util.Random
 
+import ginseng.core.primitives.component.given
 
 @main def main: Unit = Zone {
 
@@ -81,9 +82,9 @@ import scala.util.Random
         if (t > 100) { t = 0 }
 
         // Move triangle vertexs and rerender
-        tri = tri.c.modify { vert => {
+        tri = tri.C.modify { angle => {
                 val dir = if t < 50 then Dir.right else Dir.left
-                vert.translate(dir * 0.05f)
+                angle.rotate(Deg(1))
         }}
 
         TriangleRenderer(tri).render(triShader)
