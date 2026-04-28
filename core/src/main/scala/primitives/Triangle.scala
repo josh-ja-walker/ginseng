@@ -56,16 +56,10 @@ case class Triangle(mat: Mat[4, 3]) extends Primitive with Freeform[Triangle] {
     }
 
     // Area preserving with unmodified Z axis 
-    override def squeeze(f: Double): Triangle = {
-        val squeezeMat = ScaleMat(Vec[3](f, 1/f, 1))
-        new Triangle(squeezeMat * mat)
-    }
+    override def squeeze(f: Double): Triangle = new Triangle(SqueezeMat(f) * mat)
 
     // Volume preserving with full X, Y, Z degrees of freedom 
-    override def squeeze(f: Vec[2]): Triangle = {
-        val squeezeMat = ScaleMat(f :+ 1 / (f.x * f.y))
-        new Triangle(squeezeMat * mat)
-    }
+    override def squeeze(f: Vec[2]): Triangle = new Triangle(SqueezeMat(f) * mat)
 
     override def reflect(normal: Dir, point: Pos): Triangle = new Triangle(ReflectMat(normal, point) * mat)
 

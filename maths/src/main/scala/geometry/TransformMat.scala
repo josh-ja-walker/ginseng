@@ -78,6 +78,14 @@ object ScaleMat {
 }
 
 
+object SqueezeMat {
+    
+    def apply(f: Double): TransformMat = ScaleMat(Vec[3](f, 1/f, 1))
+    def apply(f: Vec[2]): TransformMat = ScaleMat(f :+ 1 / (f.x * f.y))
+
+}
+
+
 object SkewMat {
     // TODO: support creating more generic Skew matrix 
     // i.e., support Z skew and possibly combine constructors
