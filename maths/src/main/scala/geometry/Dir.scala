@@ -22,10 +22,12 @@ case class Dir(x: Double, y: Double, z: Double)
     }
 
 
+    infix def cross(d: Dir): Dir = (this.take[3].cross(d.take[3])).toDir
+
     override def unary_- : Dir = super.-(this).toDir
 
     override def *(scalar: Double): Dir = super.*(scalar).toDir
-    
+
 }
 
 
