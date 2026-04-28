@@ -78,6 +78,14 @@ object ScaleMat {
 }
 
 
+object SqueezeMat {
+    
+    def apply(f: Double): TransformMat = ScaleMat(Vec[3](f, 1/f, 1))
+    def apply(f: Vec[2]): TransformMat = ScaleMat(f :+ 1 / (f.x * f.y))
+
+}
+
+
 object SkewMat {
     // TODO: support creating more generic Skew matrix 
     // i.e., support Z skew and possibly combine constructors
@@ -101,6 +109,19 @@ object HouseholderMat {
     def apply(n: Vec[3]): TransformMat = {
         val nUnit = n.normalized
         (Mat.identity[3, 3] - 2 * (Mat(nUnit) * nUnit.transpose)).extend[4] 
+    }
+
+}
+
+
+object ReflectMat {
+
+    // Reflect in the plane defined by the position vector p and normal vector n
+    // i.e., n . (x - p) = 0
+    def apply(n: Dir, p: Pos): TransformMat = {
+        val translation = TranslateMat((p - Pos.center).take[3])
+        val reflection = HouseholderMat(n.take[3])
+        translation * reflection * translation.inverse
     }
 
 }

@@ -131,6 +131,11 @@ object Vec {
     extension (v: Vec[3]) {
         @targetName("dirFromVec3")
         def toDir: Dir = Dir(v.x, v.y, v.z)
+
+        inline infix def cross(u: Vec[3]): Vec[3] = {
+            import slash.vector.cross
+            Vec.fromSlash(v.underlying.cross(u.underlying))
+        }
     }
 
     extension (v: Vec[4]) {
