@@ -104,3 +104,16 @@ object HouseholderMat {
     }
 
 }
+
+
+object ReflectMat {
+
+    // Reflect in the plane defined by the position vector p and normal vector n
+    // i.e., n . (x - p) = 0
+    def apply(n: Dir, p: Pos): TransformMat = {
+        val translation = TranslateMat((p - Pos.center).take[3])
+        val reflection = HouseholderMat(n.take[3])
+        translation * reflection * translation.inverse
+    }
+
+}

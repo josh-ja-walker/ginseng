@@ -67,11 +67,7 @@ case class Triangle(mat: Mat[4, 3]) extends Primitive with Freeform[Triangle] {
         new Triangle(squeezeMat * mat)
     }
 
-    override def reflect(normal: Dir, point: Pos): Triangle = {
-        val reflection = Reflection(normal, normal.dot(point))
-        //TODO: define and use Mat.map function
-        new Triangle(Mat[4, 3](reflection(mat(0)), reflection(mat(1)), reflection(mat(2))))
-    }
+    override def reflect(normal: Dir, point: Pos): Triangle = new Triangle(ReflectMat(normal, point) * mat)
 
 }
 
