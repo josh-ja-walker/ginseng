@@ -2,70 +2,60 @@ package ginseng.core.primitives
 
 import ginseng.maths.linalg.*
 
+import scala.compiletime.ops.int.*
+import ginseng.maths.geometry.*
+
 
 trait Primitive
 
 
-trait Matify[T] {
-
+trait Polygon[T] {
     type N <: Int
-    given ValueOf[N] = scala.compiletime.deferred
+    given v: ValueOf[N] = scala.compiletime.deferred
 
-    def fromMat(m: Mat[4, N]): T
-
-    extension (t: T)
-        def toMat: Mat[4, N]
-
+    def points(t: T): Array[Pos]
+    def construct(points: Pos*): T // TODO: require(points.length == valueOf[N])
 }
 
 
-given Matify[Point] with {
+
+given Polygon[Point] with {
     type N = 1
 
-    override def fromMat(m: Mat[4, 1]): Point = Point(m.pos(0))
-
-    extension (t: Point) 
-        override def toMat: Mat[4, 1] = t.pos.toMat
-
+    override def points(t: Point): Array[Pos] = Array(t.pos)
+    override def construct(points: Pos*): Point = Point(points(0))
 }
 
 
-given Matify[Line] with {
+
+
+given Polygon[Line] with {
     type N = 2
 
-    override def fromMat(m: Mat[4, 2]): Line = Line(m)
-
-    extension (t: Line) 
-        override def toMat: Mat[4, 2] = t.mat
-
+    override def points(t: Line): Array[Pos] = t.mat.toPositions.toArray
+    override def construct(points: Pos*): Line = Line(new Mat(points))
 }
 
 
-given Matify[Triangle] with {
+given Polygon[Triangle] with {
     type N = 3
 
-    override def fromMat(m: Mat[4, 3]): Triangle = new Triangle(m)
-
-    extension (t: Triangle)
-        override def toMat: Mat[4, 3] = t.mat
-
+    override def points(t: Triangle): Array[Pos] = t.mat.toPositions.toArray
+    override def construct(points: Pos*): Triangle = Triangle(new Mat(points))
 }
 
 
-given Matify[Box] with {
+
+given Polygon[Box] with {
     type N = 4
 
-    override def fromMat(m: Mat[4, 4]): Box = {
-        val Seq(a, b, c, d) = m.toPositions
+    override def points(t: Box): Array[Pos] = {
+        val Box(a, b, c, d) = t
+        Array(a, b, c, d)
+    }
+
+    override def construct(points: Pos*): Box = {
+        val Seq(a, b, c, d) = points
         Box(a, b, c, d)
     }
-
-    extension (t: Box) {
-        override def toMat: Mat[4, 4] = {
-            val Box(a, b, c, d) = t
-            Mat(a, b, c, d)
-        }
-    }
-    
 }
-

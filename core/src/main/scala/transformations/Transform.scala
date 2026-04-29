@@ -6,6 +6,10 @@ import ginseng.maths.linalg.*
 import ginseng.maths.geometry.*
 
 
+// this is more performant than using .reflected.translated..., etc., 
+// because composite matrix is computed rather than applying individual transformations step-by-step
+// TODO: improve qualified transformation calls to use composite transformation matrices
+
 trait Transform[T] {
 
     extension (t: T)   
@@ -25,11 +29,10 @@ given Transform[Pos] with
 
 
 
-given [T] => (matify: Matify[T]) => Transform[T] {
-
+given [T] => (polygon: Polygon[T]) => Transform[T]:
     extension (t: T)
         override def transform(transformation: Transformation): T = {
-            matify.fromMat(transformation.mat * matify.toMat(t))
+            val points = polygon.points(t)
+            val mat = transformation.mat * new Mat[4, polygon.N](points)
+            polygon.construct(mat.toPositions*)
         }
-    
-}
