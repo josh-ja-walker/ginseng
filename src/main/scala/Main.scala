@@ -37,6 +37,8 @@ import scala.util.Random
     // Define hello triangle
 
     var tri = Triangle.equilateral(2)
+        .repositioned(_.center, Pos.center)
+
     val triShader = Shaders.interpolateShader(
         Colour.hex("#B85450"),
         Colour.hex("#82B366"),
@@ -91,7 +93,11 @@ import scala.util.Random
         }
 
         // Resize triangle and rerender
-        tri = tri.scaled(factor * Vec.one[3])
+        tri = tri.transform {
+            Transformation.Scale(factor * Vec.one[3])
+                -> Transformation.Rotation(Deg(5), Dir.forward)
+        }
+
         TriangleRenderer(tri).render(triShader)
 
         // Sleep for 0.05s

@@ -20,7 +20,7 @@ trait Squeeze[A <: Primitive] {
 }
 
 
-given [A <: Primitive & Scale[A]] => (s: Scale[A]) => Squeeze[A]:
+given [A <: Primitive] => (s: Scale[A]) => Squeeze[A]:
 
     def squeeze(a: A, f: Double): A = s.scale(a, Vec[3](f, 1/f, 1))
     def squeeze(a: A, f: Vec[2]): A = s.scale(a, f :+ 1 / (f.x * f.y))
