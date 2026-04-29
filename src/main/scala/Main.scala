@@ -3,8 +3,10 @@ package ginseng
 import scala.scalanative.unsafe.*
 import scala.scalanative.unsigned.*
 
-import ginseng.core.primitives.*
 import ginseng.core.colours.*
+import ginseng.core.primitives.*
+import ginseng.core.transformations.*
+import ginseng.core.transformations.given // TODO: ideally export from transformations
 
 import ginseng.maths.angle.*
 import ginseng.maths.linalg.*
@@ -46,8 +48,8 @@ import scala.util.Random
     def grid(n: Int): Seq[Line] = {
         (1 until n)
             .flatMap(i => Seq(
-                Line(Pos.bottomLeft, Pos.bottomRight).translate(Dir.up * 2 * (i.toDouble / n)),
-                Line(Pos.bottomLeft, Pos.topLeft).translate(Dir.right * 2 * (i.toDouble / n))
+                Line(Pos.bottomLeft, Pos.bottomRight).translated(Dir.up * 2 * (i.toDouble / n)),
+                Line(Pos.bottomLeft, Pos.topLeft).translated(Dir.right * 2 * (i.toDouble / n))
             ))
     }
 
@@ -88,7 +90,7 @@ import scala.util.Random
         }
 
         // Resize triangle and rerender
-        tri = tri.scale(factor * Vec.one[3])
+        tri = tri.scaled(factor * Vec.one[3])
         TriangleRenderer(tri).render(triShader)
 
         // Sleep for 0.05s

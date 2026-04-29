@@ -7,9 +7,7 @@ import ginseng.maths.linalg.*
 import ginseng.maths.geometry.*
 
 
-case class Point(val pos: Pos) extends Primitive with Translate[Point] {
-    override def translate(v: Dir): Point = Point(pos + v)
-}
+case class Point(val pos: Pos) extends Primitive
 
 object Point {
     def origin = Point(Pos.origin)

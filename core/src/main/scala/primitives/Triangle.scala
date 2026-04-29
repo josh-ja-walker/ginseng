@@ -8,7 +8,8 @@ import ginseng.maths.geometry.*
 
 
 //TODO: make mat private - currently used by TriangleRenderer
-case class Triangle(mat: Mat[4, 3]) extends Primitive with Freeform[Triangle] {
+case class Triangle(mat: Mat[4, 3]) 
+    extends Primitive {
 
     // /_ = side 2, angle 1, side 1
     // _\ = side 1, angle 2, side 3
@@ -33,35 +34,6 @@ case class Triangle(mat: Mat[4, 3]) extends Primitive with Freeform[Triangle] {
     val center: Pos = Line(a, Line(b, c).mid)
         .intersect(Line(b, Line(a, c).mid))
         .get
-
-    // Transformations
-    
-    override def translate(v: Dir): Triangle = new Triangle(TranslateMat(v.take[3]) * mat)
-
-    override def rotate(theta: Angle, around: Pos, axis: Dir): Triangle = {
-        val translation = TranslateMat(around.take[3])
-        val transformation = translation * RotateMat4(theta, axis) * translation.inverse
-        new Triangle(transformation * mat)
-    }
-
-    override def scale(v: Vec[3]): Triangle = new Triangle(ScaleMat(v) * mat)
-
-    override def skew(f: Double, plane: Dir): Triangle = {
-        val skewMat = plane match {
-            case Dir.right => SkewMat.x(f)
-            case Dir.up => SkewMat.y(f)
-            case Dir.forward => ??? // TODO: support skew in Z direction
-        }
-        new Triangle(skewMat * mat)
-    }
-
-    // Area preserving with unmodified Z axis 
-    override def squeeze(f: Double): Triangle = new Triangle(SqueezeMat(f) * mat)
-
-    // Volume preserving with full X, Y, Z degrees of freedom 
-    override def squeeze(f: Vec[2]): Triangle = new Triangle(SqueezeMat(f) * mat)
-
-    override def reflect(normal: Dir, point: Pos): Triangle = new Triangle(ReflectMat(normal, point) * mat)
 
 }
 
