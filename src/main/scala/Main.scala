@@ -3,8 +3,11 @@ package ginseng
 import scala.scalanative.unsafe.*
 import scala.scalanative.unsigned.*
 
-import ginseng.core.primitives.*
 import ginseng.core.colours.*
+import ginseng.core.primitives.*
+import ginseng.core.primitives.given // TODO: ideally export from primitives
+import ginseng.core.transformations.*
+import ginseng.core.transformations.given // TODO: ideally export from transformations
 
 import ginseng.maths.angle.*
 import ginseng.maths.linalg.*
@@ -35,6 +38,8 @@ import ginseng.core.primitives.component.given
     // Define hello triangle
 
     var tri = Triangle.equilateral(2)
+        .repositioned(_.center, Pos.center)
+
     val triShader = Shaders.interpolateShader(
         Colour.hex("#B85450"),
         Colour.hex("#82B366"),
@@ -47,8 +52,8 @@ import ginseng.core.primitives.component.given
     def grid(n: Int): Seq[Line] = {
         (1 until n)
             .flatMap(i => Seq(
-                Line(Pos.bottomLeft, Pos.bottomRight).translate(Dir.up * 2 * (i.toDouble / n)),
-                Line(Pos.bottomLeft, Pos.topLeft).translate(Dir.right * 2 * (i.toDouble / n))
+                Line(Pos.bottomLeft, Pos.bottomRight).translated(Dir.up * 2 * (i.toDouble / n)),
+                Line(Pos.bottomLeft, Pos.topLeft).translated(Dir.right * 2 * (i.toDouble / n))
             ))
     }
 
@@ -86,6 +91,12 @@ import ginseng.core.primitives.component.given
             val dir = if t < 50 then Dir.right else Dir.left
             angle.rotate(Deg(1))
         }}
+
+        // Resize triangle and rerender
+        tri = tri.transform {
+            Transformation.Scale(factor * Vec.one[3])
+                -> Transformation.Rotation(Deg(5), Dir.forward)
+        }
 
         TriangleRenderer(tri).render(triShader)
 

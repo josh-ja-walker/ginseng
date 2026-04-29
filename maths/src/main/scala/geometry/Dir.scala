@@ -16,10 +16,7 @@ case class Dir(x: Double, y: Double, z: Double)
     infix def angle(t: Dir): Angle = Rad(math.acos(this.normalized.dot(t.normalized)))
 
     /** Rotate direction vector anticlockwise about origin */
-    infix def rotate(theta: Angle): Dir = {
-        val newDir: Vec[3] = RotateMat3(theta, Dir.forward.take[3]) * this.take[3]
-        (newDir :+ 0).toDir
-    }
+    infix def rotate(theta: Angle): Dir = (Transformation.Rotation(theta, Dir.forward).mat * this).toDir
 
 
     infix def cross(d: Dir): Dir = (this.take[3].cross(d.take[3])).toDir
