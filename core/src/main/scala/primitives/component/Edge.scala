@@ -23,7 +23,6 @@ case class Edge[T <: Primitive](val a: Vertex[T], val b: Vertex[T])
         val translate = TranslateMat(about.take[3])
         val transform = translate * RotateMat4(theta, axis) * translate.inverse
         // Rotate the existing points
-        // TODO: should edge be represented by underlying mat similar to line 
         val Mat(vecA, vecB) = transform * Mat[4, 2](a.pos, b.pos)
         // Update the edge with new vertices in correct positions
         new Edge(a.reposition(vecA.toPos), b.reposition(vecB.toPos))

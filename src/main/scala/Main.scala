@@ -82,9 +82,9 @@ import ginseng.core.primitives.component.given
         if (t > 100) { t = 0 }
 
         // Move triangle vertexs and rerender
-        tri = tri.C.modify { angle => {
-                val dir = if t < 50 then Dir.right else Dir.left
-                angle.rotate(Deg(1))
+        tri = tri.gamma.modify { angle => {
+            val dir = if t < 50 then Dir.right else Dir.left
+            angle.rotate(Deg(1))
         }}
 
         TriangleRenderer(tri).render(triShader)

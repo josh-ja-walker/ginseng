@@ -28,9 +28,9 @@ case class Triangle(mat: Mat[4, 3]) extends Polygon with Freeform[Triangle] {
     val ac: Edge[Triangle] = (c - a) ; val ca: Edge[Triangle] = -ac
 
     // helpers for referencing angles
-    val A: AngleComponent[Triangle] = AngleComponent(ba, ac)
-    val B: AngleComponent[Triangle] = AngleComponent(ab, bc)
-    val C: AngleComponent[Triangle] = AngleComponent(ac, cb)
+    val alpha: AngleComponent[Triangle] = AngleComponent(ba, ac)
+    val beta: AngleComponent[Triangle] = AngleComponent(ab, bc)
+    val gamma: AngleComponent[Triangle] = AngleComponent(ac, cb)
 
     // Calculate centroid of triangle by intersection of medians
     val center: Pos = Line(a.pos, Line(b.pos, c.pos).mid)
