@@ -11,10 +11,7 @@ enum Transformation(val mat: Mat[4, 4]) {
 
     case Rotation(theta: Angle, axis: Dir) extends Transformation(RotateMat4(theta, axis))
     case RotationAbout(theta: Angle, about: Pos, axis: Dir) 
-        extends Transformation({
-            val move = Reposition(about, Pos.center) // FIXME: should be origin
-            (move -> Rotation(theta, axis) -> move.inverse).mat
-        })
+        extends Transformation(Rotation(theta, axis).applyAtCenter(about).mat)
 
     case Scale(factor: Vec[3]) extends Transformation(ScaleMat(factor))
 
@@ -31,10 +28,7 @@ enum Transformation(val mat: Mat[4, 4]) {
 
     case Householder(normal: Dir) extends Transformation(HouseholderMat(normal.take[3]))
     case Reflection(normal: Dir, pos: Pos)
-        extends Transformation({
-            val move = Reposition(pos, Pos.center) // FIXME: should be origin
-            (move -> Householder(normal) -> move.inverse).mat
-        })
+        extends Transformation(Householder(normal).applyAtCenter(pos).mat)
 
     case Inverse(transformation: Transformation) extends Transformation(transformation.mat.inverse)
     def inverse[N <: Int]: Inverse = Inverse(this)
@@ -44,6 +38,15 @@ enum Transformation(val mat: Mat[4, 4]) {
         extends Transformation(transformations.map(_.mat).reverse.reduce((a, b) => a * b))
 
     def ->(transform: Transformation): Composite = Composite(this, transform)
+
+
+    def applyAt(current: Pos, temp: Pos): Transformation = {
+        if (current == Pos.center) { return this }
+        val move = Reposition(current, temp)
+        move -> this -> move.inverse
+    }
+    
+    def applyAtCenter(current: Pos): Transformation = applyAt(current, Pos.center)
 
 }
 
