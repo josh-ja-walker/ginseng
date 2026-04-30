@@ -36,7 +36,7 @@ case class Triangle(mat: Mat[4, 3])
     // Calculate centroid of triangle by intersection of medians
     val center: Pos = Line(a.pos, Line(b.pos, c.pos).mid)
         .intersect(Line(b.pos, Line(a.pos, c.pos).mid))
-        .get
+        .getOrElse(Pos.center) // TODO: actual error handling for this as getting issues
 
 }
 
