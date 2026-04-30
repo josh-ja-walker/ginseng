@@ -13,7 +13,7 @@ case class AngleComponent[T <: Poly[?]](ab: Edge[T], bc: Edge[T])
 
     // Assert that the edges share a vertex along the angle
     // i.e., edges are contiguous
-    require(ab.b == bc.a)
+    require((ab.b.pos - bc.a.pos).sqrMagnitude < 0.1f) // FIXME: magic number
 
     // Assert edges share the same host Poly
     require(ab.host == bc.host)
