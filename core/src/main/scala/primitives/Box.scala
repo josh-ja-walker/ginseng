@@ -11,24 +11,7 @@ import ginseng.maths.geometry.*
 
 // TODO: implement Box 
 case class Box(private val topLeft: Pos, private val topRight: Pos, private val bottomLeft: Pos, private val bottomRight: Pos) 
-    extends Primitive 
-        with Freeform[Box] 
-{
-
-    // Freeform allows all translations
-    override def translate(v: Dir): Box = ???
-    override def rotate(theta: Angle, around: Pos, axis: Dir): Box = ???
-
-    // FIXME: this makes a parallelogram (not a box) - i.e., return Quad
-    override def skew(f: Double, plane: Dir): Box = ???
-    
-    override def scale(v: Vec[3]): Box = ???
-
-    override def squeeze(f: Double): Box = ???
-    override def squeeze(f: Vec[2]): Box = ???
-
-    override def reflect(n: Dir, p: Pos): Box = ???
-
+    extends Primitive {
 
     // TODO: decide on convention for vertices
 
