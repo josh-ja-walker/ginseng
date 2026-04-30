@@ -7,7 +7,7 @@ import ginseng.maths.linalg.*
 import ginseng.maths.geometry.*
 
 
-trait Rotate[A <: Primitive] {
+trait Rotate[A <: Poly[?]] {
     
     def rotate(a: A, theta: Angle, axis: Dir): A
     def rotate(a: A, theta: Angle, around: Pos, axis: Dir): A
@@ -24,7 +24,7 @@ trait Rotate[A <: Primitive] {
 
 
 
-given [A <: Primitive] => Transform[A] => Rotate[A]:
+given [A <: Poly[?]] => Transform[A] => Rotate[A]:
 
     def rotate(a: A, theta: Angle, axis: Dir): A = 
         Transformation.Rotation(theta, axis)(a)

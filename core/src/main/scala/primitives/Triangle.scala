@@ -12,7 +12,7 @@ import Edge.*
 
 //TODO: make mat private - currently used by TriangleRenderer
 case class Triangle(mat: Mat[4, 3]) 
-    extends Primitive {
+    extends Polygon[3] {
 
     // /_ = side 2, angle 1, side 1
     // _\ = side 1, angle 2, side 3

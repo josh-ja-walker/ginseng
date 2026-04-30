@@ -29,10 +29,10 @@ given Transform[Pos] with
 
 
 
-given [T] => (polygon: Polygon[T]) => Transform[T]:
+given [N <: Int, T <: Poly[N]] => ValueOf[N] => (geometry: Geometry[T]) => Transform[T]:
     extension (t: T)
         override def transform(transformation: Transformation): T = {
-            val points = polygon.points(t)
-            val mat = transformation.mat * new Mat[4, polygon.N](points)
-            polygon.construct(mat.toPositions*)
+            val points = geometry.points(t)
+            val mat = transformation.mat * new Mat[4, N](points)
+            geometry.construct(mat.toPositions*)
         }

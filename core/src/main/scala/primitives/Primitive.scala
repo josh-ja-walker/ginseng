@@ -6,49 +6,36 @@ import scala.compiletime.ops.int.*
 import ginseng.maths.geometry.*
 
 
-trait Primitive
+trait Poly[N <: Int] {
+    given ValueOf[N] = scala.compiletime.deferred
+}
+
+trait Polyline[N <: Int] extends Poly[N] { require(valueOf[N] >= 2) }
+trait Polygon[N <: Int] extends Poly[N] { require(valueOf[N] >= 3) }
 
 
-trait Polygon[T] {
-    type N <: Int
-    given v: ValueOf[N] = scala.compiletime.deferred
-
+trait Geometry[T <: Poly[?]] {
     def points(t: T): Array[Pos]
     def construct(points: Pos*): T // TODO: require(points.length == valueOf[N])
 }
 
 
-
-given Polygon[Point] with {
-    type N = 1
-
+given Geometry[Point] with {
     override def points(t: Point): Array[Pos] = Array(t.pos)
     override def construct(points: Pos*): Point = Point(points(0))
 }
 
-
-
-
-given Polygon[Line] with {
-    type N = 2
-
+given Geometry[Line] with {
     override def points(t: Line): Array[Pos] = t.mat.toPositions.toArray
     override def construct(points: Pos*): Line = Line(new Mat(points))
 }
 
-
-given Polygon[Triangle] with {
-    type N = 3
-
+given Geometry[Triangle] with {
     override def points(t: Triangle): Array[Pos] = t.mat.toPositions.toArray
     override def construct(points: Pos*): Triangle = Triangle(new Mat(points))
 }
 
-
-
-given Polygon[Box] with {
-    type N = 4
-
+given Geometry[Box] with {
     override def points(t: Box): Array[Pos] = {
         val Box(a, b, c, d) = t
         Array(a, b, c, d)
@@ -59,3 +46,4 @@ given Polygon[Box] with {
         Box(a, b, c, d)
     }
 }
+

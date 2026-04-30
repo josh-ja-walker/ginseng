@@ -8,14 +8,14 @@ import ginseng.maths.linalg.*
 import ginseng.maths.geometry.*
 
 
-case class AngleComponent[T <: Primitive](ab: Edge[T], bc: Edge[T])
+case class AngleComponent[T <: Poly[?]](ab: Edge[T], bc: Edge[T])
     extends Component[T] { 
 
     // Assert that the edges share a vertex along the angle
     // i.e., edges are contiguous
     require(ab.b == bc.a)
 
-    // Assert edges share the same host primitive
+    // Assert edges share the same host Poly
     require(ab.host == bc.host)
     val host: T = ab.host
 
@@ -51,7 +51,7 @@ case class AngleComponent[T <: Primitive](ab: Edge[T], bc: Edge[T])
     // Rotate edge BC an additional phi anticlockwise around B
     private def rotate(theta: Angle, phi: Angle): AngleComponent[T] = {
         val perp: Dir = (ab.dir.take[3]).cross(bc.dir.take[3]).toDir
-        AngleComponent(ab.rotate(ab.b, theta, perp), bc.rotate(bc.a, phi, perp))
+        AngleComponent(ab.rotate(theta, ab.b, perp), bc.rotate(phi, bc.a, perp))
     }
 
 }

@@ -11,7 +11,7 @@ import ginseng.maths.geometry.*
 
 // TODO: implement Box 
 case class Box(private val topLeft: Pos, private val topRight: Pos, private val bottomLeft: Pos, private val bottomRight: Pos) 
-    extends Primitive {
+    extends Polygon[4] {
 
     // TODO: decide on convention for vertices
 

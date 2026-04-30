@@ -8,7 +8,7 @@ import ginseng.maths.geometry.*
 
 // Reflect in the plane defined by the position vector p and normal vector n
 // i.e., n . (x - p) = 0
-trait Reflect[A <: Primitive] {
+trait Reflect[A <: Poly[?]] {
 
     def reflect(a: A, normal: Dir): A
     def reflect(a: A, normal: Dir, point: Pos): A
@@ -20,7 +20,7 @@ trait Reflect[A <: Primitive] {
 }
 
 
-given [A <: Primitive] => Transform[A] => Reflect[A]:
+given [A <: Poly[?]] => Transform[A] => Reflect[A]:
 
     def reflect(a: A, normal: Dir): A = Transformation.Householder(normal)(a)
 

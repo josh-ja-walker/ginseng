@@ -6,7 +6,7 @@ import ginseng.maths.linalg.*
 import ginseng.maths.geometry.*
 
 
-trait Scale[A <: Primitive] {
+trait Scale[A <: Poly[?]] {
     
     def scale(a: A, f: Vec[3]): A // TODO: should f be dir?
 
@@ -16,7 +16,7 @@ trait Scale[A <: Primitive] {
 }
 
 
-given [A <: Primitive] => Transform[A] => Scale[A]:
+given [A <: Poly[?]] => Transform[A] => Scale[A]:
 
     def scale(a: A, f: Vec[3]): A = Transformation.Scale(f)(a)
 

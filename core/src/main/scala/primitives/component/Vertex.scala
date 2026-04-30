@@ -7,7 +7,7 @@ import ginseng.maths.linalg.*
 import ginseng.maths.geometry.*
 
 
-case class Vertex[T <: Primitive](index: Int, pos: Pos)(using val host: T) 
+case class Vertex[T <: Poly[?]](index: Int, pos: Pos)(using val host: T) 
     extends Component[T] {
 
     def translate(v: Dir): Vertex[T] = Vertex(index, pos + v)

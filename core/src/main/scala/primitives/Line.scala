@@ -11,7 +11,7 @@ import Mat.*
 
 
 case class Line(val mat: Mat[4, 2]) 
-    extends Primitive {
+    extends Polyline[2] {
 
     val a: Pos = mat.pos(0)
     val b: Pos = mat.pos(1)

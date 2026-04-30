@@ -1,5 +1,7 @@
 package ginseng.core.primitives.component
 
+import scala.compiletime.ops.int.*
+
 import ginseng.core.primitives.*
 import ginseng.core.transformations.*
 
@@ -8,10 +10,10 @@ import ginseng.maths.linalg.*
 import ginseng.maths.geometry.*
 
 
-case class Edge[T <: Primitive](val a: Vertex[T], val b: Vertex[T])
+case class Edge[T <: Poly[?]](val a: Vertex[T], val b: Vertex[T])
     extends Component[T] {
 
-    // Require that both vertices belong to the same primitive
+    // Require that both vertices belong to the same Poly
     require(a.host == b.host)
     val host: T = a.host
 
@@ -39,7 +41,7 @@ case class Edge[T <: Primitive](val a: Vertex[T], val b: Vertex[T])
 
 object Edge {
 
-    extension[T <: Primitive] (v: Vertex[T]) {
+    extension[T <: Poly[?]] (v: Vertex[T]) {
         def -(u: Vertex[T]): Edge[T] = Edge(u, v)
         def ->(u: Vertex[T]): Edge[T] = Edge(v, u)
     }

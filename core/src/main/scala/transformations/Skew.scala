@@ -6,7 +6,7 @@ import ginseng.maths.linalg.*
 import ginseng.maths.geometry.*
 
 
-trait Skew[A <: Primitive] {
+trait Skew[A <: Poly[?]] {
 
     // TODO: support skewing in plane directions - i.e., XY plane, YZ plane 
     def skew(a: A, f: Double, plane: Dir): A
@@ -17,7 +17,7 @@ trait Skew[A <: Primitive] {
 }
 
 
-given [A <: Primitive] => Transform[A] => Skew[A]:
+given [A <: Poly[?]] => Transform[A] => Skew[A]:
 
     def skew(a: A, f: Double, plane: Dir): A = {
         val transformation: Transformation = plane match {
