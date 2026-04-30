@@ -19,17 +19,14 @@ case class Edge[T <: Primitive](val a: Vertex[T], val b: Vertex[T])
     def translate(v: Dir): Edge[T] = Edge(a.translate(v), b.translate(v))
 
     // Rotate edge around a position
-    def rotate(about: Pos, theta: Angle, axis: Dir): Edge[T] = {
-        val translate = TranslateMat(about.take[3])
-        val transform = translate * RotateMat4(theta, axis) * translate.inverse
+    def rotate(theta: Angle, about: Pos, axis: Dir): Edge[T] = {
         // Rotate the existing points
-        val Mat(vecA, vecB) = transform * Mat[4, 2](a.pos, b.pos)
+        val Mat(vecA, vecB) = Transformation.RotationAbout(theta, about, axis).mat * Mat[4, 2](a.pos, b.pos)
         // Update the edge with new vertices in correct positions
         new Edge(a.reposition(vecA.toPos), b.reposition(vecB.toPos))
     }
 
-    def rotate(about: Vertex[T], theta: Angle, axis: Dir): Edge[T] = 
-        rotate(about.pos, theta, axis)
+    def rotate(theta: Angle, about: Vertex[T], axis: Dir): Edge[T] = rotate(theta, about.pos, axis)
 
     // Invert edge
     def unary_- : Edge[T] = Edge(b, a) 
