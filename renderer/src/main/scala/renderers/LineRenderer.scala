@@ -7,8 +7,8 @@ import opengl.bindings.glad.*
 import opengl.bindings.glfw.*
 import ginseng.maths.linalg.*
 
-import ginseng.core.primitives.Line
-import ginseng.core.primitives.Triangle
+import ginseng.core.poly.polylines.Line
+import ginseng.core.poly.polygons.Triangle
 
 import ginseng.renderer.shaders.*
 import ginseng.renderer.rendering.*

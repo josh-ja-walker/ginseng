@@ -1,4 +1,7 @@
-package ginseng.core.primitives
+package ginseng.core.poly.polygons
+
+import ginseng.core.poly.*
+import ginseng.core.poly.polylines.*
 
 import ginseng.core.colour.*
 import ginseng.core.transformations.*
@@ -7,6 +10,7 @@ import ginseng.maths.*
 import ginseng.maths.angle.*
 import ginseng.maths.linalg.*
 import ginseng.maths.geometry.*
+
 
 
 // TODO: implement Box 

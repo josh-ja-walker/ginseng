@@ -1,4 +1,4 @@
-package ginseng.core.primitives
+package ginseng.core.poly.polylines
 
 import ginseng.core.transformations.*
 

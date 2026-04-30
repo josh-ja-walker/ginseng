@@ -8,8 +8,9 @@ import opengl.bindings.glfw.*
 
 import ginseng.renderer.shaders.*
 import ginseng.renderer.rendering.*
-import ginseng.core.primitives.Point
+
 import ginseng.core.colour.*
+import ginseng.core.poly.misc.*
 
 
 class PointRenderer(private val size: Float, private val num: Int, private val vao: Ptr[UInt]) extends Renderer[Point] {

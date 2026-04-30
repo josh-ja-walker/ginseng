@@ -1,7 +1,5 @@
 package ginseng.core.transformations
 
-import ginseng.core.primitives.*
-
 
 // TODO: should Freeform trait be reserved for transformation of vertices and edges?
 trait Freeform[A] 

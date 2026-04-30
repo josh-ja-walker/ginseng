@@ -1,14 +1,14 @@
-package ginseng.core.primitives
+package ginseng.core.poly.polygons
 
-import ginseng.core.transformations.*
-import ginseng.core.primitives.components.*
-import ginseng.core.primitives.components.given
+import ginseng.core.poly.*
+import ginseng.core.poly.polygons.*
+import ginseng.core.poly.components.*
+import ginseng.core.poly.components.given
+import ginseng.core.poly.geometry.given
 
 import ginseng.maths.angle.*
 import ginseng.maths.linalg.*
 import ginseng.maths.geometry.*
-
-import Edge.* 
 
 
 //TODO: make mat private - currently used by TriangleRenderer

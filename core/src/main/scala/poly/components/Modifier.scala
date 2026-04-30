@@ -1,8 +1,9 @@
-package ginseng.core.primitives.components
+package ginseng.core.poly.components
 
 import scala.compiletime.ops.int.*
 
-import ginseng.core.primitives.*
+import ginseng.core.poly.*
+import ginseng.core.poly.polygons.*
 
 
 trait Modifier[T <: Poly[?], C <: Component[T]] {

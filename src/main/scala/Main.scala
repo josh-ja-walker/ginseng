@@ -4,10 +4,16 @@ import scala.scalanative.unsafe.*
 import scala.scalanative.unsigned.*
 
 import ginseng.core.colours.*
-import ginseng.core.primitives.*
-import ginseng.core.primitives.given // TODO: ideally export from primitives
-import ginseng.core.primitives.components.given // TODO: ideally export from components
+
+import ginseng.core.poly.*
+import ginseng.core.poly.polygons.*
 import ginseng.core.transformations.*
+import ginseng.core.poly.polylines.*
+
+import ginseng.core.poly.geometry.given // TODO: ideally export from geometry
+import ginseng.core.poly.polygons.given // TODO: ideally export from polygons
+import ginseng.core.poly.polylines.given // TODO: ideally export from polylines
+import ginseng.core.poly.components.given // TODO: ideally export from components
 import ginseng.core.transformations.given // TODO: ideally export from transformations
 
 import ginseng.maths.angle.*
@@ -24,7 +30,6 @@ import opengl.bindings.glfw.*
 
 import scala.util.Random
 
-import ginseng.core.primitives.component.given
 
 @main def main: Unit = Zone {
 

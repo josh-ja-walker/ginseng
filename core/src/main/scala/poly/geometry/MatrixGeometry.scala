@@ -1,7 +1,9 @@
-package ginseng.core.primitives
+package ginseng.core.poly.geometry
 
-
-import ginseng.core.primitives.components.* 
+import ginseng.core.poly.*
+import ginseng.core.poly.misc.*
+import ginseng.core.poly.polylines.*
+import ginseng.core.poly.polygons.*
 
 import ginseng.maths.linalg.*
 import ginseng.maths.geometry.*
