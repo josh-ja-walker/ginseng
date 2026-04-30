@@ -24,7 +24,7 @@ given [N <: Int, T <: Poly[N]] => (g: Geometry[T]) => Rig[N, T] {
 
     extension (t: T) 
         def vertex[I <: Int](using ValueOf[I], I <= N =:= true): Vertex[T] = {
-            Vertex[T](valueOf[I], g.positions(t)(valueOf[I]).toPos)(using t)
+            Vertex[T](valueOf[I], g.positions(t)(valueOf[I]))(using t)
         }
 
 }
