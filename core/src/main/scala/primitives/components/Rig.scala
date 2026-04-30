@@ -15,8 +15,8 @@ trait Rig[N <: Int, T <: Poly[N]] {
             Edge[T](vertex[I], vertex[J])
 
         def angle[I <: Int, J <: Int, K <: Int]
-            (using ValueOf[I], ValueOf[J], ValueOf[K], I <= N =:= true, J <= N =:= true, K <= N =:= true): AngleComponent[T] = 
-                AngleComponent[T](edge[I, J], edge[J, K])
+            (using ValueOf[I], ValueOf[J], ValueOf[K], I <= N =:= true, J <= N =:= true, K <= N =:= true): Arc[T] = 
+                Arc[T](edge[I, J], edge[J, K])
 
 }
 

@@ -21,9 +21,9 @@ given [N <: Int, T <: Poly[N]] => =:=[N >= 2, true] => (Modifier[T, Vertex[T]]) 
         }
 }
 
-given [N <: Int, T <: Poly[N]] => =:=[N >= 3, true] => Modifier[T, Edge[T]] => Modifier[T, AngleComponent[T]] { 
-    extension (c: AngleComponent[T]) 
-        override def update(v: AngleComponent[T]): T = {
+given [N <: Int, T <: Poly[N]] => =:=[N >= 3, true] => Modifier[T, Edge[T]] => Modifier[T, Arc[T]] { 
+    extension (c: Arc[T]) 
+        override def update(v: Arc[T]): T = {
             c.ab.update(v.ab)
             c.bc.update(v.bc)
         }

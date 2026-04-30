@@ -8,7 +8,7 @@ import ginseng.maths.linalg.*
 import ginseng.maths.geometry.*
 
 
-case class AngleComponent[T <: Poly[?]](ab: Edge[T], bc: Edge[T])
+case class Arc[T <: Poly[?]](ab: Edge[T], bc: Edge[T])
     extends Component[T] { 
 
     // Assert that the edges share a vertex along the angle
@@ -31,32 +31,32 @@ case class AngleComponent[T <: Poly[?]](ab: Edge[T], bc: Edge[T])
 
     // TODO: implement maths operations on Angle to avoid unnecessary conversion 
     // Scale angle with respect to bisecting center line
-    def *(factor: Float)(using Rotate[Edge[T]]): AngleComponent[T] = update(Rad(angle.toRadians * factor))
-    def /(factor: Float)(using Rotate[Edge[T]]): AngleComponent[T] = this * (1 / factor)
+    def *(factor: Float)(using Rotate[Edge[T]]): Arc[T] = update(Rad(angle.toRadians * factor))
+    def /(factor: Float)(using Rotate[Edge[T]]): Arc[T] = this * (1 / factor)
 
     // Add/subtract angle in the anticlockwise direction
-    def +(angle: Angle)(using Rotate[Edge[T]]): AngleComponent[T] = rotate(Rad(0), angle)
-    def -(angle: Angle)(using Rotate[Edge[T]]): AngleComponent[T] = this + (Rad(-angle.toRadians))
+    def +(angle: Angle)(using Rotate[Edge[T]]): Arc[T] = rotate(Rad(0), angle)
+    def -(angle: Angle)(using Rotate[Edge[T]]): Arc[T] = this + (Rad(-angle.toRadians))
 
     // Rotate both edges in the same direction
-    def rotate(angle: Angle)(using Rotate[Edge[T]]): AngleComponent[T] = rotate(Rad(-angle.toRadians), angle)
+    def rotate(angle: Angle)(using Rotate[Edge[T]]): Arc[T] = rotate(Rad(-angle.toRadians), angle)
 
     // Set angle value
-    def update(angle: Angle)(using Rotate[Edge[T]]): AngleComponent[T] = {
+    def update(angle: Angle)(using Rotate[Edge[T]]): Arc[T] = {
         val diff: Rad = Rad((angle.toRadians - this.angle.toRadians) / 2)
         rotate(-diff, diff) // Achieve angles by rotating edges the required diff
     }
 
     // Rotate edge AB an additional theta anticlockwise around B
     // Rotate edge BC an additional phi anticlockwise around B
-    private def rotate(theta: Angle, phi: Angle)(using Rotate[Edge[T]]): AngleComponent[T] = {
+    private def rotate(theta: Angle, phi: Angle)(using Rotate[Edge[T]]): Arc[T] = {
         val perp: Dir = (ab.dir.take[3]).cross(bc.dir.take[3]).toDir
-        AngleComponent(ab.rotated(theta, ab.b, perp), bc.rotated(phi, bc.a, perp))
+        Arc(ab.rotated(theta, ab.b, perp), bc.rotated(phi, bc.a, perp))
     }
 
 }
 
 
-object AngleComponent {
+object Arc {
 
 }

@@ -34,9 +34,9 @@ case class Triangle(mat: Mat[4, 3])
     val ac: Edge[Triangle] = this.edge[C, A] 
 
     // helpers for referencing angles
-    val alpha: AngleComponent[Triangle] = this.angle[B, A, C]
-    val beta: AngleComponent[Triangle] = this.angle[A, B, C]
-    val gamma: AngleComponent[Triangle] = this.angle[B, C, A]
+    val alpha: Arc[Triangle] = this.angle[B, A, C]
+    val beta: Arc[Triangle] = this.angle[A, B, C]
+    val gamma: Arc[Triangle] = this.angle[B, C, A]
 
 }
 
