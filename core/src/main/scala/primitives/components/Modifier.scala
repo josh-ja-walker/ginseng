@@ -1,11 +1,9 @@
-package ginseng.core.primitives.component
+package ginseng.core.primitives.components
 
 import scala.compiletime.ops.int.*
 
 import ginseng.core.primitives.*
 
-
-trait Component[T <: Poly[?]]
 
 trait Modifier[T <: Poly[?], C <: Component[T]] {
     extension (c: C) {
@@ -36,9 +34,8 @@ given [N <: Int, T <: Poly[N]] => =:=[N >= 3, true] => Modifier[T, Edge[T]] => M
 given Modifier[Triangle, Vertex[Triangle]] with 
     extension (c: Vertex[Triangle])
         override def update(v: Vertex[Triangle]): Triangle = {
-            // TODO: this must be copied :(
             require(c.index == v.index)
             require(c.host == v.host)
+
             new Triangle(c.host.mat.update(c.index, v.pos))
         }
-

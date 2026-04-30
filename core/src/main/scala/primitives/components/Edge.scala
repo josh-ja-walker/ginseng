@@ -1,4 +1,4 @@
-package ginseng.core.primitives.component
+package ginseng.core.primitives.components
 
 import scala.compiletime.ops.int.*
 
@@ -21,7 +21,8 @@ case class Edge[T <: Poly[?]](val a: Vertex[T], val b: Vertex[T])
         this.rotated(theta, about.pos, axis)
 
     // Invert edge
-    def unary_- : Edge[T] = Edge(b, a) 
+    def invert: Edge[T] = Edge(b, a)
+    def unary_- : Edge[T] = invert 
 
     // TODO: ideally not required
     def dir: Dir = (b.pos - a.pos)
@@ -40,7 +41,7 @@ object Edge {
 
 
 // TODO: should transform be used for Components? or just for Polys??
-// If so, Edge should probably use Line as underlying representation
+// If so, Edge should probably use Line as underlying representati
 
 given [T <: Poly[?]] => Transform[Line] => Transform[Edge[T]]:
     extension (t: Edge[T]) 

@@ -1,4 +1,4 @@
-package ginseng.core.primitives.component
+package ginseng.core.primitives.components
 
 import ginseng.core.primitives.*
 import ginseng.core.transformations.*

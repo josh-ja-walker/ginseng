@@ -1,4 +1,4 @@
-package ginseng.core.primitives.component
+package ginseng.core.primitives.components
 
 import ginseng.core.primitives.*
 import ginseng.core.transformations.*
@@ -9,7 +9,7 @@ import ginseng.maths.geometry.*
 
 case class Vertex[T <: Poly[?]](index: Int, pos: Pos)(using val host: T) 
     extends Component[T]
-
+    
 
 given [T <: Poly[?]] => Transform[Pos] => Transform[Vertex[T]]:
     extension (t: Vertex[T]) 

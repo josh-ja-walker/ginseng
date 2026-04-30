@@ -1,7 +1,7 @@
 package ginseng.core.primitives
 
 import ginseng.core.transformations.*
-import ginseng.core.primitives.component.*
+import ginseng.core.primitives.components.*
 
 import ginseng.maths.angle.*
 import ginseng.maths.linalg.*
@@ -24,9 +24,9 @@ case class Triangle(mat: Mat[4, 3])
     val c: Vertex[Triangle] = Vertex(2, mat.pos(2))(using this)
 
     // helpers for referencing edges
-    val ab: Edge[Triangle] = (b - a) ; val ba: Edge[Triangle] = -ab
-    val bc: Edge[Triangle] = (c - b) ; val cb: Edge[Triangle] = -bc
-    val ac: Edge[Triangle] = (c - a) ; val ca: Edge[Triangle] = -ac
+    val ab: Edge[Triangle] = a -> b ; val ba: Edge[Triangle] = -ab
+    val bc: Edge[Triangle] = b -> c ; val cb: Edge[Triangle] = -bc
+    val ac: Edge[Triangle] = a -> c ; val ca: Edge[Triangle] = -ac
 
     // helpers for referencing angles
     val alpha: AngleComponent[Triangle] = AngleComponent(ba, ac)
