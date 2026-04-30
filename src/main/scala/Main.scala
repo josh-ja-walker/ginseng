@@ -6,6 +6,7 @@ import scala.scalanative.unsigned.*
 import ginseng.core.colours.*
 import ginseng.core.primitives.*
 import ginseng.core.primitives.given // TODO: ideally export from primitives
+import ginseng.core.primitives.components.given // TODO: ideally export from components
 import ginseng.core.transformations.*
 import ginseng.core.transformations.given // TODO: ideally export from transformations
 

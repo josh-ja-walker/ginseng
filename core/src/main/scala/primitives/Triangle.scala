@@ -2,6 +2,7 @@ package ginseng.core.primitives
 
 import ginseng.core.transformations.*
 import ginseng.core.primitives.components.*
+import ginseng.core.primitives.components.given
 
 import ginseng.maths.angle.*
 import ginseng.maths.linalg.*
@@ -18,25 +19,24 @@ case class Triangle(mat: Mat[4, 3])
     // _\ = side 1, angle 2, side 3
     // /\ = side 2, angle 3, side 3
 
+    type A = 0
+    type B = 1
+    type C = 2
+
     // helpers for referencing vertices
-    val a: Vertex[Triangle] = Vertex(0, mat.pos(0))(using this)
-    val b: Vertex[Triangle] = Vertex(1, mat.pos(1))(using this)
-    val c: Vertex[Triangle] = Vertex(2, mat.pos(2))(using this)
+    val a: Vertex[Triangle] = this.vertex[A]
+    val b: Vertex[Triangle] = this.vertex[B]
+    val c: Vertex[Triangle] = this.vertex[C]
 
     // helpers for referencing edges
-    val ab: Edge[Triangle] = a -> b ; val ba: Edge[Triangle] = -ab
-    val bc: Edge[Triangle] = b -> c ; val cb: Edge[Triangle] = -bc
-    val ac: Edge[Triangle] = a -> c ; val ca: Edge[Triangle] = -ac
+    val ab: Edge[Triangle] = this.edge[A, B] 
+    val bc: Edge[Triangle] = this.edge[B, C] 
+    val ac: Edge[Triangle] = this.edge[C, A] 
 
     // helpers for referencing angles
-    val alpha: AngleComponent[Triangle] = AngleComponent(ba, ac)
-    val beta: AngleComponent[Triangle] = AngleComponent(ab, bc)
-    val gamma: AngleComponent[Triangle] = AngleComponent(ac, cb)
-
-    // Calculate centroid of triangle by intersection of medians
-    val center: Pos = Line(a.pos, Line(b.pos, c.pos).mid)
-        .intersect(Line(b.pos, Line(a.pos, c.pos).mid))
-        .getOrElse(Pos.center) // TODO: actual error handling for this as getting issues
+    val alpha: AngleComponent[Triangle] = this.angle[B, A, C]
+    val beta: AngleComponent[Triangle] = this.angle[A, B, C]
+    val gamma: AngleComponent[Triangle] = this.angle[B, C, A]
 
 }
 
