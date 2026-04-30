@@ -8,29 +8,11 @@ import ginseng.maths.geometry.*
 
 
 case class Vertex[T <: Poly[?]](index: Int, pos: Pos)(using val host: T) 
-    extends Component[T] {
+    extends Component[T]
 
-    def translate(v: Dir): Vertex[T] = Vertex(index, pos + v)
-    def reposition(pos: Pos): Vertex[T] = Vertex(index, pos)
 
-    override def equals(obj: Any): Boolean = obj match {
-        case v: Vertex[?] => {
-            v.host == host 
-                && v.index == index 
-                && v.pos.toSeq.zip(pos.toSeq)
-                    .forall((a, b) => (a - b).abs < Vertex.eps)
+given [T <: Poly[?]] => Transform[Pos] => Transform[Vertex[T]]:
+    extension (t: Vertex[T]) 
+        override def transform(transformation: Transformation): Vertex[T] = {
+            t.copy(pos = t.pos.transform(transformation))(using t.host)
         }
-
-        case _ => false
-    }
-
-}
-
-
-object Vertex {
-
-    // TODO: standardise for all equalities
-    // Floating point precision
-    val eps = 0.0001
-    
-}
