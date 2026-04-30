@@ -92,7 +92,7 @@ import ginseng.core.primitives.component.given
             angle.rotate(Deg(1))
         }}
 
-        val factor: Float = if t >= 50 then 10f / 9f else 0.9f
+        val factor = if t >= 50 then 10d / 9d else 0.9d
 
         // Resize triangle and rerender
         tri = tri.transform {
