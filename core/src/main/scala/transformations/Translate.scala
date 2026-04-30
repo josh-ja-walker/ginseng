@@ -6,7 +6,7 @@ import ginseng.maths.linalg.*
 import ginseng.maths.geometry.*
 
 
-trait Translate[A <: Poly[?]] {
+trait Translate[A] {
 
     def translate(a: A, d: Dir): A
 
@@ -16,7 +16,7 @@ trait Translate[A <: Poly[?]] {
 }
 
 
-given [A <: Poly[?]] => Transform[A] => Translate[A]:
+given [A] => Transform[A] => Translate[A]:
 
     def translate(a: A, d: Dir): A = Transformation.Translation(d)(a)
 

@@ -6,7 +6,7 @@ import ginseng.maths.linalg.*
 import ginseng.maths.geometry.*
 
 
-trait Reposition[A <: Poly[?]] {
+trait Reposition[A] {
 
     def reposition(a: A, anchor: Pos, pos: Pos): A
     def reposition(a: A, anchor: A => Pos, pos: Pos): A = reposition(a, anchor(a), pos)
@@ -17,6 +17,6 @@ trait Reposition[A <: Poly[?]] {
 }
 
 
-given [A <: Poly[?]] => (t: Translate[A]) => Reposition[A]:
+given [A] => (t: Translate[A]) => Reposition[A]:
     def reposition(a: A, anchor: Pos, pos: Pos): A = t.translate(a, pos - anchor)
     
