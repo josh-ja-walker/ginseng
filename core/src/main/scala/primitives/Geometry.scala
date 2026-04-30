@@ -1,17 +1,7 @@
 package ginseng.core.primitives
 
 import ginseng.maths.linalg.*
-
-import scala.compiletime.ops.int.*
 import ginseng.maths.geometry.*
-
-
-trait Poly[N <: Int] {
-    given ValueOf[N] = scala.compiletime.deferred
-}
-
-trait Polyline[N <: Int] extends Poly[N] { require(valueOf[N] >= 2) }
-trait Polygon[N <: Int] extends Poly[N] { require(valueOf[N] >= 3) }
 
 
 trait Geometry[T <: Poly[?]] {
@@ -46,4 +36,3 @@ given Geometry[Box] with {
         Box(a, b, c, d)
     }
 }
-
