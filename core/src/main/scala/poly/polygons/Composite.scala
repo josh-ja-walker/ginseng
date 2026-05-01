@@ -1,4 +1,4 @@
-package ginseng.core.composites
+package ginseng.core.poly.polygons
 
 import scala.compiletime.ops.int.*
 
