@@ -1,6 +1,7 @@
 package ginseng.core.transformations
 
-import ginseng.core.primitives.*
+import ginseng.core.poly.*
+import ginseng.core.poly.geometry.*
 
 import ginseng.maths.linalg.*
 import ginseng.maths.geometry.*
@@ -29,10 +30,9 @@ given Transform[Pos] with
 
 
 
-given [T] => (polygon: Polygon[T]) => Transform[T]:
+given [N <: Int, T <: Poly[N]] => ValueOf[N] => (m: MatrixGeometry[T, N]) => Transform[T]:
     extension (t: T)
         override def transform(transformation: Transformation): T = {
-            val points = polygon.points(t)
-            val mat = transformation.mat * new Mat[4, polygon.N](points)
-            polygon.construct(mat.toPositions*)
+            val mat = transformation.mat * m.toMat(t)
+            m.construct(mat)
         }

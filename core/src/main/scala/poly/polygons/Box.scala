@@ -1,4 +1,7 @@
-package ginseng.core.primitives
+package ginseng.core.poly.polygons
+
+import ginseng.core.poly.*
+import ginseng.core.poly.polylines.*
 
 import ginseng.core.colour.*
 import ginseng.core.transformations.*
@@ -9,9 +12,10 @@ import ginseng.maths.linalg.*
 import ginseng.maths.geometry.*
 
 
+
 // TODO: implement Box 
 case class Box(private val topLeft: Pos, private val topRight: Pos, private val bottomLeft: Pos, private val bottomRight: Pos) 
-    extends Primitive {
+    extends Polygon[4] {
 
     // TODO: decide on convention for vertices
 

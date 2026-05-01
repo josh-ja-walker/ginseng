@@ -4,9 +4,16 @@ import scala.scalanative.unsafe.*
 import scala.scalanative.unsigned.*
 
 import ginseng.core.colours.*
-import ginseng.core.primitives.*
-import ginseng.core.primitives.given // TODO: ideally export from primitives
+
+import ginseng.core.poly.*
+import ginseng.core.poly.polygons.*
 import ginseng.core.transformations.*
+import ginseng.core.poly.polylines.*
+
+import ginseng.core.poly.geometry.given // TODO: ideally export from geometry
+import ginseng.core.poly.polygons.given // TODO: ideally export from polygons
+import ginseng.core.poly.polylines.given // TODO: ideally export from polylines
+import ginseng.core.poly.components.given // TODO: ideally export from components
 import ginseng.core.transformations.given // TODO: ideally export from transformations
 
 import ginseng.maths.angle.*
@@ -70,7 +77,7 @@ import scala.util.Random
 
 
     // Animation timestep - start halfway through growth phase
-    var t = 25 
+    var t = 25
 
     context.run(() => {
         
@@ -83,14 +90,15 @@ import scala.util.Random
         // Increase animation timestep
         t += 1
         
-        // Determine resize factor
-        val factor = t match {
-            case grow if grow < 50 => (10d / 9d) // Grow by factor 1.11
-            case shrink => {
-                if (shrink > 100) { t = 0 } // Loop
-                0.9d // Shrink by factor 0.9
-            }
-        }
+        if (t > 100) { t = 0 }
+
+        // Move triangle vertexs and rerender
+        tri = tri.gamma.modify { angle => {
+            val dir = if t < 50 then Dir.right else Dir.left
+            angle.rotate(Deg(1))
+        }}
+
+        val factor = if t >= 50 then 10d / 9d else 0.9d
 
         // Resize triangle and rerender
         tri = tri.transform {

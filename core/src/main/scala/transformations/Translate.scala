@@ -1,12 +1,12 @@
 package ginseng.core.transformations
 
-import ginseng.core.primitives.*
+import ginseng.core.poly.*
 
 import ginseng.maths.linalg.*
 import ginseng.maths.geometry.*
 
 
-trait Translate[A <: Primitive] {
+trait Translate[A] {
 
     def translate(a: A, d: Dir): A
 
@@ -16,7 +16,7 @@ trait Translate[A <: Primitive] {
 }
 
 
-given [A <: Primitive] => Transform[A] => Translate[A]:
+given [A] => Transform[A] => Translate[A]:
 
     def translate(a: A, d: Dir): A = Transformation.Translation(d)(a)
 

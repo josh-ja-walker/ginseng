@@ -1,6 +1,10 @@
-package ginseng.core.primitives
+package ginseng.core.poly.polygons
 
-import ginseng.core.transformations.*
+import ginseng.core.poly.*
+import ginseng.core.poly.polygons.*
+import ginseng.core.poly.components.*
+import ginseng.core.poly.components.given
+import ginseng.core.poly.geometry.given
 
 import ginseng.maths.angle.*
 import ginseng.maths.linalg.*
@@ -9,31 +13,30 @@ import ginseng.maths.geometry.*
 
 //TODO: make mat private - currently used by TriangleRenderer
 case class Triangle(mat: Mat[4, 3]) 
-    extends Primitive {
+    extends Polygon[3] {
 
     // /_ = side 2, angle 1, side 1
     // _\ = side 1, angle 2, side 3
     // /\ = side 2, angle 3, side 3
 
+    type A = 0
+    type B = 1
+    type C = 2
+
     // helpers for referencing vertices
-    val a: Pos = mat.pos(0)
-    val b: Pos = mat.pos(1)
-    val c: Pos = mat.pos(2)
-    
-    // TODO: allow modification of referenced sides
-    val ab: Dir = b - a ; val ba: Dir = -ab 
-    val bc: Dir = c - b ; val cb: Dir = -bc
-    val ac: Dir = c - a ; val ca: Dir = -ac
+    val a: Vertex[Triangle] = this.vertex[A]
+    val b: Vertex[Triangle] = this.vertex[B]
+    val c: Vertex[Triangle] = this.vertex[C]
 
-    // TODO: allow modification of referenced angles
-    val A: Angle = ab.angle(ac)
-    val B: Angle = ba.angle(bc)
-    val C: Angle = ca.angle(cb)
+    // helpers for referencing edges
+    val ab: Edge[Triangle] = this.edge[A, B] 
+    val bc: Edge[Triangle] = this.edge[B, C] 
+    val ac: Edge[Triangle] = this.edge[C, A] 
 
-    // Calculate centroid of triangle by intersection of medians
-    val center: Pos = Line(a, Line(b, c).mid)
-        .intersect(Line(b, Line(a, c).mid))
-        .get
+    // helpers for referencing angles
+    val alpha: Arc[Triangle] = this.angle[B, A, C]
+    val beta: Arc[Triangle] = this.angle[A, B, C]
+    val gamma: Arc[Triangle] = this.angle[B, C, A]
 
 }
 
