@@ -26,11 +26,6 @@ trait Rotate[A] {
 
 given [A] => Transform[A] => Rotate[A]:
 
-    def rotate(a: A, theta: Angle, axis: Dir): A = 
-        Transformation.Rotation(theta, axis)(a)
-
-    def rotate(a: A, theta: Angle, around: Pos, axis: Dir): A = around match {
-        case Pos.center => rotate(a, theta, axis) // FIXME: should be Pos.origin instead - reparameterise space
-        case p => Transformation.RotationAbout(theta, p, axis)(a)
-    }
+    def rotate(a: A, theta: Angle, axis: Dir): A = Transformation.Rotation(theta, axis)(a)
+    def rotate(a: A, theta: Angle, around: Pos, axis: Dir): A = Transformation.RotationAbout(theta, around, axis)(a)
 

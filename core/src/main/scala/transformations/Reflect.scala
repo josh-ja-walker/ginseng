@@ -23,8 +23,4 @@ trait Reflect[A] {
 given [A] => Transform[A] => Reflect[A]:
 
     def reflect(a: A, normal: Dir): A = Transformation.Householder(normal)(a)
-
-    def reflect(a: A, normal: Dir, point: Pos): A = point match {
-        case Pos.center => reflect(a, normal) // FIXME: should be Pos.origin instead - reparameterise space
-        case p => Transformation.Reflection(normal, point)(a)
-    }
+    def reflect(a: A, normal: Dir, point: Pos): A = Transformation.Reflection(normal, point)(a)
