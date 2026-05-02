@@ -54,8 +54,8 @@ object Tri {
             math.acos((b2 + c2 - a2) / (2 * b * c)).toRadians
         }
         
-        val angleA: Rad = computeAngle(s1, s2, s3)
-        val c = a + (Dir.right.rotate(angleA) * s3)
+        val alpha = computeAngle(s1, s2, s3)
+        val c = a + (Dir.right.rotate(alpha) * s3)
 
         Tri(a, b, c)
     }

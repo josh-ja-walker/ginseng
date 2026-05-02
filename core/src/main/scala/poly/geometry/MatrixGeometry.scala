@@ -46,15 +46,15 @@ given MatrixGeometry[Tri, 3] with {
         
 }
 
-given MatrixGeometry[Square, 4] with {
-    override def construct(m: Mat[4, 4]): Square = {
+given MatrixGeometry[Quad, 4] with {
+    override def construct(m: Mat[4, 4]): Quad = {
         val Seq(a, b, c, d) = m.toPositions
-        Square(a, b, c, d)
+        Quad(a, b, c, d)
     }
 
-    extension (t: Square)
+    extension (t: Quad)
         override def toMat: Mat[4, 4] = {
-            val Square(a, b, c, d) = t
+            val Quad(a, b, c, d) = t
             Mat[4, 4](a, b, c, d)
         }
 }
