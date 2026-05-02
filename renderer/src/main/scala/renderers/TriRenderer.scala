@@ -14,7 +14,7 @@ import ginseng.core.poly.polygons.*
 import ginseng.maths.linalg.*
 
 
-class TriangleRenderer(private val num: Int, private val vao: Ptr[UInt]) extends Renderer[Triangle] {
+class TriRenderer(private val num: Int, private val vao: Ptr[UInt]) extends Renderer[Tri] {
     def render(shader: ShaderProg)(using zone: Zone) = {
         // Bind shader to OpenGL state machine
         shader.bind()
@@ -26,8 +26,8 @@ class TriangleRenderer(private val num: Int, private val vao: Ptr[UInt]) extends
 }
 
 
-object TriangleRenderer {
-    def apply(tris: Triangle*)(using zone: Zone): TriangleRenderer = {
+object TriRenderer {
+    def apply(tris: Tri*)(using zone: Zone): TriRenderer = {
         // Define triangle points array
         val points: Array[Float] = tris
             .flatMap(tri => {
@@ -57,7 +57,7 @@ object TriangleRenderer {
         glBindBuffer(GL_ARRAY_BUFFER, !vbo)
         glVertexAttribPointer(0.toUInt, 3, GL_FLOAT, GL_FALSE, 0, null)
 
-        new TriangleRenderer(tris.length, vao)
+        new TriRenderer(tris.length, vao)
     }
 
 }

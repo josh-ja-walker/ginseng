@@ -32,11 +32,11 @@ given [N <: Int, T <: Poly[N]] => =:=[N >= 3, true] => Modifier[T, Edge[T]] => M
 
 
 // Modifier for Triangle vertices
-given Modifier[Triangle, Vertex[Triangle]] with 
-    extension (c: Vertex[Triangle])
-        override def update(v: Vertex[Triangle]): Triangle = {
+given Modifier[Tri, Vertex[Tri]] with 
+    extension (c: Vertex[Tri])
+        override def update(v: Vertex[Tri]): Tri = {
             require(c.index == v.index)
             require(c.host == v.host)
 
-            new Triangle(c.host.mat.update(c.index, v.pos))
+            new Tri(c.host.mat.update(c.index, v.pos))
         }

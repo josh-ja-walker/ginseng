@@ -37,11 +37,11 @@ given MatrixGeometry[Line, 2] with {
 
 }
 
-given MatrixGeometry[Triangle, 3] with {
+given MatrixGeometry[Tri, 3] with {
 
-    override def construct(m: Mat[4, 3]): Triangle = Triangle(m)
+    override def construct(m: Mat[4, 3]): Tri = Tri(m)
 
-    extension (t: Triangle) 
+    extension (t: Tri) 
         override def toMat: Mat[4, 3] = t.mat
         
 }
