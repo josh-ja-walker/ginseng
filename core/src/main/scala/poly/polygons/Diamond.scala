@@ -1,30 +1,33 @@
 package ginseng.core.poly.polygons
 
 import ginseng.core.poly.*
-import ginseng.core.poly.polylines.*
+import ginseng.core.poly.geometry.given
 
 import ginseng.core.colour.*
 import ginseng.core.transformations.*
+import ginseng.core.transformations.given
 
 import ginseng.maths.*
+import ginseng.maths.units.*
 import ginseng.maths.angle.*
 import ginseng.maths.linalg.*
 import ginseng.maths.geometry.*
 
 
-opaque type Diamond = Quad
+type Diamond = Quad
 
 object Diamond {
 
     def unapply(d: Diamond) = Quad.unapply(d)
 
-    def apply(p: Pos, size: Float): Diamond = ???
-    def centered(center: Pos, size: Float): Diamond = ???
+    def unital: Diamond = Diamond.size(1.u)
+    def size(size: Length): Diamond = Square.size(size).rotated(45.toDegrees)
+    def size(width: Length, height: Length): Diamond = 
+        unital.scaled(Vec[3](width.toDouble, height.toDouble, 1))
 
-    def apply(size: Float): Diamond = ???
-    def unital: Diamond = Diamond(1)
+    def centered(center: Pos, size: Length): Diamond = Square.centered(center, size)
+        .rotated(45.toDegrees)
     
-    def apply(left: Double, top: Double, right: Double, bottom: Double): Diamond = ???
 
 }
 
