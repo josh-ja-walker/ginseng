@@ -32,7 +32,7 @@ object QuadRenderer {
         val points: Array[Float] = quads
             .flatMap(quad => {
                 val Quad(a, b, c, d) = quad
-                (a.take[3] ++ d.take[3] ++ c.take[3] ++ b.take[3]).toSeq
+                (a.take[3] ++ b.take[3] ++ c.take[3] ++ d.take[3]).toSeq
             })
             .map(_.toFloat)
             .toArray
