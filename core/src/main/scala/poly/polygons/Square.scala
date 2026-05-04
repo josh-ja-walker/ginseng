@@ -18,9 +18,6 @@ type Square = Quad
 
 object Square {
 
-    def apply(p: Pos, size: Length) = Quad(p, p + Dir.right * size.toDouble, 
-        p + Dir(1, 1, 0) * size.toDouble, p + Dir.up * size.toDouble)
-
     def unapply(s: Square) = Quad.unapply(s)
 
     def unital: Square = Square.size(1.u)
@@ -28,6 +25,13 @@ object Square {
 
     def centered(center: Pos, size: Length): Square = 
         Square.size(size).repositioned(_.center, center)
+
+    def apply(a: Pos, size: Length) = {
+        val b = a + Dir.right * size.toDouble
+        val c = b + Dir.up * size.toDouble
+        val d = a + Dir.up * size.toDouble
+        Quad(a, b, c, d)
+    }
 
 }
 

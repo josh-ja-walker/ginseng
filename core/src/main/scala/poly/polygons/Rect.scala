@@ -20,19 +20,19 @@ type Rect = Quad
 
 object Rect {
 
-    def unital: Rect = Rect.size(2.u, 1.u)
-    def size(width: Length, height: Length): Rect = 
-        Square.size(width).scaled(Vec.up[3] * height.toDouble)
-
     def unapply(r: Rect) = Quad.unapply(r)
 
+    def unital: Rect = Rect.size(2.u, 1.u)
+    def size(width: Length, height: Length): Rect = 
+        Square.unital.scaled(Vec[3](width.toDouble, height.toDouble, 1))
+
+    // TODO: Make centered a transformation
+    // TODO: Make centeredOn(p) a transformation
     def centered(center: Pos, width: Length, height: Length): Rect = 
         Rect.size(width, height).repositioned(_.center, center)
 
-    def apply(bottomLeft: Pos, topRight: Pos): Square = {
-        val Pos(x1, y1, z1, _) = bottomLeft; val Pos(x2, y2, z2, _) = topRight 
-        Quad(bottomLeft, Pos(x2, y1, z2), topRight, Pos(x1, y2, z1))
-    }
+    def apply(a: Pos, c: Pos): Square = 
+        Rect.size((c.x - a.x).u, (c.y - a.y).u).repositioned(_.center, a)
 
 }
 

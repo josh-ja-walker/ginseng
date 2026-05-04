@@ -26,8 +26,9 @@ object Diamond {
     def size(width: Length, height: Length): Diamond = 
         unital.scaled(Vec[3](width.toDouble, height.toDouble, 1))
 
-    def centered(center: Pos, size: Length): Diamond = Square.centered(center, size)
-        .rotated(45.toDegrees)
+    def centered(center: Pos, size: Length): Diamond = Diamond.size(size).repositioned(_.center, center)
+    
+    def apply(a: Pos, size: Length): Diamond = Diamond.size(size).repositioned(_.a, a)
 
 }
 
