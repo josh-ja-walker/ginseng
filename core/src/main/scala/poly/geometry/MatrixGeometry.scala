@@ -61,10 +61,10 @@ given MatrixGeometry[Quad, 4] with {
         }
 }
 
-given [N <: Int] => ValueOf[N] => =:=[N >= 3, true] => MatrixGeometry[PolygonN[N], N] {
-    override def construct(m: Mat[4, N]): PolygonN[N] = PolygonN(m.toPositions*)
+given [N <: Int] => ValueOf[N] => =:=[N >= 3, true] => MatrixGeometry[RegPolygon[N], N] {
+    override def construct(m: Mat[4, N]): RegPolygon[N] = RegPolygon(m.toPositions*)
 
-    extension (t: PolygonN[N])
+    extension (t: RegPolygon[N])
         override def toMat: Mat[4, N] = {
             new Mat[4, N](t.verts.map(p => p: Vec[4]))
         }

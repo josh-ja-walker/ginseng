@@ -12,7 +12,7 @@ import ginseng.maths.angle.*
 import ginseng.maths.geometry.*
 import ginseng.maths.geometry.given
 
-type Pentagon = PolygonN[5]
+type Pentagon = RegPolygon[5]
 
 object Pentagon {
 

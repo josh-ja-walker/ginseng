@@ -16,7 +16,7 @@ import ginseng.core.poly.geometry.given
 import ginseng.maths.linalg.*
 
 
-class PolygonNRenderer(private val ns: Seq[Int], private val vao: Ptr[UInt]) extends Renderer[PolygonN[?]] {
+class RegPolygonRenderer(private val ns: Seq[Int], private val vao: Ptr[UInt]) extends Renderer[RegPolygon[?]] {
     def render(shader: ShaderProg)(using zone: Zone) = {
         // Bind shader to OpenGL state machine
         shader.bind()
@@ -31,8 +31,8 @@ class PolygonNRenderer(private val ns: Seq[Int], private val vao: Ptr[UInt]) ext
 }
 
 
-object PolygonNRenderer {
-    def apply(polygons: PolygonN[?]*)(using zone: Zone): PolygonNRenderer = {
+object RegPolygonRenderer {
+    def apply(polygons: RegPolygon[?]*)(using zone: Zone): RegPolygonRenderer = {
         // Define quad points array
         val points: Array[Float] = polygons
             .flatMap(_.verts.flatMap(_.take[3].toSeq)) 
@@ -60,7 +60,7 @@ object PolygonNRenderer {
         glVertexAttribPointer(0.toUInt, 3, GL_FLOAT, GL_FALSE, 0, null)
 
         // TODO: use N instead of verts length
-        new PolygonNRenderer(polygons.map(_.verts.length), vao)
+        new RegPolygonRenderer(polygons.map(_.verts.length), vao)
     }
 
 }
