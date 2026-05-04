@@ -32,7 +32,11 @@ class StripRenderer(private val width: Float, private val lengths: Seq[Int], pri
 
         // Bind vertex array to and draw
         glBindVertexArray(!vao)
-        glDrawArrays(GL_LINE_STRIP, 0, lengths.sum) // TODO: support other type of line drawing (LOOP, STRIP, etc.,)
+
+        // Draw disjointed line strips
+        val starts = lengths.scanLeft(0)(_ + _).toArray
+        val counts = lengths.toArray
+        glMultiDrawArrays(GL_LINE_STRIP, starts.at(0), counts.at(0), lengths.length)
 
         // Reset line width
         glLineWidth(!defaultWidth)

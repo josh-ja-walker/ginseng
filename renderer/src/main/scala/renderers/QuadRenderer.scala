@@ -21,7 +21,11 @@ class QuadRenderer(private val num: Int, private val vao: Ptr[UInt]) extends Ren
         
         // Bind vertex array to and draw
         glBindVertexArray(!vao)
-        glDrawArrays(GL_TRIANGLE_FAN, 0, num * 4)
+
+        // Draw disjointed primitives
+        val starts = Seq.iterate(0, num)(_ + 4).toArray // 4 because Quad
+        val counts = Seq.fill(num)(4).toArray
+        glMultiDrawArrays(GL_TRIANGLE_FAN, starts.at(0), counts.at(0), num)
     }
 }
 
