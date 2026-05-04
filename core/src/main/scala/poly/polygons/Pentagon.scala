@@ -12,47 +12,26 @@ import ginseng.maths.angle.*
 import ginseng.maths.geometry.*
 import ginseng.maths.geometry.given
 
-
-case class Pentagon(a: Pos, b: Pos, c: Pos, d: Pos, e: Pos) 
-    extends Polygon[5] {
-
-    // helpers for referencing edges
-    val ab: Edge[Pentagon] = this.edge[Pentagon.A, Pentagon.B]
-    val bc: Edge[Pentagon] = this.edge[Pentagon.B, Pentagon.C]
-    val cd: Edge[Pentagon] = this.edge[Pentagon.C, Pentagon.D]
-    val de: Edge[Pentagon] = this.edge[Pentagon.D, Pentagon.E]
-    val ea: Edge[Pentagon] = this.edge[Pentagon.E, Pentagon.A]
-
-    // helpers for referencing angles
-    val alpha: Arc[Pentagon]   = this.angle[Pentagon.E, Pentagon.A, Pentagon.B]
-    val beta:  Arc[Pentagon]   = this.angle[Pentagon.A, Pentagon.B, Pentagon.C]
-    val gamma: Arc[Pentagon]   = this.angle[Pentagon.B, Pentagon.C, Pentagon.D]
-    val delta: Arc[Pentagon]   = this.angle[Pentagon.C, Pentagon.D, Pentagon.E]
-    val epsilon: Arc[Pentagon] = this.angle[Pentagon.D, Pentagon.E, Pentagon.A]
-
-}
-
+type Pentagon = PolygonN[5]
 
 object Pentagon {
 
     type A = 0; type B = 1; type C = 2; type D = 3; type E = 4
 
-    // TODO: can be used for N polygon
-    def apply(a: Pos, length: Length): Pentagon = {
-        val exterior: Angle = Deg(360.toDegrees / 5) // TODO: improve angle
+    extension (p: Pentagon) {
+        // helpers for referencing edges
+        def ab: Edge[Pentagon] = p.edge[Pentagon.A, Pentagon.B]
+        def bc: Edge[Pentagon] = p.edge[Pentagon.B, Pentagon.C]
+        def cd: Edge[Pentagon] = p.edge[Pentagon.C, Pentagon.D]
+        def de: Edge[Pentagon] = p.edge[Pentagon.D, Pentagon.E]
+        def ea: Edge[Pentagon] = p.edge[Pentagon.E, Pentagon.A]
 
-        val Seq(_, b, c, d, e): Seq[Pos] = Stream.from(0)
-            .scanLeft(a)((p, i) => p + (Dir.right * length.toDouble)
-                .rotate(Deg(exterior.toDegrees * i)))
-            .take(5)
-            
-        Pentagon(a, b, c, d, e)
+        // helpers for referencing angles
+        def alpha: Arc[Pentagon]   = p.angle[Pentagon.E, Pentagon.A, Pentagon.B]
+        def beta:  Arc[Pentagon]   = p.angle[Pentagon.A, Pentagon.B, Pentagon.C]
+        def gamma: Arc[Pentagon]   = p.angle[Pentagon.B, Pentagon.C, Pentagon.D]
+        def delta: Arc[Pentagon]   = p.angle[Pentagon.C, Pentagon.D, Pentagon.E]
+        def epsilon: Arc[Pentagon] = p.angle[Pentagon.D, Pentagon.E, Pentagon.A]
     }
-
-    def unital: Pentagon = Pentagon.size(0.5d.u)
-    def size(size: Length): Pentagon = Pentagon(Pos.origin, size)
-
-    def centered(center: Pos, size: Length): Pentagon = 
-        Pentagon.size(size).repositioned(_.center, center)
 
 }

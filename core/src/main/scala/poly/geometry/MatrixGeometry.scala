@@ -1,5 +1,7 @@
 package ginseng.core.poly.geometry
 
+import scala.compiletime.ops.int.*
+
 import ginseng.core.poly.*
 import ginseng.core.poly.misc.*
 import ginseng.core.poly.polylines.*
@@ -59,15 +61,11 @@ given MatrixGeometry[Quad, 4] with {
         }
 }
 
-given MatrixGeometry[Pentagon, 5] with {
-    override def construct(m: Mat[4, 5]): Pentagon = {
-        val Seq(a, b, c, d, e) = m.toPositions
-        Pentagon(a, b, c, d, e)
-    }
+given [N <: Int] => ValueOf[N] => =:=[N >= 3, true] => MatrixGeometry[PolygonN[N], N] {
+    override def construct(m: Mat[4, N]): PolygonN[N] = PolygonN(m.toPositions*)
 
-    extension (t: Pentagon)
-        override def toMat: Mat[4, 5] = {
-            val Pentagon(a, b, c, d, e) = t
-            Mat[4, 5](a, b, c, d, e)
+    extension (t: PolygonN[N])
+        override def toMat: Mat[4, N] = {
+            new Mat[4, N](t.verts.map(p => p: Vec[4]))
         }
 }

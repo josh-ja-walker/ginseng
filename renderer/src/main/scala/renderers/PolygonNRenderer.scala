@@ -16,27 +16,26 @@ import ginseng.core.poly.geometry.given
 import ginseng.maths.linalg.*
 
 
-class PentagonRenderer(private val num: Int, private val vao: Ptr[UInt]) extends Renderer[Pentagon] {
+class PolygonNRenderer(private val ns: Seq[Int], private val vao: Ptr[UInt]) extends Renderer[PolygonN[?]] {
     def render(shader: ShaderProg)(using zone: Zone) = {
         // Bind shader to OpenGL state machine
         shader.bind()
         
         // Bind vertex array to and draw
         glBindVertexArray(!vao)
-        glDrawArrays(GL_TRIANGLE_FAN, 0, num * 5)
+
+        val starts = ns.scanLeft(0)(_ + _).toArray
+        val counts = ns.toArray
+        glMultiDrawArrays(GL_TRIANGLE_FAN, starts.at(0), counts.at(0), ns.length)
     }
 }
 
 
-object PentagonRenderer {
-    def apply(pentagons: Pentagon*)(using zone: Zone): PentagonRenderer = {
+object PolygonNRenderer {
+    def apply(polygons: PolygonN[?]*)(using zone: Zone): PolygonNRenderer = {
         // Define quad points array
-        val points: Array[Float] = pentagons
-            .flatMap(pentagon => {
-                val Pentagon(a, b, c, d, e) = pentagon
-                (a.take[3] ++ b.take[3] ++ c.take[3] ++ d.take[3] ++ e.take[3]).toSeq
-
-            })
+        val points: Array[Float] = polygons
+            .flatMap(_.verts.flatMap(_.take[3].toSeq)) 
             .map(_.toFloat)
             .toArray
 
@@ -60,7 +59,8 @@ object PentagonRenderer {
         glBindBuffer(GL_ARRAY_BUFFER, !vbo)
         glVertexAttribPointer(0.toUInt, 3, GL_FLOAT, GL_FALSE, 0, null)
 
-        new PentagonRenderer(pentagons.length, vao)
+        // TODO: use N instead of verts length
+        new PolygonNRenderer(polygons.map(_.verts.length), vao)
     }
 
 }
