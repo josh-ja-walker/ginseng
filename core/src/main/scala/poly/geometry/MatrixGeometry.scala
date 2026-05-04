@@ -58,3 +58,16 @@ given MatrixGeometry[Quad, 4] with {
             Mat[4, 4](a, b, c, d)
         }
 }
+
+given MatrixGeometry[Pentagon, 5] with {
+    override def construct(m: Mat[4, 5]): Pentagon = {
+        val Seq(a, b, c, d, e) = m.toPositions
+        Pentagon(a, b, c, d, e)
+    }
+
+    extension (t: Pentagon)
+        override def toMat: Mat[4, 5] = {
+            val Pentagon(a, b, c, d, e) = t
+            Mat[4, 5](a, b, c, d, e)
+        }
+}
