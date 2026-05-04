@@ -4,6 +4,7 @@ import scala.compiletime.ops.int.*
 
 import ginseng.core.poly.*
 import ginseng.core.poly.polygons.*
+import ginseng.core.poly.geometry.MatrixGeometry
 
 
 trait Modifier[T <: Poly[?], C <: Component[T]] {
@@ -40,3 +41,12 @@ given Modifier[Tri, Vertex[Tri]] with
 
             new Tri(c.host.mat.update(c.index, v.pos))
         }
+
+
+// Modifier for Triangle vertices
+given [N <: Int, T <: Poly[N]] => (m: MatrixGeometry[T, N]) => Modifier[T, Vertex[T]] {
+    extension (c: Vertex[T])
+        override def update(v: Vertex[T]): T = {
+            m.construct(m.toMat(c.host).update(c.index, v.pos))
+        }
+}
