@@ -28,9 +28,9 @@ case class Tri(mat: Mat[4, 3])
     val ac: Edge[Tri] = this.edge[C, A] 
 
     // helpers for referencing angles
-    val alpha: Arc[Tri] = this.angle[B, A, C]
-    val beta: Arc[Tri] = this.angle[A, B, C]
-    val gamma: Arc[Tri] = this.angle[B, C, A]
+    val alpha: Arc[Tri] = this.arc[B, A, C]
+    val beta: Arc[Tri] = this.arc[A, B, C]
+    val gamma: Arc[Tri] = this.arc[B, C, A]
 
 }
 

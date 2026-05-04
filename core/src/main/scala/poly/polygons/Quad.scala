@@ -21,10 +21,10 @@ case class Quad(a: Pos, b: Pos, c: Pos, d: Pos)
     val da: Edge[Quad] = this.edge[Quad.D, Quad.A]
 
     // helpers for referencing angles
-    val alpha: Arc[Quad] = this.angle[Quad.D, Quad.A, Quad.B]
-    val beta:  Arc[Quad] = this.angle[Quad.A, Quad.B, Quad.C]
-    val gamma: Arc[Quad] = this.angle[Quad.B, Quad.C, Quad.D]
-    val delta: Arc[Quad] = this.angle[Quad.C, Quad.D, Quad.A]
+    val alpha: Arc[Quad] = this.arc[Quad.D, Quad.A, Quad.B]
+    val beta:  Arc[Quad] = this.arc[Quad.A, Quad.B, Quad.C]
+    val gamma: Arc[Quad] = this.arc[Quad.B, Quad.C, Quad.D]
+    val delta: Arc[Quad] = this.arc[Quad.C, Quad.D, Quad.A]
 
 }
 

@@ -27,11 +27,11 @@ object Pentagon {
         def ea: Edge[Pentagon] = p.edge[Pentagon.E, Pentagon.A]
 
         // helpers for referencing angles
-        def alpha: Arc[Pentagon]   = p.angle[Pentagon.E, Pentagon.A, Pentagon.B]
-        def beta:  Arc[Pentagon]   = p.angle[Pentagon.A, Pentagon.B, Pentagon.C]
-        def gamma: Arc[Pentagon]   = p.angle[Pentagon.B, Pentagon.C, Pentagon.D]
-        def delta: Arc[Pentagon]   = p.angle[Pentagon.C, Pentagon.D, Pentagon.E]
-        def epsilon: Arc[Pentagon] = p.angle[Pentagon.D, Pentagon.E, Pentagon.A]
+        def alpha: Arc[Pentagon]   = p.arc[Pentagon.E, Pentagon.A, Pentagon.B]
+        def beta:  Arc[Pentagon]   = p.arc[Pentagon.A, Pentagon.B, Pentagon.C]
+        def gamma: Arc[Pentagon]   = p.arc[Pentagon.B, Pentagon.C, Pentagon.D]
+        def delta: Arc[Pentagon]   = p.arc[Pentagon.C, Pentagon.D, Pentagon.E]
+        def epsilon: Arc[Pentagon] = p.arc[Pentagon.D, Pentagon.E, Pentagon.A]
     }
 
 }
