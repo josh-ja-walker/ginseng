@@ -14,6 +14,9 @@ trait Rotate[A] {
 
     extension (a: A)
         
+        // TODO: allow A => Dir and A => Pos similar to Repositioned 
+        // TODO: make local transform for objects - i.e., square.up if rotated =/= dir.up
+
         infix def rotated(theta: Angle): A = rotate(a, theta, Dir.forward)
         infix def rotated(theta: Angle, axis: Dir): A = rotate(a, theta, axis)
 
