@@ -22,12 +22,12 @@ object Diamond {
 
     def unital: Diamond = Diamond.size(1.u)
     def size(size: Length): Diamond = Square.size(size).rotated(45.toDegrees)
+    
     def size(width: Length, height: Length): Diamond = 
         unital.scaled(Vec[3](width.toDouble, height.toDouble, 1))
 
     def centered(center: Pos, size: Length): Diamond = Square.centered(center, size)
         .rotated(45.toDegrees)
-    
 
 }
 
