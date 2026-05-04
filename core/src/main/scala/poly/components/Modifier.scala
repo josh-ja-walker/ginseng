@@ -4,6 +4,7 @@ import scala.compiletime.ops.int.*
 
 import ginseng.core.poly.*
 import ginseng.core.poly.polygons.*
+import ginseng.core.poly.geometry.MatrixGeometry
 
 
 trait Modifier[T <: Poly[?], C <: Component[T]] {
@@ -32,11 +33,20 @@ given [N <: Int, T <: Poly[N]] => =:=[N >= 3, true] => Modifier[T, Edge[T]] => M
 
 
 // Modifier for Triangle vertices
-given Modifier[Triangle, Vertex[Triangle]] with 
-    extension (c: Vertex[Triangle])
-        override def update(v: Vertex[Triangle]): Triangle = {
+given Modifier[Tri, Vertex[Tri]] with 
+    extension (c: Vertex[Tri])
+        override def update(v: Vertex[Tri]): Tri = {
             require(c.index == v.index)
             require(c.host == v.host)
 
-            new Triangle(c.host.mat.update(c.index, v.pos))
+            new Tri(c.host.mat.update(c.index, v.pos))
         }
+
+
+// Modifier for Triangle vertices
+given [N <: Int, T <: Poly[N]] => (m: MatrixGeometry[T, N]) => Modifier[T, Vertex[T]] {
+    extension (c: Vertex[T])
+        override def update(v: Vertex[T]): T = {
+            m.construct(m.toMat(c.host).update(c.index, v.pos))
+        }
+}

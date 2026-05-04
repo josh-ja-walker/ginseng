@@ -1,7 +1,5 @@
 package ginseng.core.poly
 
 
-trait Poly[N <: Int] {
-    given ValueOf[N] = scala.compiletime.deferred
-}
+trait Poly[N <: Int](using ValueOf[N])
 

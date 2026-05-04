@@ -1,5 +1,7 @@
 package ginseng.core.poly.geometry
 
+import scala.compiletime.ops.int.*
+
 import ginseng.core.poly.*
 import ginseng.core.poly.misc.*
 import ginseng.core.poly.polylines.*
@@ -37,24 +39,33 @@ given MatrixGeometry[Line, 2] with {
 
 }
 
-given MatrixGeometry[Triangle, 3] with {
+given MatrixGeometry[Tri, 3] with {
 
-    override def construct(m: Mat[4, 3]): Triangle = Triangle(m)
+    override def construct(m: Mat[4, 3]): Tri = Tri(m)
 
-    extension (t: Triangle) 
+    extension (t: Tri) 
         override def toMat: Mat[4, 3] = t.mat
         
 }
 
-given MatrixGeometry[Box, 4] with {
-    override def construct(m: Mat[4, 4]): Box = {
+given MatrixGeometry[Quad, 4] with {
+    override def construct(m: Mat[4, 4]): Quad = {
         val Seq(a, b, c, d) = m.toPositions
-        Box(a, b, c, d)
+        Quad(a, b, c, d)
     }
 
-    extension (t: Box)
+    extension (t: Quad)
         override def toMat: Mat[4, 4] = {
-            val Box(a, b, c, d) = t
+            val Quad(a, b, c, d) = t
             Mat[4, 4](a, b, c, d)
+        }
+}
+
+given [N <: Int] => ValueOf[N] => =:=[N >= 3, true] => MatrixGeometry[RegPolygon[N], N] {
+    override def construct(m: Mat[4, N]): RegPolygon[N] = RegPolygon(m.toPositions*)
+
+    extension (t: RegPolygon[N])
+        override def toMat: Mat[4, N] = {
+            new Mat[4, N](t.verts.map(p => p: Vec[4]))
         }
 }

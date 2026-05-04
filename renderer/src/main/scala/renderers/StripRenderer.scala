@@ -5,16 +5,16 @@ import scala.scalanative.unsigned.*
 
 import opengl.bindings.glad.*
 import opengl.bindings.glfw.*
-import ginseng.maths.linalg.*
 
-import ginseng.core.poly.polylines.Line
-import ginseng.core.poly.polygons.Tri
+import ginseng.core.poly.polylines.*
+
+import ginseng.maths.linalg.*
 
 import ginseng.renderer.shaders.*
 import ginseng.renderer.rendering.*
 
 
-class LineRenderer(private val width: Float, private val num: Int, private val vao: Ptr[UInt]) extends Renderer[Line] {
+class StripRenderer(private val width: Float, private val lengths: Seq[Int], private val vao: Ptr[UInt]) extends Renderer[Strip[?]] {
     def render(shader: ShaderProg)(using zone: Zone) = {
         // Bind shader to OpenGL state machine
         shader.bind()
@@ -32,7 +32,11 @@ class LineRenderer(private val width: Float, private val num: Int, private val v
 
         // Bind vertex array to and draw
         glBindVertexArray(!vao)
-        glDrawArrays(GL_LINES, 0, num * 2) // TODO: support other type of line drawing (LOOP, STRIP, etc.,)
+
+        // Draw disjointed line strips
+        val starts = lengths.scanLeft(0)(_ + _).toArray
+        val counts = lengths.toArray
+        glMultiDrawArrays(GL_LINE_STRIP, starts.at(0), counts.at(0), lengths.length)
 
         // Reset line width
         glLineWidth(!defaultWidth)
@@ -40,27 +44,22 @@ class LineRenderer(private val width: Float, private val num: Int, private val v
 }
 
 
-object LineRenderer {
+object StripRenderer {
     
     // FIXME: default width means unnecessary modification of line width - instead use optional width 
     private val defaultLineWidth: Float = 1f
 
-    def apply(lines: Line*)(using zone: Zone): LineRenderer = {
-        LineRenderer(defaultLineWidth, lines*)
-    }
-        
+    def apply(strips: Strip[?]*)(using zone: Zone): StripRenderer =
+        StripRenderer(defaultLineWidth, strips*)
 
-    def apply(width: Float, lines: Line*)(using zone: Zone): LineRenderer = {
+    def apply(width: Float, strips: Strip[?]*)(using zone: Zone): StripRenderer = {
         // TODO: factor out points array intiialisation, etc. 
         // all of below is reused in TriangleRenderer, etc.
         
         // Define line points array
-        val points: Array[Float] = lines
-            .flatMap(line => {
-                // TODO: must be an easier way to concat consituent vectors
-                val Mat(a, b) = line.mat
-                (a.take[3] ++ b.take[3]).toSeq
-            })
+        val points: Array[Float] = strips
+            // .flatMap(loops => loops.pos.map(_.take[3]).flatten) // TODO: implement flatten
+            .flatMap(_.positions.flatMap(_.take[3].toSeq)) 
             .map(_.toFloat)
             .toArray
 
@@ -84,7 +83,7 @@ object LineRenderer {
         glBindBuffer(GL_ARRAY_BUFFER, !vbo)
         glVertexAttribPointer(0.toUInt, 3, GL_FLOAT, GL_FALSE, 0, null)
 
-        new LineRenderer(width, lines.length, vao)
+        new StripRenderer(width, strips.map(_.positions.length), vao)
     }
 
 }
