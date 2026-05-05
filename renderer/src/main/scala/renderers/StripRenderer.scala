@@ -7,14 +7,17 @@ import opengl.bindings.glad.*
 import opengl.bindings.glfw.*
 
 import ginseng.core.poly.polylines.*
+import ginseng.core.poly.geometry.*
+import ginseng.core.poly.geometry.given
 
 import ginseng.maths.linalg.*
 
 import ginseng.renderer.shaders.*
 import ginseng.renderer.renderers.*
+import ginseng.renderer.renderers.given
 
 
-class StripRenderer(private val width: Float, private val lengths: Seq[Int], private val vao: Ptr[UInt]) extends Renderer[Strip[?]] {
+class StripRenderer(width: Float, vao: VertexBuffer) extends Renderer[Strip[?]] {
     def render(shader: ShaderProg)(using zone: Zone) = {
         // Bind shader to OpenGL state machine
         shader.bind()
@@ -31,12 +34,12 @@ class StripRenderer(private val width: Float, private val lengths: Seq[Int], pri
         glLineWidth(width)
 
         // Bind vertex array to and draw
-        glBindVertexArray(!vao)
+        vao.bind()
 
         // Draw disjointed line strips
-        val starts = lengths.scanLeft(0)(_ + _).toArray
-        val counts = lengths.toArray
-        glMultiDrawArrays(GL_LINE_STRIP, starts.at(0), counts.at(0), lengths.length)
+        val starts = vao.sizes.scanLeft(0)(_ + _).toArray
+        val counts = vao.sizes.toArray
+        glMultiDrawArrays(GL_LINE_STRIP, starts.at(0), counts.at(0), vao.count)
 
         // Reset line width
         glLineWidth(!defaultWidth)
@@ -49,42 +52,11 @@ object StripRenderer {
     // FIXME: default width means unnecessary modification of line width - instead use optional width 
     private val defaultLineWidth: Float = 1f
 
-    def apply(strips: Strip[?]*)(using zone: Zone): StripRenderer =
+    def apply[N <: Int](strips: Strip[N]*)(using zone: Zone)(using ValueOf[N]): StripRenderer =
         StripRenderer(defaultLineWidth, strips*)
 
-    def apply(width: Float, strips: Strip[?]*)(using zone: Zone): StripRenderer = {
-        // TODO: factor out points array intiialisation, etc. 
-        // all of below is reused in TriangleRenderer, etc.
-        
-        // Define line points array
-        val points: Array[Float] = strips
-            // .flatMap(loops => loops.pos.map(_.take[3]).flatten) // TODO: implement flatten
-            .flatMap(_.positions.flatMap(_.take[3].toSeq)) 
-            .map(_.toFloat)
-            .toArray
-
-        val pointsPtr: Ptr[Byte] = points.at(0).asInstanceOf[Ptr[Byte]]
-
-        // Initialise vertex buffer
-        val vbo: Ptr[UInt] = alloc[UInt]()
-        !vbo = 0.toUInt
-
-        glGenBuffers(1, vbo)
-        glBindBuffer(GL_ARRAY_BUFFER, !vbo)
-        glBufferData(GL_ARRAY_BUFFER, points.length * sizeOf[Float], pointsPtr, GL_STATIC_DRAW)
-
-        // Initialise vertex array
-        val vao: Ptr[UInt] = alloc[UInt]()
-        !vao = 0.toUInt
-        
-        glGenVertexArrays(1, vao)
-        glBindVertexArray(!vao)
-        glEnableVertexAttribArray(0.toUInt)
-        glBindBuffer(GL_ARRAY_BUFFER, !vbo)
-        glVertexAttribPointer(0.toUInt, 3, GL_FLOAT, GL_FALSE, 0, null)
-
-        new StripRenderer(width, strips.map(_.positions.length), vao)
-    }
+    def apply[N <: Int](width: Float, strips: Strip[N]*)(using zone: Zone)(using ValueOf[N]): StripRenderer = 
+        new StripRenderer(width, VertexBuffer[Strip[N]](strips*))
 
 }
 

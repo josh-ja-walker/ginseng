@@ -9,10 +9,12 @@ import ginseng.maths.linalg.*
 
 import ginseng.renderer.shaders.*
 import ginseng.renderer.renderers.*
-import ginseng.core.poly.polylines.Loop
+
+import ginseng.core.poly.polylines.*
+import ginseng.core.poly.geometry.given
 
 
-class LoopRenderer(private val width: Float, private val lengths: Seq[Int], private val vao: Ptr[UInt]) extends Renderer[Loop[?]] {
+class LoopRenderer(width: Float, vao: VertexBuffer) extends Renderer[Loop[?]] {
     def render(shader: ShaderProg)(using zone: Zone) = {
         // Bind shader to OpenGL state machine
         shader.bind()
@@ -29,12 +31,12 @@ class LoopRenderer(private val width: Float, private val lengths: Seq[Int], priv
         glLineWidth(width)
 
         // Bind vertex array to and draw
-        glBindVertexArray(!vao)
+        vao.bind()
 
         // Draw disjointed line strips
-        val starts = lengths.scanLeft(0)(_ + _).toArray
-        val counts = lengths.toArray
-        glMultiDrawArrays(GL_LINE_LOOP, starts.at(0), counts.at(0), lengths.length)
+        val starts = vao.sizes.scanLeft(0)(_ + _).toArray
+        val counts = vao.sizes.toArray
+        glMultiDrawArrays(GL_LINE_STRIP, starts.at(0), counts.at(0), vao.count)
 
         // Reset line width
         glLineWidth(!defaultWidth)
@@ -47,42 +49,11 @@ object LoopRenderer {
     // FIXME: default width means unnecessary modification of line width - instead use optional width 
     private val defaultLineWidth: Float = 1f
 
-    def apply(loops: Loop[?]*)(using zone: Zone): LoopRenderer =
+    def apply[N <: Int](loops: Loop[N]*)(using zone: Zone)(using ValueOf[N]): LoopRenderer =
         LoopRenderer(defaultLineWidth, loops*)
 
-    def apply(width: Float, loops: Loop[?]*)(using zone: Zone): LoopRenderer = {
-        // TODO: factor out points array intiialisation, etc. 
-        // all of below is reused in TriangleRenderer, etc.
-        
-        // Define line points array
-        val points: Array[Float] = loops
-            // .flatMap(loops => loops.pos.map(_.take[3]).flatten) // TODO: implement flatten
-            .flatMap(_.positions.flatMap(_.take[3].toSeq)) 
-            .map(_.toFloat)
-            .toArray
-
-        val pointsPtr: Ptr[Byte] = points.at(0).asInstanceOf[Ptr[Byte]]
-
-        // Initialise vertex buffer
-        val vbo: Ptr[UInt] = alloc[UInt]()
-        !vbo = 0.toUInt
-
-        glGenBuffers(1, vbo)
-        glBindBuffer(GL_ARRAY_BUFFER, !vbo)
-        glBufferData(GL_ARRAY_BUFFER, points.length * sizeOf[Float], pointsPtr, GL_STATIC_DRAW)
-
-        // Initialise vertex array
-        val vao: Ptr[UInt] = alloc[UInt]()
-        !vao = 0.toUInt
-        
-        glGenVertexArrays(1, vao)
-        glBindVertexArray(!vao)
-        glEnableVertexAttribArray(0.toUInt)
-        glBindBuffer(GL_ARRAY_BUFFER, !vbo)
-        glVertexAttribPointer(0.toUInt, 3, GL_FLOAT, GL_FALSE, 0, null)
-
-        new LoopRenderer(width, loops.map(_.positions.length), vao)
-    }
+    def apply[N <: Int](width: Float, loops: Loop[N]*)(using zone: Zone)(using ValueOf[N]): LoopRenderer =
+        new LoopRenderer(width, VertexBuffer[Loop[N]](loops*))
 
 }
 
