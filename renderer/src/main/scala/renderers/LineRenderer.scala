@@ -1,4 +1,4 @@
-package ginseng.renderer.rendering
+package ginseng.renderer.renderers
 
 import scala.scalanative.unsafe.*
 import scala.scalanative.unsigned.*
@@ -11,7 +11,7 @@ import ginseng.core.poly.polylines.Line
 import ginseng.core.poly.polygons.Tri
 
 import ginseng.renderer.shaders.*
-import ginseng.renderer.rendering.*
+import ginseng.renderer.renderers.*
 
 
 class LineRenderer(private val width: Float, private val num: Int, private val vao: Ptr[UInt]) extends Renderer[Line] {

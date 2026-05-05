@@ -1,4 +1,4 @@
-package ginseng.renderer.rendering
+package ginseng.renderer.renderers
 
 import scala.scalanative.unsafe.*
 import scala.scalanative.unsigned.*
@@ -11,7 +11,7 @@ import ginseng.core.poly.polylines.*
 import ginseng.maths.linalg.*
 
 import ginseng.renderer.shaders.*
-import ginseng.renderer.rendering.*
+import ginseng.renderer.renderers.*
 
 
 class StripRenderer(private val width: Float, private val lengths: Seq[Int], private val vao: Ptr[UInt]) extends Renderer[Strip[?]] {

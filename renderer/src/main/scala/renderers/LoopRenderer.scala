@@ -1,4 +1,4 @@
-package ginseng.renderer.rendering
+package ginseng.renderer.renderers
 
 import scala.scalanative.unsafe.*
 import scala.scalanative.unsigned.*
@@ -8,7 +8,7 @@ import opengl.bindings.glfw.*
 import ginseng.maths.linalg.*
 
 import ginseng.renderer.shaders.*
-import ginseng.renderer.rendering.*
+import ginseng.renderer.renderers.*
 import ginseng.core.poly.polylines.Loop
 
 

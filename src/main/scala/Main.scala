@@ -23,7 +23,7 @@ import ginseng.maths.geometry.*
 import ginseng.renderer.*
 import ginseng.renderer.shaders.*
 import ginseng.renderer.context.*
-import ginseng.renderer.rendering.*
+import ginseng.renderer.renderers.*
 
 import opengl.bindings.glad.*
 import opengl.bindings.glfw.*
