@@ -5,6 +5,9 @@ import ginseng.core.poly.*
 import ginseng.maths.linalg.*
 import ginseng.maths.geometry.*
 
+import ginseng.core.poly.polygons.*
+import ginseng.core.poly.polylines.*
+
 
 trait Geometry[T <: Poly[?]] {
  
@@ -30,3 +33,15 @@ given [N <: Int, T <: Poly[N]] => ValueOf[N] => (m: MatrixGeometry[T, N]) => Geo
         def positions: Array[Pos] = m.toMat(t).toPositions.toArray
 
 }
+
+
+// FIXME: ideally not required but idk how
+
+// given Geometry[Strip[?]] {
+
+//     def construct(positions: Pos*): Strip[?] = Strip(positions*)
+    
+//     extension (t: Strip[?]) 
+//         def positions: Array[Pos] = t.positions.toArray
+
+// }

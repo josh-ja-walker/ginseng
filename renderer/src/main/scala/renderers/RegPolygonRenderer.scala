@@ -37,6 +37,12 @@ object RegPolygonRenderer {
     def apply[N <: Int](polygons: RegPolygon[N]*)(using zone: Zone)(using ValueOf[N], N >= 3 =:= true): RegPolygonRenderer = 
         new RegPolygonRenderer(VertexBuffer[RegPolygon[N]](polygons*)) // TODO: use N instead of verts length
 
+    // def apply(polygons: RegPolygon[?]*)(using zone: Zone)(using ValueOf[?], ? >= 3 =:= true): RegPolygonRenderer = 
+    //     new RegPolygonRenderer(VertexBuffer[RegPolygon[?]](polygons*)) // TODO: use N instead of verts length
+        // FIXME: THE ABOVE IS NOT POSSIBLE FOR THE FOLLOWING REASONS
+        // USING THE WILDCARD ? MEANS THAT THERE IS NO N <: INT
+        // THIS MEANS THERE IS NO GIVEN [T, N] => MATRIXGEOMETRY[T, N] => GEOMETRY[T]
+        // I DO NOT KNOW HOW TO DO
 }
 
 

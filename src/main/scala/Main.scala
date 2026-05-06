@@ -99,9 +99,9 @@ import scala.util.Random
         }}
 
         // FIXME: now unable to create loop renderers for Loop[?]
-        val loop2 = Loop[2](Pos.origin, Pos.topRight)
-        val loop3 = Loop[3](Pos.origin, Pos.topRight, Pos.bottomRight)
-        val loopRenderer = LoopRenderer(loop2, loop3).render(triShader)
+        // val loop2 = Loop[2](Pos.origin, Pos.topRight)
+        // val loop3 = Loop[3](Pos.origin, Pos.topRight, Pos.bottomRight)
+        // val loopRenderer = LoopRenderer(loop2, loop3).render(triShader)
 
         val factor = if t >= 50 then 10d / 9d else 0.9d
 
