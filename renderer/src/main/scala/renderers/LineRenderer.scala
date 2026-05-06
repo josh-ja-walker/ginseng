@@ -21,7 +21,7 @@ class LineRenderer(vao: VertexBuffer, width: Option[Float] = None) extends Rende
         shader.bind()
         vao.bind()
 
-        LineWidth.using(width) {
+        Settings.LineWidth.using(width) {
             glDrawArrays(GL_LINES, 0, vao.count * 2) 
         }
     }

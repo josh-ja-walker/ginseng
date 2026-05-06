@@ -26,7 +26,7 @@ class StripRenderer(vao: VertexBuffer, width: Option[Float] = None) extends Rend
         // Bind vertex array to and draw
         vao.bind()
 
-        LineWidth.using(width) {
+        Settings.LineWidth.using(width) {
             // Draw disjointed line strips
             val starts = vao.sizes.scanLeft(0)(_ + _).toArray
             val counts = vao.sizes.toArray

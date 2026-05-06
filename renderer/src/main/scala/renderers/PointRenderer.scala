@@ -23,7 +23,7 @@ class PointRenderer(vao: VertexBuffer, pointSize: Option[Float] = None) extends 
         // Bind vertex array to and draw
         vao.bind()
         
-        PointSize.using(pointSize) {
+        Settings.PointSize.using(pointSize) {
             glDrawArrays(GL_POINTS, 0, vao.count)
         }
     }
