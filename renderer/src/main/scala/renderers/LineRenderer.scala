@@ -12,7 +12,7 @@ import ginseng.core.poly.geometry.given
 
 import ginseng.renderer.shaders.*
 import ginseng.renderer.renderers.*
-import ginseng.renderer.renderers.Buffer.*
+import ginseng.renderer.renderers.settings.*
 
 
 class LineRenderer(vao: VertexBuffer, width: Option[Float] = None) extends Renderer[Line] {

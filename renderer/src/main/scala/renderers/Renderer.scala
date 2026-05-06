@@ -8,4 +8,5 @@ import ginseng.renderer.shaders.*
 
 trait Renderer[A <: Poly[?]] {
     def render(shader: ShaderProg)(using zone: Zone): Unit
+    // def render(vao: VertexBuffer, shader: ShaderProg)(using zone: Zone): Unit
 }

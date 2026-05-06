@@ -15,7 +15,7 @@ import ginseng.maths.linalg.*
 import ginseng.renderer.shaders.*
 import ginseng.renderer.renderers.*
 import ginseng.renderer.renderers.given
-import ginseng.renderer.renderers.Buffer.*
+import ginseng.renderer.renderers.settings.*
 
 
 class StripRenderer(vao: VertexBuffer, width: Option[Float] = None) extends Renderer[Strip[?]] {

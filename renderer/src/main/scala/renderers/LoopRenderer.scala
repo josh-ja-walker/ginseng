@@ -12,7 +12,7 @@ import ginseng.renderer.renderers.*
 
 import ginseng.core.poly.polylines.*
 import ginseng.core.poly.geometry.given
-import ginseng.renderer.renderers.Buffer.*
+import ginseng.renderer.renderers.settings.*
 
 
 class LoopRenderer(vao: VertexBuffer, width: Option[Float] = None) extends Renderer[Loop[?]] {
