@@ -15,48 +15,34 @@ import ginseng.maths.linalg.*
 import ginseng.renderer.shaders.*
 import ginseng.renderer.renderers.*
 import ginseng.renderer.renderers.given
+import ginseng.renderer.renderers.Buffer.*
 
 
-class StripRenderer(width: Float, vao: VertexBuffer) extends Renderer[Strip[?]] {
+class StripRenderer(vao: VertexBuffer, width: Option[Float] = None) extends Renderer[Strip[?]] {
     def render(shader: ShaderProg)(using zone: Zone) = {
         // Bind shader to OpenGL state machine
         shader.bind()
         
-        // Buffer width before modification
-        val defaultWidth = alloc[Float](1)
-        glGetFloatv(GL_LINE_WIDTH, defaultWidth)
-
-        // TODO: this provides unstable results at high widths
-        // line width must be within GL_ALIASED_LINE_WIDTH_RANGE / GL_SMOOTH_LINE_WIDTH_RANGE 
-        // TODO: also provide user with enabling / disabling of line smoothing
-
-        // Change line width to desired width
-        glLineWidth(width)
-
         // Bind vertex array to and draw
         vao.bind()
 
-        // Draw disjointed line strips
-        val starts = vao.sizes.scanLeft(0)(_ + _).toArray
-        val counts = vao.sizes.toArray
-        glMultiDrawArrays(GL_LINE_STRIP, starts.at(0), counts.at(0), vao.count)
-
-        // Reset line width
-        glLineWidth(!defaultWidth)
+        LineWidth.using(width) {
+            // Draw disjointed line strips
+            val starts = vao.sizes.scanLeft(0)(_ + _).toArray
+            val counts = vao.sizes.toArray
+            glMultiDrawArrays(GL_LINE_STRIP, starts.at(0), counts.at(0), vao.count)
+        }
     }
 }
 
 
 object StripRenderer {
-    
-    // FIXME: default width means unnecessary modification of line width - instead use optional width 
-    private val defaultLineWidth: Float = 1f
 
     def apply[N <: Int](strips: Strip[N]*)(using zone: Zone)(using ValueOf[N]): StripRenderer =
-        StripRenderer(defaultLineWidth, strips*)
+        new StripRenderer(VertexBuffer(strips*))
 
-    def apply[N <: Int](width: Float, strips: Strip[N]*)(using zone: Zone)(using ValueOf[N]): StripRenderer = 
-        new StripRenderer(width, VertexBuffer[Strip[N]](strips*))
+    def width(width: Float)[N <: Int](strips: Strip[N]*)(using zone: Zone)(using ValueOf[N]): StripRenderer = 
+        new StripRenderer(VertexBuffer(strips*), Some(width))
 
 }
 
