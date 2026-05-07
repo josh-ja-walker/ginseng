@@ -1,4 +1,4 @@
-package ginseng.renderer.renderers
+package ginseng.renderer.renderers.polylines
 
 import scala.scalanative.unsafe.*
 import scala.scalanative.unsigned.*
@@ -15,7 +15,7 @@ import ginseng.maths.linalg.*
 import ginseng.renderer.shaders.*
 import ginseng.renderer.renderers.*
 import ginseng.renderer.renderers.given
-import ginseng.renderer.renderers.settings.*
+import ginseng.renderer.settings.*
 
 
 

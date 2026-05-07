@@ -1,4 +1,4 @@
-package ginseng.renderer.renderers
+package ginseng.renderer.renderers.polylines
 
 import scala.scalanative.unsafe.*
 import scala.scalanative.unsigned.*
@@ -9,10 +9,11 @@ import ginseng.maths.linalg.*
 
 import ginseng.renderer.shaders.*
 import ginseng.renderer.renderers.*
+import ginseng.renderer.renderers.given
+import ginseng.renderer.settings.*
 
 import ginseng.core.poly.polylines.*
 import ginseng.core.poly.geometry.given
-import ginseng.renderer.renderers.settings.*
 
 
 class LoopRenderer(renderer: MultiPolyRenderer, lineWidth: Option[Float] = None) extends Renderer[Loop[?]] {

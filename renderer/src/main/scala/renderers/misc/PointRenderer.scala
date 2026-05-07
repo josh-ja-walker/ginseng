@@ -1,4 +1,4 @@
-package ginseng.renderer.renderers
+package ginseng.renderer.renderers.misc
 
 import scala.scalanative.unsafe.*
 import scala.scalanative.unsigned.*
@@ -12,7 +12,8 @@ import ginseng.renderer.renderers.*
 import ginseng.core.colour.*
 import ginseng.core.poly.misc.*
 import ginseng.core.poly.geometry.given
-import ginseng.renderer.renderers.settings.*
+import ginseng.renderer.settings.*
+import ginseng.renderer.renderers.given
 
 
 class PointRenderer(polyRenderer: PolyRenderer, pointSize: Option[Float] = None) extends Renderer[Point] {

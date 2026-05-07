@@ -1,4 +1,4 @@
-package ginseng.renderer.renderers.settings
+package ginseng.renderer.settings
 
 import scala.scalanative.unsafe.*
 import scala.scalanative.unsigned.*
