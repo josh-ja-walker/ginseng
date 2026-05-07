@@ -15,34 +15,26 @@ import ginseng.core.poly.geometry.given
 import ginseng.renderer.renderers.settings.*
 
 
-class LoopRenderer(vao: VertexBuffer, width: Option[Float] = None) extends Renderer[Loop[?]] {
+class LoopRenderer(renderer: MultiPolyRenderer, lineWidth: Option[Float] = None) extends Renderer[Loop[?]] {
     def render(shader: ShaderProg)(using zone: Zone) = {
-        // Bind shader to OpenGL state machine
-        shader.bind()
-
-        // Bind vertex array to and draw
-        vao.bind()
-        
-        Settings.LineWidth.using(width) {
-
-            // Draw disjointed line strips
-            val starts = vao.sizes.scanLeft(0)(_ + _).toArray
-            val counts = vao.sizes.toArray
-            glMultiDrawArrays(GL_LINE_STRIP, starts.at(0), counts.at(0), vao.count)
-
+        Settings.LineWidth.using(lineWidth) {
+            renderer.render(shader)
         }
     }
 }
 
 
 object LoopRenderer {
-    
-    def apply[N <: Int](loops: Loop[N]*)(using zone: Zone)(using ValueOf[N]): LoopRenderer = 
-        new LoopRenderer(VertexBuffer(loops*))
 
-    def width(width: Float)[N <: Int](loops: Loop[N]*)(using zone: Zone)(using ValueOf[N]): LoopRenderer =
-        new LoopRenderer(VertexBuffer(loops*), Some(width))
+    private def apply[N <: Int](loops: Seq[Loop[N]], lineWidth: Option[Float])(using Zone, ValueOf[N]): LoopRenderer = {
+        val renderer = new MultiPolyRenderer(GL_LINE_LOOP, VertexBuffer(loops*))
+        new LoopRenderer(renderer, lineWidth)
+    }
+    
+    def apply[N <: Int](loops: Loop[N]*)(using Zone, ValueOf[N]): LoopRenderer = LoopRenderer(loops, None)
+
+    def width(width: Float)[N <: Int](loops: Loop[N]*)(using Zone, ValueOf[N]): LoopRenderer =
+        LoopRenderer(loops, Some(width))
 
 }
-
 

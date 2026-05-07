@@ -15,16 +15,10 @@ import ginseng.core.poly.geometry.given
 import ginseng.renderer.renderers.settings.*
 
 
-class PointRenderer(vao: VertexBuffer, pointSize: Option[Float] = None) extends Renderer[Point] {
+class PointRenderer(polyRenderer: PolyRenderer, pointSize: Option[Float] = None) extends Renderer[Point] {
     def render(shader: ShaderProg)(using zone: Zone) = {
-        // Bind shader to OpenGL state machine
-        shader.bind()
-
-        // Bind vertex array to and draw
-        vao.bind()
-        
         Settings.PointSize.using(pointSize) {
-            glDrawArrays(GL_POINTS, 0, vao.count)
+            polyRenderer.render(shader)
         }
     }
 }
@@ -32,11 +26,15 @@ class PointRenderer(vao: VertexBuffer, pointSize: Option[Float] = None) extends 
 
 object PointRenderer {
 
-    def apply(points: Point*)(using zone: Zone): PointRenderer = 
-        new PointRenderer(VertexBuffer(points*), None)
+    private def apply(points: Seq[Point], pointSize: Option[Float])(using Zone): PointRenderer = {
+        val renderer = new PolyRenderer(GL_POINTS, VertexBuffer(points*))
+        new PointRenderer(renderer, pointSize)
+    }
+
+    def apply(points: Point*)(using zone: Zone): PointRenderer = PointRenderer(points, None)
         
     def size(size: Float)(points: Point*)(using zone: Zone): PointRenderer = 
-        new PointRenderer(VertexBuffer(points*), Some(size))
+        PointRenderer(points, Some(size))
 
 }
 

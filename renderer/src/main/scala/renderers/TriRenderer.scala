@@ -15,21 +15,16 @@ import ginseng.core.poly.geometry.given
 import ginseng.maths.linalg.*
 
 
-class TriRenderer(vao: VertexBuffer) extends Renderer[Tri] {
-    def render(shader: ShaderProg)(using zone: Zone) = {
-        // Bind shader to OpenGL state machine
-        shader.bind()
-        
-        // Bind vertex array to and draw
-        vao.bind()
-        glDrawArrays(GL_TRIANGLES, 0, 3 * vao.count)
-    }
+class TriRenderer(renderer: PolyRenderer) extends Renderer[Tri] {
+    def render(shader: ShaderProg)(using zone: Zone) = renderer.render(shader)
 }
 
 
 object TriRenderer {
-    def apply(tris: Tri*)(using zone: Zone): TriRenderer = 
-        new TriRenderer(VertexBuffer(tris*))
+    def apply(tris: Tri*)(using zone: Zone): TriRenderer = {
+        val renderer = PolyRenderer(GL_TRIANGLES, VertexBuffer(tris*))
+        new TriRenderer(renderer)
+    }
 }
 
 

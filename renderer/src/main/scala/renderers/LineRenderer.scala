@@ -15,26 +15,27 @@ import ginseng.renderer.renderers.*
 import ginseng.renderer.renderers.settings.*
 
 
-class LineRenderer(vao: VertexBuffer, width: Option[Float] = None) extends Renderer[Line] {
-    def render(shader: ShaderProg)(using zone: Zone) = {
-        // Bind shader to OpenGL state machine
-        shader.bind()
-        vao.bind()
 
-        Settings.LineWidth.using(width) {
-            glDrawArrays(GL_LINES, 0, vao.count * 2) 
+class LineRenderer(renderer: PolyRenderer, lineWidth: Option[Float] = None) extends Renderer[Line] {
+    def render(shader: ShaderProg)(using zone: Zone) = {
+        Settings.LineWidth.using(lineWidth) {
+            renderer.render(shader)
         }
     }
 }
 
 
 object LineRenderer {
-    
-    def apply(lines: Line*)(using zone: Zone): LineRenderer = new LineRenderer(VertexBuffer(lines*))
 
-    def width(width: Float)(lines: Line*)(using zone: Zone): LineRenderer =
-        new LineRenderer(VertexBuffer(lines*), Some(width))
+    private def apply(lines: Seq[Line], lineWidth: Option[Float])(using Zone): LineRenderer = {
+        val renderer = new PolyRenderer(GL_LINES, VertexBuffer(lines*))
+        new LineRenderer(renderer, lineWidth)
+    }
+    
+    def apply(lines: Line*)(using Zone): LineRenderer = LineRenderer(lines, None)
+
+    def width(width: Float)(lines: Line*)(using Zone): LineRenderer =
+        LineRenderer(lines, Some(width))
 
 }
-
 

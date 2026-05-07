@@ -18,19 +18,11 @@ import ginseng.renderer.renderers.given
 import ginseng.renderer.renderers.settings.*
 
 
-class StripRenderer(vao: VertexBuffer, width: Option[Float] = None) extends Renderer[Strip[?]] {
-    def render(shader: ShaderProg)(using zone: Zone) = {
-        // Bind shader to OpenGL state machine
-        shader.bind()
-        
-        // Bind vertex array to and draw
-        vao.bind()
 
-        Settings.LineWidth.using(width) {
-            // Draw disjointed line strips
-            val starts = vao.sizes.scanLeft(0)(_ + _).toArray
-            val counts = vao.sizes.toArray
-            glMultiDrawArrays(GL_LINE_STRIP, starts.at(0), counts.at(0), vao.count)
+class StripRenderer(renderer: MultiPolyRenderer, lineWidth: Option[Float] = None) extends Renderer[Strip[?]] {
+    def render(shader: ShaderProg)(using zone: Zone) = {
+        Settings.LineWidth.using(lineWidth) {
+            renderer.render(shader)
         }
     }
 }
@@ -38,12 +30,17 @@ class StripRenderer(vao: VertexBuffer, width: Option[Float] = None) extends Rend
 
 object StripRenderer {
 
-    def apply[N <: Int](strips: Strip[N]*)(using zone: Zone)(using ValueOf[N]): StripRenderer =
-        new StripRenderer(VertexBuffer(strips*))
+    private def apply[N <: Int](lineStrips: Seq[Strip[N]], lineWidth: Option[Float])(using Zone, ValueOf[N]): StripRenderer = {
+        val renderer = new MultiPolyRenderer(GL_LINE_LOOP, VertexBuffer(lineStrips*))
+        new StripRenderer(renderer, lineWidth)
+    }
+    
+    def apply[N <: Int](lineStrips: Strip[N]*)(using Zone, ValueOf[N]): StripRenderer = StripRenderer(lineStrips, None)
 
-    def width(width: Float)[N <: Int](strips: Strip[N]*)(using zone: Zone)(using ValueOf[N]): StripRenderer = 
-        new StripRenderer(VertexBuffer(strips*), Some(width))
+    def width(width: Float)[N <: Int](lineStrips: Strip[N]*)(using Zone, ValueOf[N]): StripRenderer =
+        StripRenderer(lineStrips, Some(width))
 
 }
+
 
 
