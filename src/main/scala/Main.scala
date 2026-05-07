@@ -23,7 +23,8 @@ import ginseng.maths.geometry.*
 import ginseng.renderer.*
 import ginseng.renderer.shaders.*
 import ginseng.renderer.context.*
-import ginseng.renderer.rendering.*
+import ginseng.renderer.renderers.polygons.*
+import ginseng.renderer.renderers.polylines.*
 
 import opengl.bindings.glad.*
 import opengl.bindings.glfw.*
@@ -65,13 +66,13 @@ import scala.util.Random
 
     val (lineRenderer, lineShader) = {
         val shader = Shaders.flatShader(Colour.hex("#eeeeee"))
-        val renderer = LineRenderer(2.0f, grid(50)*)
+        val renderer = LineRenderer.width(2.0f)(grid(50)*)
         (renderer, shader)
     }
 
     val (boldLineRenderer, boldLineShader) = {
         val shader = Shaders.flatShader(Colour.hex("#aeaeae"))
-        val renderer = LineRenderer(4.0f, grid(10)*)
+        val renderer = LineRenderer.width(4.0f)(grid(10)*)
         (renderer, shader)
     }
 
@@ -97,6 +98,11 @@ import scala.util.Random
             val dir = if t < 50 then Dir.right else Dir.left
             angle.rotate(Deg(1))
         }}
+
+        // FIXME: now unable to create loop renderers for Loop[?]
+        // val loop2 = Loop[2](Pos.origin, Pos.topRight)
+        // val loop3 = Loop[3](Pos.origin, Pos.topRight, Pos.bottomRight)
+        // val loopRenderer = LoopRenderer(loop2, loop3).render(triShader)
 
         val factor = if t >= 50 then 10d / 9d else 0.9d
 
