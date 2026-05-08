@@ -66,13 +66,13 @@ import scala.util.Random
 
     val (lineRenderer, lineShader) = {
         val shader = Shaders.flatShader(Colour.hex("#eeeeee"))
-        val renderer = LineRenderer.width(2.0f)(grid(50)*)
+        val renderer = LineRenderer(grid(50)*)
         (renderer, shader)
     }
 
     val (boldLineRenderer, boldLineShader) = {
         val shader = Shaders.flatShader(Colour.hex("#aeaeae"))
-        val renderer = LineRenderer.width(4.0f)(grid(10)*)
+        val renderer = LineRenderer.width(2.0f)(grid(10)*)
         (renderer, shader)
     }
 
