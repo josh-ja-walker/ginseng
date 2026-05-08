@@ -36,8 +36,9 @@ object VertexBuffer {
         // Convert to list of points per primitive
         val primitives: Seq[Seq[Float]] = renderables.map(_.toPoints)
 
-        // Count number of points in each primitive
-        val counts: Seq[Int] = primitives.map(_.length)
+        // Count number of vertices in each primitive
+        // NOTE: div 3 because float values per vertex
+        val counts: Seq[Int] = primitives.map(_.length / 3) 
 
         // Define line points array
         val points: Array[Float] = primitives.flatten.toArray

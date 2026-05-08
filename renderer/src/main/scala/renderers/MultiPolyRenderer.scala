@@ -21,7 +21,7 @@ class MultiPolyRenderer(drawMode: GLenum, vao: VertexBuffer) extends Renderer[Po
         // Bind vertex array to and draw
         vao.bind()
 
-        val starts = vao.sizes.scanLeft(0)(_ + _).toArray
+        val starts = vao.sizes.scanLeft(0)(_ + _).dropRight(1).toArray
         val sizes = vao.sizes.toArray
         glMultiDrawArrays(drawMode, starts.at(0), sizes.at(0), vao.count)
     }
