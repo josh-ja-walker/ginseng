@@ -6,6 +6,7 @@ import ginseng.core.poly.*
 import ginseng.core.poly.misc.*
 import ginseng.core.poly.polylines.*
 import ginseng.core.poly.polygons.*
+import ginseng.core.poly.volumes.*
 
 import ginseng.maths.linalg.*
 import ginseng.maths.geometry.*
@@ -83,4 +84,20 @@ given [N <: Int] => ValueOf[N] => MatrixGeometry[Strip[N], N] {
     extension (t: Strip[N]) 
         override def toMat: Mat[4, N] = new Mat(t.positions)
 
+}
+
+
+given MatrixGeometry[Tetra, 4] {
+
+    override def construct(m: Mat[4, 4]): Tetra = {
+        val Seq(a, b, c, d) = m.toPositions
+        Tetra(a, b, c, d)
+    }
+
+    extension (t: Tetra) 
+        override def toMat: Mat[4, 4] = {
+            val Tetra(a, b, c, d) = t
+            Mat[4, 4](a, b, c, d)
+        }
+        
 }
