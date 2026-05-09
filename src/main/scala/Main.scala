@@ -7,8 +7,9 @@ import ginseng.core.colours.*
 
 import ginseng.core.poly.*
 import ginseng.core.poly.polygons.*
-import ginseng.core.transformations.*
+import ginseng.core.poly.volumes.*
 import ginseng.core.poly.polylines.*
+import ginseng.core.transformations.*
 
 import ginseng.core.poly.geometry.given // TODO: ideally export from geometry
 import ginseng.core.poly.polygons.given // TODO: ideally export from polygons
@@ -53,7 +54,15 @@ import scala.util.Random
         Colour.hex("#6C8EBF")
     )
     
+    var tetra = Tetra.unital
+        .repositioned(_.center, Pos.center)
+        .rotated(30.toDegrees, Pos.center, Dir.right)
     
+    var cube = Cube.unital
+        .repositioned(_.center, Pos.center)
+        .scaled(0.5f * Vec.one[3])
+        .rotated(15.toDegrees, Dir.right)
+
     // Define lines forming a grid
 
     def grid(n: Int): Seq[Line] = {
@@ -113,6 +122,19 @@ import scala.util.Random
         }
 
         TriRenderer(tri).render(triShader)
+
+        tetra = tetra
+            .rotated(15.toDegrees, Dir.up)
+            .rotated(5.toDegrees, Dir.right)
+            .rotated(3.toDegrees, Dir.forward)
+            
+        cube = cube
+            .rotated(1.toDegrees, Dir.up)
+            .rotated(2.toDegrees, Dir.right)
+            .rotated(3.toDegrees, Dir.forward)
+        
+        CubeRenderer(cube).render(triShader)
+        TetraRenderer(tetra).render(Shaders.flatShader(Colours.red))
 
         // Sleep for 0.05s
         Thread.sleep(50)
