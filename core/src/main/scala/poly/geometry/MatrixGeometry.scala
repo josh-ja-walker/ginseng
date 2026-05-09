@@ -102,6 +102,20 @@ given MatrixGeometry[Tetra, 4] {
         
 }
 
+given MatrixGeometry[Pyramid, 5] {
+
+    override def construct(m: Mat[4, 5]): Pyramid = {
+        val Seq(a, b, c, d, e) = m.toPositions
+        Pyramid(a, b, c, d, e)
+    }
+
+    extension (t: Pyramid) 
+        override def toMat: Mat[4, 5] = {
+            val Pyramid(a, b, c, d, e) = t
+            Mat[4, 5](a, b, c, d, e)
+        }
+        
+}
 
 given MatrixGeometry[Cuboid, 8] {
 
