@@ -3,9 +3,6 @@ package ginseng.maths.geometry
 import ginseng.maths.*
 import ginseng.maths.angle.*
 
-import ginseng.maths.geometry.vectors.*
-import ginseng.maths.geometry.matrices.*
-
 import ginseng.maths.linalg.*
 
 import Vec.* 
