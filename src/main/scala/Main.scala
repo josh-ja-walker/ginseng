@@ -24,7 +24,7 @@ import ginseng.maths.geometry.*
 import ginseng.renderer.*
 import ginseng.renderer.shaders.*
 import ginseng.renderer.context.*
-import ginseng.renderer.renderers.polygons.*
+import ginseng.renderer.renderers.volumes.*
 import ginseng.renderer.renderers.polylines.*
 
 import opengl.bindings.glad.*
