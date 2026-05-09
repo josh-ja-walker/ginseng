@@ -24,7 +24,7 @@ class TetraRenderer(renderer: TriRenderer) extends Renderer[Tetra] {
 
 object TetraRenderer {
     def apply(tetras: Tetra*)(using zone: Zone): TetraRenderer = {
-        val renderer = TriRenderer(tetras.map(_.faces).flatten*)
+        val renderer = TriRenderer(tetras.flatMap(_.faces)*)
         new TetraRenderer(renderer)
     }
 }

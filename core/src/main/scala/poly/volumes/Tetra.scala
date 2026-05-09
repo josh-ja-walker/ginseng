@@ -8,6 +8,7 @@ import ginseng.core.transformations.*
 import ginseng.core.transformations.given
 
 import ginseng.maths.*
+import ginseng.maths.units.*
 import ginseng.maths.angle.*
 import ginseng.maths.geometry.*
 
@@ -26,9 +27,31 @@ case class Tetra(a: Pos, b: Pos, c: Pos, d: Pos)
 }
 
 object Tetra {
-    def unital: Tetra = {
-        val base = Tri.equilateral.rotated(Deg(90), Dir.right)
-        Tetra(base.a.pos, base.b.pos, base.c.pos,
-            base.center + (Dir.up * math.cos(Deg(60)) * base.ab.dir.norm))
+
+    def unital: Tetra = Tetra.size(1.u)
+
+    def size(side: Length): Tetra = { 
+        // TODO: fix triangle representation to use lengths and be similar to quads
+        val base = Tri.equilateral(side.toDouble).rotated(Deg(-90), Dir.right)
+        val heightSqr = (side.toDouble * side.toDouble) - 
+            (base.center - base.a.pos).sqrMagnitude
+
+        Tetra.height(base, math.sqrt(heightSqr).u)
     }
+
+    def dims(side: Length, height: Length): Tetra = {
+        val base = Tri.equilateral(side.toDouble)
+            .rotated(Deg(-90), Dir.right)
+        Tetra.height(base, height)
+    }
+
+    def height(base: Tri, height: Length): Tetra = {
+        val Seq(a, b, c) = base.mat.toPositions
+        val peak = base.center 
+            // TODO: use local transforms (e.g. up) instead of computing cross
+            + ((b - a).cross(c - b).normalized * height.toDouble).toDir
+
+        Tetra(a, b, c, peak)
+    }
+
 }
