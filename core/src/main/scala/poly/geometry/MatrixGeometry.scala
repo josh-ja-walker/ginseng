@@ -101,3 +101,19 @@ given MatrixGeometry[Tetra, 4] {
         }
         
 }
+
+
+given MatrixGeometry[Cube, 8] {
+
+    override def construct(m: Mat[4, 8]): Cube = {
+        val Seq(a, b, c, d, e, f, g, h) = m.toPositions
+        Cube(a, b, c, d, e, f, g, h)
+    }
+
+    extension (t: Cube) 
+        override def toMat: Mat[4, 8] = {
+            val Cube(a, b, c, d, e, f, g, h) = t
+            Mat[4, 8](a, b, c, d, e, f, g, h)
+        }
+        
+}
