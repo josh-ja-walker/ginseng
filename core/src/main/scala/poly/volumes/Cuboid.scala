@@ -14,7 +14,7 @@ import ginseng.core.poly.polygons.*
 
 
 case class Cuboid(a: Pos, b: Pos, c: Pos, d: Pos, e: Pos, f: Pos, g: Pos, h: Pos) 
-    extends Poly[8] {
+    extends Volume[8, 6] {
 
     // TODO: rig with faces
     val faces: Seq[Square] = Seq(

@@ -13,7 +13,7 @@ import ginseng.maths.geometry.*
 
 
 case class Tetra(a: Pos, b: Pos, c: Pos, d: Pos) 
-    extends Poly[4] {
+    extends Volume[4, 4] {
 
     // TODO: rig with faces
     val faces: Seq[Tri] = Seq(
