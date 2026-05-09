@@ -127,13 +127,13 @@ import scala.util.Random
             .rotated(15.toDegrees, Dir.up)
             .rotated(5.toDegrees, Dir.right)
             .rotated(3.toDegrees, Dir.forward)
-            
+
         cube = cube
             .rotated(1.toDegrees, Dir.up)
             .rotated(2.toDegrees, Dir.right)
             .rotated(3.toDegrees, Dir.forward)
-        
-        CubeRenderer(cube).render(triShader)
+
+        CuboidRenderer(cube).render(triShader)
         TetraRenderer(tetra).render(Shaders.flatShader(Colours.red))
 
         // Sleep for 0.05s

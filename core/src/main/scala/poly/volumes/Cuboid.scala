@@ -7,12 +7,13 @@ import ginseng.core.transformations.*
 import ginseng.core.transformations.given
 
 import ginseng.maths.*
+import ginseng.maths.units.*
 import ginseng.maths.angle.*
 import ginseng.maths.geometry.*
 import ginseng.core.poly.polygons.*
 
 
-case class Cube(a: Pos, b: Pos, c: Pos, d: Pos, e: Pos, f: Pos, g: Pos, h: Pos) 
+case class Cuboid(a: Pos, b: Pos, c: Pos, d: Pos, e: Pos, f: Pos, g: Pos, h: Pos) 
     extends Poly[8] {
 
     // TODO: rig with faces
@@ -27,14 +28,28 @@ case class Cube(a: Pos, b: Pos, c: Pos, d: Pos, e: Pos, f: Pos, g: Pos, h: Pos)
     
 }
 
-object Cube {
 
-    def unital: Cube = {
-        val Quad(a, b, c, d) = Square.unital
-        val Quad(e, f, g, h) = Square.unital
-            .repositioned(_.a, a + Dir.forward)
-            
-        Cube(a, b, c, d, e, f, g, h)
+object Cuboid {
+
+    def unital: Cuboid = Cuboid.size(2.u, 1.u, 1.u)
+
+    def size(width: Length, height: Length, depth: Length): Cuboid = {
+        val rect @ Quad(a, b, c, d) = Rect.size(width, height)
+        val Quad(e, f, g, h) = rect
+            .repositioned(_.a, a + Dir.forward * depth.toDouble)
+
+        Cuboid(a, b, c, d, e, f, g, h)
     }
 
 }
+
+
+type Cube = Cuboid
+
+object Cube {
+    
+    def unital: Cube = Cube.size(1.u)
+    def size(side: Length): Cube = Cuboid.size(side, side, side)
+
+}
+

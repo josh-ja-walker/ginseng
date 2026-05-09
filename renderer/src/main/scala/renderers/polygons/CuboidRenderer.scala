@@ -17,14 +17,14 @@ import ginseng.core.poly.geometry.given
 import ginseng.maths.linalg.*
 
 
-class CubeRenderer(renderer: QuadRenderer) extends Renderer[Cube] {
+class CuboidRenderer(renderer: QuadRenderer) extends Renderer[Cuboid] {
     def render(shader: ShaderProg)(using zone: Zone) = renderer.render(shader)
 }
 
-object CubeRenderer {
-    def apply(cubes: Cube*)(using zone: Zone): CubeRenderer = {
+object CuboidRenderer {
+    def apply(cubes: Cuboid*)(using zone: Zone): CuboidRenderer = {
         val renderer = QuadRenderer(cubes.map(_.faces).flatten*)
-        new CubeRenderer(renderer)
+        new CuboidRenderer(renderer)
     }
 }
 
