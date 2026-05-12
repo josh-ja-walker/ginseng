@@ -65,7 +65,22 @@ given [N <: Int] => ValueOf[N] => =:=[N >= 3, true] => MatrixGeometry[RegPolygon
     override def construct(m: Mat[4, N]): RegPolygon[N] = RegPolygon(m.toPositions*)
 
     extension (t: RegPolygon[N])
-        override def toMat: Mat[4, N] = {
-            new Mat[4, N](t.verts.map(p => p: Vec[4]))
-        }
+        override def toMat: Mat[4, N] = new Mat[4, N](t.verts)
+}
+
+// FIXME: how were these rendered before without these givens
+given [N <: Int] => ValueOf[N] => MatrixGeometry[Loop[N], N] {
+    override def construct(m: Mat[4, N]): Loop[N] = Loop(m.toPositions*)
+    
+    extension (t: Loop[N]) 
+        override def toMat: Mat[4, N] = new Mat(t.positions)
+
+}
+
+given [N <: Int] => ValueOf[N] => MatrixGeometry[Strip[N], N] {
+    override def construct(m: Mat[4, N]): Strip[N] = Strip(m.toPositions*)
+    
+    extension (t: Strip[N]) 
+        override def toMat: Mat[4, N] = new Mat(t.positions)
+
 }
