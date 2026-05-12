@@ -9,7 +9,6 @@ import opengl.bindings.glfw.*
 import ginseng.renderer.shaders.*
 import ginseng.renderer.renderers.*
 
-import ginseng.core.colour.*
 import ginseng.core.poly.misc.*
 import ginseng.core.poly.geometry.given
 import ginseng.renderer.settings.*

@@ -1,7 +1,5 @@
 package ginseng.core.poly.components
 
-import scala.compiletime.ops.int.*
-
 import ginseng.core.poly.*
 import ginseng.core.poly.polygons.*
 import ginseng.core.poly.polylines.*

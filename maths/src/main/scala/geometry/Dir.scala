@@ -36,8 +36,8 @@ object Dir {
     val left = Dir(-1, 0, 0)
     val right = Dir(1, 0, 0)
 
-    val forward = Dir(0, 0, 1)
-    val back = Dir(0, 0, -1)
+    val forward = Dir(0, 0, -1)
+    val back = Dir(0, 0, 1)
 
     val one = Dir(1, 1, 1)
     val zero = Dir(0, 0, 0)

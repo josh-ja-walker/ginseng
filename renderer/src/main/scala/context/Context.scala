@@ -53,6 +53,10 @@ object Context {
 
         // Recolor window background to black
         window.recolor(config.colour)
+
+        // Enable depth testing for rendering 3D objects
+        glEnable(GL_DEPTH_TEST)
+
         new Context(window, gladVersion)
     }
 }

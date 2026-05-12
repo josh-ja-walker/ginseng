@@ -1,11 +1,10 @@
 package ginseng.core.poly.geometry
 
-import scala.compiletime.ops.int.*
-
 import ginseng.core.poly.*
 import ginseng.core.poly.misc.*
 import ginseng.core.poly.polylines.*
 import ginseng.core.poly.polygons.*
+import ginseng.core.poly.volumes.*
 
 import ginseng.maths.linalg.*
 import ginseng.maths.geometry.*
@@ -61,7 +60,7 @@ given MatrixGeometry[Quad, 4] with {
         }
 }
 
-given [N <: Int] => ValueOf[N] => =:=[N >= 3, true] => MatrixGeometry[RegPolygon[N], N] {
+given [N <: Int] => ValueOf[N] => (N >= 3) => MatrixGeometry[RegPolygon[N], N] {
     override def construct(m: Mat[4, N]): RegPolygon[N] = RegPolygon(m.toPositions*)
 
     extension (t: RegPolygon[N])
@@ -83,4 +82,50 @@ given [N <: Int] => ValueOf[N] => MatrixGeometry[Strip[N], N] {
     extension (t: Strip[N]) 
         override def toMat: Mat[4, N] = new Mat(t.positions)
 
+}
+
+
+given MatrixGeometry[Tetra, 4] {
+
+    override def construct(m: Mat[4, 4]): Tetra = {
+        val Seq(a, b, c, d) = m.toPositions
+        Tetra(a, b, c, d)
+    }
+
+    extension (t: Tetra) 
+        override def toMat: Mat[4, 4] = {
+            val Tetra(a, b, c, d) = t
+            Mat[4, 4](a, b, c, d)
+        }
+        
+}
+
+given MatrixGeometry[Pyramid, 5] {
+
+    override def construct(m: Mat[4, 5]): Pyramid = {
+        val Seq(a, b, c, d, e) = m.toPositions
+        Pyramid(a, b, c, d, e)
+    }
+
+    extension (t: Pyramid) 
+        override def toMat: Mat[4, 5] = {
+            val Pyramid(a, b, c, d, e) = t
+            Mat[4, 5](a, b, c, d, e)
+        }
+        
+}
+
+given MatrixGeometry[Cuboid, 8] {
+
+    override def construct(m: Mat[4, 8]): Cuboid = {
+        val Seq(a, b, c, d, e, f, g, h) = m.toPositions
+        Cuboid(a, b, c, d, e, f, g, h)
+    }
+
+    extension (t: Cuboid) 
+        override def toMat: Mat[4, 8] = {
+            val Cuboid(a, b, c, d, e, f, g, h) = t
+            Mat[4, 8](a, b, c, d, e, f, g, h)
+        }
+        
 }

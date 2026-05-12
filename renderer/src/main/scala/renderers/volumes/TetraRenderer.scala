@@ -1,4 +1,4 @@
-package ginseng.renderer.renderers.polygons
+package ginseng.renderer.renderers.volumes
 
 import scala.scalanative.unsafe.*
 import scala.scalanative.unsigned.*
@@ -9,23 +9,23 @@ import opengl.bindings.glfw.*
 import ginseng.renderer.shaders.*
 import ginseng.renderer.renderers.*
 import ginseng.renderer.renderers.given
+import ginseng.renderer.renderers.polygons.*
 
 import ginseng.core.poly.polygons.*
-import ginseng.core.poly.geometry.*
+import ginseng.core.poly.volumes.*
 import ginseng.core.poly.geometry.given
 
 import ginseng.maths.linalg.*
 
 
-class RegPolygonRenderer(renderer: MultiPolyRenderer) extends Renderer[RegPolygon[?]] {
+class TetraRenderer(renderer: TriRenderer) extends Renderer[Tetra] {
     def render(shader: ShaderProg)(using zone: Zone) = renderer.render(shader)
 }
 
-
-object RegPolygonRenderer {
-    def apply[N <: Int](polygons: RegPolygon[N]*)(using Zone, ValueOf[N], N >= 3): RegPolygonRenderer = {
-        val renderer = MultiPolyRenderer(GL_TRIANGLE_FAN, VertexBuffer(polygons*))
-        new RegPolygonRenderer(renderer)
+object TetraRenderer {
+    def apply(tetras: Tetra*)(using zone: Zone): TetraRenderer = {
+        val renderer = TriRenderer(tetras.flatMap(_.faces)*)
+        new TetraRenderer(renderer)
     }
 }
 

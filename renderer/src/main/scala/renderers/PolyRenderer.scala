@@ -1,7 +1,5 @@
 package ginseng.renderer.renderers
 
-import scala.compiletime.ops.int.*
-
 import scala.scalanative.unsafe.*
 import scala.scalanative.unsigned.*
 
