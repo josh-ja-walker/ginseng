@@ -121,8 +121,6 @@ import scala.util.Random
                 -> Transformation.Rotation(Deg(5), Dir.forward)
         }
 
-        TriRenderer(tri).render(triShader)
-
         tetra = tetra
             .rotated(15.toDegrees, Dir.up)
             .rotated(5.toDegrees, Dir.right)

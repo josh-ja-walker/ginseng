@@ -1,7 +1,5 @@
 package ginseng.core.poly.geometry
 
-import scala.compiletime.ops.int.*
-
 import ginseng.core.poly.*
 import ginseng.core.poly.misc.*
 import ginseng.core.poly.polylines.*
@@ -62,7 +60,7 @@ given MatrixGeometry[Quad, 4] with {
         }
 }
 
-given [N <: Int] => ValueOf[N] => =:=[N >= 3, true] => MatrixGeometry[RegPolygon[N], N] {
+given [N <: Int] => ValueOf[N] => (N >= 3) => MatrixGeometry[RegPolygon[N], N] {
     override def construct(m: Mat[4, N]): RegPolygon[N] = RegPolygon(m.toPositions*)
 
     extension (t: RegPolygon[N])

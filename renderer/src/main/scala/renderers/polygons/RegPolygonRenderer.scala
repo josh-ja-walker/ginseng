@@ -1,7 +1,5 @@
 package ginseng.renderer.renderers.polygons
 
-import scala.compiletime.ops.int.*
-
 import scala.scalanative.unsafe.*
 import scala.scalanative.unsigned.*
 
@@ -25,10 +23,9 @@ class RegPolygonRenderer(renderer: MultiPolyRenderer) extends Renderer[RegPolygo
 
 
 object RegPolygonRenderer {
-    def apply[N <: Int](polygons: RegPolygon[N]*)(using zone: Zone)(using ValueOf[N], N >= 3 =:= true): RegPolygonRenderer = {
+    def apply[N <: Int](polygons: RegPolygon[N]*)(using Zone, ValueOf[N], N >= 3): RegPolygonRenderer = {
         val renderer = MultiPolyRenderer(GL_TRIANGLE_FAN, VertexBuffer(polygons*))
         new RegPolygonRenderer(renderer)
     }
 }
-
 

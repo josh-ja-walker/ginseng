@@ -1,10 +1,8 @@
 package ginseng.core.poly.components
 
-import scala.compiletime.ops.int.*
-
 import ginseng.core.poly.*
 import ginseng.core.poly.polygons.*
-import ginseng.core.poly.geometry.MatrixGeometry
+import ginseng.core.poly.geometry.*
 
 
 trait Modifier[T <: Poly[?], C <: Component[T]] {
@@ -15,7 +13,7 @@ trait Modifier[T <: Poly[?], C <: Component[T]] {
 }
 
 
-given [N <: Int, T <: Poly[N]] => =:=[N >= 2, true] => (Modifier[T, Vertex[T]]) => Modifier[T, Edge[T]] { 
+given [N <: Int, T <: Poly[N]] => (N >= 2) => (Modifier[T, Vertex[T]]) => Modifier[T, Edge[T]] { 
     extension (c: Edge[T]) 
         override def update(v: Edge[T]): T = {
             c.a.update(v.a)
@@ -23,7 +21,7 @@ given [N <: Int, T <: Poly[N]] => =:=[N >= 2, true] => (Modifier[T, Vertex[T]]) 
         }
 }
 
-given [N <: Int, T <: Poly[N]] => =:=[N >= 3, true] => Modifier[T, Edge[T]] => Modifier[T, Arc[T]] { 
+given [N <: Int, T <: Poly[N]] => (N >= 3) => Modifier[T, Edge[T]] => Modifier[T, Arc[T]] { 
     extension (c: Arc[T]) 
         override def update(v: Arc[T]): T = {
             c.ab.update(v.ab)
