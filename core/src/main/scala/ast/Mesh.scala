@@ -20,8 +20,8 @@ object MeshTree {
     sealed trait Polyline[N <: Int] extends Primitive
 
     case class Direct(a: Pos, b: Pos) extends Polyline[2]
-    case class Path[N <: Int](positions: Pos) extends Polyline[N]
-    case class Loop[N <: Int](positions: Pos) extends Polyline[N]
+    case class Path[N <: Int](positions: Pos*) extends Polyline[N]
+    case class Loop[N <: Int](positions: Pos*) extends Polyline[N]
 
     // 2D primitives
     case class Tri(a: Pos, b: Pos, c: Pos) extends Primitive
