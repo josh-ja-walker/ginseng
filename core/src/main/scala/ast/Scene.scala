@@ -44,18 +44,6 @@ object SceneTree {
     case class Cube(size: Length) extends Body[8, 6]
     case class Cuboid(width: Length, height: Length, depth: Length) extends Body[8, 6]
 
-    // Positioning
-    sealed trait Positioning extends Scene
-
-    // Position a scene at an anchor with respect to its own anchor (`at`) 
-    case class AnchorAt(anchor: Anchor, obj: Scene, at: Scene => Anchor) extends Positioning
-
-    // Position two scenes with respect to each other
-    case class LeftOf(a: Scene, b: Scene) extends Positioning
-    case class RightOf(a: Scene, b: Scene) extends Positioning
-    case class Above(a: Scene, b: Scene) extends Positioning
-    case class Below(a: Scene, b: Scene) extends Positioning
-
     // Anchor for positioning objects
     sealed trait Anchor extends Scene {
         // Helper for constructing `AnchorAt` with `this`
@@ -99,6 +87,18 @@ object SceneTree {
         // Center of box
         case Center
     }
+
+    // Positioning
+    sealed trait Positioning extends Scene
+
+    // Position a scene at an anchor with respect to its own anchor (`at`) 
+    case class AnchorAt(anchor: Anchor, obj: Scene, at: Scene => Anchor) extends Positioning
+
+    // Position two scenes with respect to each other
+    case class LeftOf(a: Scene, b: Scene) extends Positioning
+    case class RightOf(a: Scene, b: Scene) extends Positioning
+    case class Above(a: Scene, b: Scene) extends Positioning
+    case class Below(a: Scene, b: Scene) extends Positioning
 
     // Transformations
     sealed trait Transform extends Scene

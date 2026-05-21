@@ -26,20 +26,20 @@ object MeshTree {
     // 2D primitives
     case class Tri(a: Pos, b: Pos, c: Pos) extends Primitive
 
+    // Anchor for positioning objects
+    sealed trait Anchor(val pos: Pos) extends Mesh
+    
+    // Anchor for any position
+    case class Position(val p: Pos) extends Anchor(p)
+
+    // Universal scene anchor
+    case object Origin extends Anchor(Pos.origin) // FIXME: reparameterise to (0, 0, 0)
+
     // Positioning
     sealed trait Positioning extends Mesh
 
     // Position with respect to an anchor
-    case class Anchors(anchor: Anchor, obj: Mesh, at: Anchor) extends Positioning
-
-    // Anchor for positioning objects
-    sealed trait Anchor(p: Pos) extends Mesh
-    
-    // Anchor for any position
-    case class Position(pos: Pos) extends Anchor(pos)
-
-    // Universal scene anchor
-    case object Origin extends Anchor(Pos.origin) // FIXME: reparameterise to (0, 0, 0)
+    case class AnchorAt(anchor: Anchor, obj: Mesh, at: Anchor) extends Positioning
 
     // Transformations
     // TODO: should these be omitted and applied at the conversion stage?
