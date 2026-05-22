@@ -105,7 +105,7 @@ object SceneTree {
 
     // TODO: provide access to local direcitons
     case class Move(a: Scene, d: Dir) extends Transform
-    case class MoveTo(a: Scene, p: Pos) extends Transform
+    case class MoveTo(a: Scene, anchor: Scene => Anchor, p: Pos) extends Transform
 
     case class Scale(a: Scene, factor: Vec[3]) extends Transform
     case class Reflect(a: Scene, plane: Plane) extends Transform
@@ -115,9 +115,9 @@ object SceneTree {
     case class RotateAbout(a: Scene, angle: Angle, axis: Dir, about: Scene => Anchor) extends Transform
 
     // TODO: consolidate into 1
-    case class SkewX(a: Scene, v: Vec[3]) extends Transform
-    case class SkewY(a: Scene, v: Vec[3]) extends Transform
-    case class SkewZ(a: Scene, v: Vec[3]) extends Transform
+    case class SkewX(a: Scene, f: Double) extends Transform
+    case class SkewY(a: Scene, f: Double) extends Transform
+    case class SkewZ(a: Scene, f: Double) extends Transform
 
     // TODO: consolidate into 1
     case class SqueezeX(a: Scene, f: Double) extends Transform
