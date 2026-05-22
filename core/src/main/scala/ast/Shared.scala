@@ -1,4 +1,12 @@
 package ginseng.core.ast
 
-// FIXME: import ginseng.renderer.shaders.* 
-type Shader
+import ginseng.core.colours.*
+
+
+enum Shader {
+    
+    case Flat(col: Colour)
+    case Tri(a: Colour, b: Colour, c: Colour)
+    case Interpolate(colours: Colour*)
+
+}
