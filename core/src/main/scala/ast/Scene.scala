@@ -10,9 +10,38 @@ import ginseng.core.poly.polylines.Polyline
 object SceneTree {
 
     sealed trait Scene {
-        // FIXME: should not be available for some specific scene objects - i.e., point, anchor, etc.
+
+        // TODO: move following to be extension methods 
+        // FIXME: should not be available for some specific scene objects - i.e., point, etc.
+
         def aabb(anchorType: AnchorType) = AABB(this, anchorType)
         def obb(anchorType: AnchorType) = OBB(this, anchorType)
+
+        def anchoredAt(anchor: Anchor, at: Scene => Anchor) = AnchorAt(anchor, this, at)
+
+        def leftOf(b: Scene) = LeftOf(this, b)
+        def rightOf(b: Scene) = RightOf(this, b)
+        def above(b: Scene) = Above(this, b)
+        def below(b: Scene) = Below(this, b)
+
+        def moved(d: Dir) = Move(this, d)
+        def movedTo(p: Pos, anchor: Scene => Anchor) = MoveTo(this, anchor, p)
+        def scaled(factor: Vec[3]) = Scale(this, factor)
+        def reflected(plane: Plane) = Reflect(this, plane)
+
+        // TODO: ideally consolidate into one
+        def rotated(angle: Angle, axis: Dir) = Rotate(this, angle, axis)
+        def rotatedAbout(angle: Angle, axis: Dir, about: Scene => Anchor) = RotateAbout(this, angle, axis, about)
+
+        // TODO: consolidate into 1
+        def skewedX(f: Double) = SkewX(this, f)
+        def skewedY(f: Double) = SkewY(this, f)
+        def skewedZ(f: Double) = SkewZ(this, f)
+
+        // TODO: consolidate into 1
+        def squeezedX(f: Double) = SqueezeX(this, f)
+        def squeezedY(f: Double) = SqueezeY(this, f)
+        def squeezedZ(f: Double) = SqueezeZ(this, f)
     }
 
     // Primitives
