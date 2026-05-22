@@ -73,10 +73,13 @@ object SceneTree {
     case class Cube(size: Length) extends Body[8, 6]
     case class Cuboid(width: Length, height: Length, depth: Length) extends Body[8, 6]
 
+    // TODO: should move
+
     // Anchor for positioning objects
-    sealed trait Anchor extends Scene {
+    sealed trait Anchor {
         // Helper for constructing `AnchorAt` with `this`
         def anchors(a: Scene, at: Scene => Anchor) = AnchorAt(this, a, at)
+        def anchors(a: Scene) = AnchorAt(this, a, AABB(_, AnchorType.A))
     }
 
     // Displace an anchor by a direction
