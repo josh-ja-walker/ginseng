@@ -1,5 +1,6 @@
 package ginseng.core.ast.scene
 
+import ginseng.core.ast.* 
 import ginseng.maths.geometry.*
 
 
@@ -9,6 +10,9 @@ object Anchors {
     
     // Anchor for positioning objects
     sealed trait Anchor
+
+    // Universal scene origin 
+    case object Origin extends Anchor
 
     // Displace an anchor by a direction
     case class Displaced(anchor: Anchor, d: Dir) extends Anchor
@@ -24,29 +28,7 @@ object Anchors {
     case class AABB(scene: Scene, anchorType: AnchorType) extends BoundsAnchor(scene, anchorType)
     case class OBB(scene: Scene, anchorType: AnchorType) extends BoundsAnchor(scene, anchorType)
 
-    // Universal scene anchors
-    case object Origin extends Anchor
+    // Universal viewport bounds
     case class ViewportAnchor(anchorType: AnchorType) extends BoundsAnchor(Viewport, anchorType)
-
-    // Type of anchor to specify with a bounding box
-    enum AnchorType {
-        // Vertices of bounding box
-        case A; case B; case C; case D
-        case E; case F; case G; case H
-
-        // Midpoint of respective lines
-        case AB; case BC; case CD; case DA
-        case BF;          case GC; case CB
-        case EF; case FG; case GH; case HE
-        case EA; case AD; case DH; 
-
-        // Center of respective faces
-        case Top   ; case Bottom
-        case Left  ; case Right
-        case Front ; case Back
-
-        // Center of box
-        case Center
-    }
 
 }

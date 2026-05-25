@@ -1,27 +1,29 @@
 package ginseng.core.ast.mesh
 
+import ginseng.core.ast.*
+
 import ginseng.maths.geometry.*
 
 
+// TODO:
 object Bounds {
 
-    sealed trait BoundingBox(a: Pos, b: Pos, c: Pos, d: Pos, e: Pos, f: Pos, g: Pos, h: Pos)
+    sealed trait Bounds {
+        def resolve(anchorType: AnchorType): Pos
+    }
+
+    case object Viewport extends Bounds {
+        def resolve(anchorType: AnchorType): Pos = ???
+    }
 
     // Bounding box aligned upon the axis
-    case class AABB(a: Pos, b: Pos, c: Pos, d: Pos, e: Pos, f: Pos, g: Pos, h: Pos) 
-        extends BoundingBox(a, b, c, d, e, f, g, h)
-
-    object AABB {
-        def apply(mesh: AST.Mesh): AABB = ???
+    case class AABB(mesh: Mesh) extends Bounds {
+        def resolve(anchorType: AnchorType): Pos = ???
     }
 
     // Bounding box orientated in the direction of the bound object
-    case class OBB(a: Pos, b: Pos, c: Pos, d: Pos, e: Pos, f: Pos, g: Pos, h: Pos) 
-        extends BoundingBox(a, b, c, d, e, f, g, h) {
-    }
-
-    object OBB {
-        def apply(mesh: AST.Mesh): OBB = ???
+    case class OBB(mesh: Mesh) extends Bounds {
+        def resolve(anchorType: AnchorType): Pos = ???
     }
 
 }

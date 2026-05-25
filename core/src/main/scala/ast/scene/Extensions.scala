@@ -1,5 +1,7 @@
 package ginseng.core.ast.scene
 
+import ginseng.core.ast.*
+
 import ginseng.maths.angle.*
 import ginseng.maths.linalg.*
 import ginseng.maths.geometry.*
