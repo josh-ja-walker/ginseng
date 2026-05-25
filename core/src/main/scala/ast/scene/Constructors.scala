@@ -7,11 +7,11 @@ import ginseng.maths.angle.*
 
 object Constructors {
     
-    object Tri {
+    object Tris {
         def equil(s: Length) = AST.Tri(s, Deg(60), s)
     }
 
-    object Square {
+    object Squares {
         // TODO:...
     }
 
