@@ -1,15 +1,20 @@
-package ginseng.core.ast
+package ginseng.core.ast.mesh
 
+import ginseng.core.ast.*
+import ginseng.core.transformations.*
+
+import ginseng.maths.units.*
 import ginseng.maths.angle.*
 import ginseng.maths.linalg.*
 import ginseng.maths.geometry.*
-import ginseng.maths.units.Length
 
 
-object MeshTree {
+object AST {
+
+    import Anchors.*
 
     sealed trait Mesh
-
+    
     // Primitives
     sealed trait Primitive extends Mesh
 
@@ -24,13 +29,14 @@ object MeshTree {
     case class Loop[N <: Int](positions: Pos*) extends Polyline[N]
 
     // 2D primitives
-    case class Tri(a: Pos, b: Pos, c: Pos) extends Primitive
 
-    // Anchor for positioning objects
-    sealed trait Anchor(val pos: Pos) extends Mesh
-    
-    case object Origin extends Anchor(Pos.origin) // Universal scene anchor
-    case class Position(val p: Pos) extends Anchor(p) // Anchor for any position
+    // ==========================
+    // POSITIONS ARE NOT ABSOLUTE
+    // ==========================
+
+    // NOTE: a, b, c are Positions RELATIVE TO ORIGIN
+    // this origin MAY CHANGE - it is the anchor
+    case class Tri(a: Pos, b: Pos, c: Pos) extends Primitive
 
     // Positioning
     sealed trait Positioning extends Mesh
@@ -41,7 +47,7 @@ object MeshTree {
     // Can be modified using modification
     sealed trait Modifiable extends Mesh
 
-    case class Vertex(index: Int, primitive: Primitive, p: Pos) extends Anchor(p) with Modifiable    
+    case class Vertex(index: Int, primitive: Primitive) extends Modifiable    
     case class Edge(a: Vertex, b: Vertex) extends Modifiable
 
     // Modification to a primitive
@@ -52,7 +58,8 @@ object MeshTree {
 
     // Shader specification
     case class Rendered(mesh: Mesh, shader: Shader) extends Mesh
+
     // DO NOT RENDER Scaffold even if nested underneath a Rendered scene
-    case class Scaffold(mesh: Mesh) extends Mesh
+    // case class Scaffold(mesh: Mesh) extends Mesh
 
 }
