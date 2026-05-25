@@ -14,7 +14,7 @@ import ginseng.maths.linalg.*
 import scene.*
 import mesh.AST.Mesh
 
-import AnchorConvert.*
+import ComputeAnchor.*
 
 
 object ComputeMesh {
@@ -31,6 +31,9 @@ object ComputeMesh {
         // Delegate to positioning mesh compute handler
         case positioned: Positioning => positioned.computeMesh
 
+        // case Vertex(_, _) => ???
+        // case Edge(_, _) => ???
+
         // Delegate to positioning mesh compute handler
         case modification: Modification => modification.computeMesh
 
@@ -38,7 +41,6 @@ object ComputeMesh {
         case Rendered(scene, shader) => mesh.AST.Rendered(scene.computeMesh, shader)
         case Scaffold(scene) => mesh.AST.Scaffold(scene.computeMesh)
 
-        case Viewport => ???
     }
 
 
@@ -79,14 +81,14 @@ object ComputeMesh {
     // Compute mesh for transformed types by applying transformation to the computed sub-mesh
     extension (transform: Transform) def computeMesh: Mesh = transform match {
         case Move(a, d) => a.computeMesh.translated(d)
-        case MoveTo(a, anchor, to) => a.computeMesh.repositioned(anchor(a).convert.pos, to)
+        case MoveTo(a, anchor, to) => a.computeMesh.repositioned(anchor(a).compute.pos, to)
 
         case Scale(a, factor) => a.computeMesh.scaled(factor)
         case Reflect(a, plane) => a.computeMesh.reflected(plane.normal, plane.point) 
 
         case Rotate(a, angle, axis) => a.computeMesh.rotated(angle, axis)
         // TODO: use a property to ensure about(_) can be converted to about(_) : MeshAnchor
-        case RotateAbout(a, angle, axis, about) => a.computeMesh.rotated(angle, about(a).convert.pos, axis) // FIXME: use consistent arg ordering
+        case RotateAbout(a, angle, axis, about) => a.computeMesh.rotated(angle, about(a).compute.pos, axis) // FIXME: use consistent arg ordering
 
         // FIXME: consolidate into 1
         case SkewX(a, f) => a.computeMesh.skewed(f, Dir.right)
@@ -103,7 +105,7 @@ object ComputeMesh {
     // Compute mesh for positioned types by converting all helpers into anchors
     extension (positioned: Positioning) def computeMesh: mesh.AST.AnchorAt = positioned match {
         // Propagate anchor information to mesh
-        case AnchorAt(anchor, obj, at) => mesh.AST.AnchorAt(anchor.convert, obj.computeMesh, at(obj).convert)
+        case AnchorAt(anchor, obj, at) => mesh.AST.AnchorAt(anchor.compute, obj.computeMesh, at(obj).compute)
         
         // Convert positioning helpers into anchorings
         case LeftOf(a, b)  => a.aabb(AnchorType.Right) .anchors(b, _.aabb(AnchorType.Left))  .computeMesh
