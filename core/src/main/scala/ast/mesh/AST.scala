@@ -44,22 +44,8 @@ object AST {
     // Position with respect to an anchor
     case class AnchorAt(anchor: Anchor, obj: Mesh, at: Anchor) extends Positioning 
 
-    // Can be modified using modification
-    sealed trait Modifiable extends Mesh
-
-    case class Vertex(index: Int, primitive: Primitive) extends Modifiable    
-    case class Edge(a: Vertex, b: Vertex) extends Modifiable
-
-    // Modification to a primitive
-    sealed trait Modification extends Mesh
-
-    //TODO: modify edges
-    case class Modify(vertex: Vertex, tri: Tri, modifier: Pos => Pos) extends Modification 
-
     // Shader specification
     case class Rendered(mesh: Mesh, shader: Shader) extends Mesh
-
-    // DO NOT RENDER Scaffold even if nested underneath a Rendered scene
-    // case class Scaffold(mesh: Mesh) extends Mesh
+    case class Scaffold(mesh: Mesh) extends Mesh // DO NOT RENDER Scaffold even if nested underneath a Rendered scene
 
 }
