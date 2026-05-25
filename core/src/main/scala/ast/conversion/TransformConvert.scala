@@ -7,18 +7,19 @@ import ginseng.core.transformations.given
 
 import ginseng.maths.geometry.*
 
+import scene.{ Transform as _, * } 
+
+import MeshConvert.*
+import AnchorConvert.*
+
 
 object TransformConvert {
     
-    import SceneTree.{ Transform as _, * } 
-    import MeshConvert.*
-    import AnchorConvert.*
+    given Transform[mesh.AST.Mesh] = ??? // TODO: implement
 
-    given Transform[MeshTree.Mesh] = ??? // TODO: implement
-
-    extension (transform: SceneTree.Transform) {
+    extension (transform: scene.AST.Transform) {
         
-        def toMeshTransform: MeshTree.Mesh = transform match {
+        def toMeshTransform: mesh.AST.Mesh = transform match {
             
             case Move(a, d) => a.toMesh.translated(d)
             case MoveTo(a, anchor, pos) => a.toMesh
