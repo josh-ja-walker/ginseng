@@ -2,6 +2,7 @@ package ginseng.core.ast.scene
 
 import ginseng.core.ast.*
 import ginseng.core.poly.polylines.*
+import ginseng.core.poly.components.*
 
 import ginseng.maths.units.*
 import ginseng.maths.angle.*
@@ -63,7 +64,7 @@ object AST {
 
     // TODO: provide access to local direcitons
     case class Move(a: Scene, d: Dir) extends Transform
-    case class MoveTo(a: Scene, anchor: Scene => Anchor, p: Pos) extends Transform
+    case class MoveTo(a: Scene, anchor: Scene => Anchor, to: Pos) extends Transform
 
     case class Scale(a: Scene, factor: Vec[3]) extends Transform
     case class Reflect(a: Scene, plane: Plane) extends Transform
@@ -83,24 +84,24 @@ object AST {
     case class SqueezeZ(a: Scene, f: Double) extends Transform
     // TODO: include SqueezeXY, SqueezeYZ, SqueezeXZ 
 
-    // Can be modified using modification
-    sealed trait Modifiable extends Scene
 
-    sealed trait FlatModifiable extends Modifiable
+    // Can be modified using modification
+    sealed trait Modifiable[T] extends Scene
+
+    sealed trait FlatModifiable extends Modifiable[Flat[?]]
 
     // TODO: can vertex take any scene object? prob no
     case class Vertex(index: Int, scene: Scene) extends FlatModifiable    
     case class Edge(a: Vertex, b: Vertex) extends FlatModifiable
     
-    sealed trait BodyModifiable extends Modifiable
-
+    sealed trait BodyModifiable extends Modifiable[Body[?, ?]]
 
     // Modification to a primitive
     sealed trait Modification extends Scene
+    case class ModifyFlat(modifiable: FlatModifiable, flat: Flat[?], modifier: FlatModifiable => FlatModifiable) extends Modification
+    case class ModifyBody(modifiable: BodyModifiable, body: Body[?, ?], modifier: BodyModifiable => BodyModifiable) extends Modification
 
-    //TODO: modify edges 
-    case class ModifyFlat(vertex: FlatModifiable, flat: Flat[?], modifier: Pos => Pos) extends Modification
-    case class ModifyBody(face: Flat[?], body: Body[?, ?], modifier: Flat[?] => Flat[?]) extends Modification
+    // case class Modify[T, M <: Modifiable[T]](modifiable: M, modified: T, modifier: M => M)
 
     // Shader specification
     case class Rendered(scene: Scene, shader: Shader) extends Scene

@@ -8,6 +8,7 @@ object Anchors {
     
     import AST.*
     
+    
     // Anchor for positioning objects
     sealed trait Anchor
 
@@ -21,6 +22,7 @@ object Anchors {
     // TODO: unsure of how to handle complex scenes (which vertices to use???)
     case class VertexAnchor(scene: Scene, vertexIndex: Int) extends Anchor
 
+
     // Anchors with respect to the bounds of a scene
     sealed trait BoundsAnchor(scene: Scene, anchorType: AnchorType) extends Anchor
 
@@ -30,5 +32,6 @@ object Anchors {
 
     // Universal viewport bounds
     case class ViewportAnchor(anchorType: AnchorType) extends BoundsAnchor(Viewport, anchorType)
+
 
 }
