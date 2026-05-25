@@ -13,7 +13,7 @@ import ginseng.maths.geometry.*
 
 trait Transform[T] {
 
-    extension (t: T)   
+    extension (t: T)
         def transform(transformation: Transformation): T
     
     extension (transformation: Transformation)
@@ -24,15 +24,14 @@ trait Transform[T] {
 
 given Transform[Pos] with 
     extension (t: Pos)
-        override def transform(transformation: Transformation): Pos = {
+        def transform(transformation: Transformation): Pos = {
             (transformation.mat * (t: Vec[4])).toPos
         }
 
 
-
 given [N <: Int, T <: Poly[N]] => ValueOf[N] => (m: MatrixGeometry[T, N]) => Transform[T]:
     extension (t: T)
-        override def transform(transformation: Transformation): T = {
+        def transform(transformation: Transformation): T = {
             val mat = transformation.mat * m.toMat(t)
             m.construct(mat)
         }
