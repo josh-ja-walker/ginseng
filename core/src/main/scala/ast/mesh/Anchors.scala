@@ -11,12 +11,13 @@ object Anchors {
     sealed trait Anchor(val pos: Pos)
 
     case object Origin extends Anchor(Pos.origin) // Universal scene anchor
-    // TODO: remove this
-    case class Position(val p: Pos) extends Anchor(p) // Anchor for any position
 
     // Vertex of a scene
-    // TODO: unsure of how to handle complex scenes (which vertices to use???)
-    case class VertexAnchor(mesh: Mesh, vertexIndex: Int, p: Pos) extends Anchor(p)
-
+    case class VertexAnchor(tri: Tri, vertex: TriVertex, p: Pos) extends Anchor(p)
+    
+    enum TriVertex { 
+        case A; case B; case C 
+    }
+    
 }
 
