@@ -9,20 +9,24 @@ object Anchors {
 
     import AST.*
 
-
     // Anchor for positioning objects
-    sealed trait Anchor(val pos: Pos)
+    sealed trait Anchor {
+        def pos: Pos
+    }
 
-    case object Origin extends Anchor(Pos.origin) // Universal scene anchor
+    // Universal scene anchor
+    case object Origin extends Anchor { def pos: Pos = Pos.origin } 
 
     // Vertex of a scene
-    case class VertexAnchor(tri: Tri, vertex: TriVertex, p: Pos) extends Anchor(p)
+    case class VertexAnchor(tri: Tri, vertex: TriVertex, p: Pos) extends Anchor { def pos: Pos = p }
     enum TriVertex { case A; case B; case C }
 
 
     // Anchors with respect to the bounds of a scene
-    sealed trait BoundsAnchor(bounds: Bounds.Bounds, anchorType: AnchorType)
-    
+    sealed trait BoundsAnchor(bounds: Bounds.Bounds, anchorType: AnchorType) extends Anchor { 
+        def pos: Pos = bounds.resolve(anchorType)
+    }
+
     case class AABB(mesh: Mesh, anchorType: AnchorType) 
         extends BoundsAnchor(Bounds.AABB(mesh), anchorType)
 
@@ -32,7 +36,7 @@ object Anchors {
 
     // Universal scene anchors
     case class ViewportAnchor(anchorType: AnchorType) 
-        extends Anchor(Bounds.Viewport.resolve(anchorType))
+        extends BoundsAnchor(Bounds.Viewport, anchorType) 
 
 }
 
