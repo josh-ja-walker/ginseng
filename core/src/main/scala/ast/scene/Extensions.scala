@@ -20,6 +20,7 @@ object Extensions {
         def obb(anchorType: AnchorType) = OBB(scene, anchorType)
 
         def anchoredAt(anchor: Anchor, at: Scene => Anchor) = AnchorAt(anchor, scene, at)
+        def vertex(index: Int) = VertexAnchor(scene, index)
 
         def leftOf(b: Scene) = LeftOf(scene, b)
         def rightOf(b: Scene) = RightOf(scene, b)
@@ -44,6 +45,8 @@ object Extensions {
         def squeezedX(f: Double) = SqueezeX(scene, f)
         def squeezedY(f: Double) = SqueezeY(scene, f)
         def squeezedZ(f: Double) = SqueezeZ(scene, f)
+
+        // TODO: modify helpers
 
         def shaded(shader: Shader) = Rendered(scene, shader)
         def scaffolded = Scaffold(scene)
