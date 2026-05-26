@@ -45,7 +45,7 @@ object Extensions {
         def squeezedY(f: Double) = SqueezeY(scene, f)
         def squeezedZ(f: Double) = SqueezeZ(scene, f)
 
-        def rendered(shader: Shader) = Rendered(scene, shader)
+        def shaded(shader: Shader) = Rendered(scene, shader)
         def scaffolded = Scaffold(scene)
     }
 
