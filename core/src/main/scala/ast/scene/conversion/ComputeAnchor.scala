@@ -1,17 +1,17 @@
-package ginseng.core.ast.conversion
+package ginseng.core.ast.scene.conversion
 
 import ginseng.core.ast.*
 
-import scene.AST.*
-import scene.Anchors.{ Anchor as SceneAnchor, * }
+import scene.SceneAST.*
 import mesh.Anchors.{ Anchor as MeshAnchor }
 
 import ComputeMesh.*
 
+
 object ComputeAnchor {
 
     // Convert a SceneAnchor into a MeshAnchor
-    extension (anchor: SceneAnchor) def compute: MeshAnchor = anchor match {
+    extension (anchor: Anchor) def compute: MeshAnchor = anchor match {
         
         // Convert a displaced anchor
         case Displaced(anchor, dir) => ???
@@ -27,10 +27,8 @@ object ComputeAnchor {
         // Universal scene anchors
         case Origin => mesh.Anchors.Origin
 
-        // TODO: find vertex position in scene? 
-        case VertexAnchor(scene, vertexIndex) => ???
-            // FIXME: requires Tri
-            // mesh.Anchors.VertexAnchor(scene.computeMesh, vertexIndex, p = ???) 
+        // Anchor to nth vertex of mesh corresponding to scene 
+        case VertexAnchor(scene, index) => mesh.Anchors.VertexAnchor(scene.computeMesh, index)
         
     }
 

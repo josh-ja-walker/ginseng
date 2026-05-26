@@ -1,4 +1,4 @@
-package ginseng.core.ast.conversion
+package ginseng.core.ast.scene.conversion
 
 import ginseng.core.*
 import ginseng.core.ast.*
