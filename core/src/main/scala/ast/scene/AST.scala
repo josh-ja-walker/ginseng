@@ -91,7 +91,7 @@ object AST {
     sealed trait FlatModifiable extends Modifiable[Flat[?]]
 
     // TODO: can vertex take any scene object? prob no
-    case class Vertex(index: Int, scene: Scene) extends FlatModifiable    
+    case class Vertex(scene: Scene, index: Int) extends FlatModifiable    
     case class Edge(a: Vertex, b: Vertex) extends FlatModifiable
     
     sealed trait BodyModifiable extends Modifiable[Body[?, ?]]
