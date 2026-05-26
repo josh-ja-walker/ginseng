@@ -9,8 +9,9 @@ import ginseng.renderer.renderers.polylines.*
 
 import ginseng.core.poly.*
 
-import ginseng.core.ast.{ Shader as ShaderAST }
 import ginseng.core.ast.mesh.MeshAST.*
+import ginseng.core.ast.{ Shader as ShaderAST }
+
 import ginseng.maths.geometry.*
 
 

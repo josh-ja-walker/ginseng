@@ -20,7 +20,7 @@ object Anchors {
 
     // Vertex of a scene
     // TODO: unsure of how to handle complex scenes (which vertices to use???)
-    case class VertexAnchor(scene: Scene, vertexIndex: Int) extends Anchor
+    case class VertexAnchor(scene: Scene, index: Int) extends Anchor
 
 
     // Anchors with respect to the bounds of a scene
