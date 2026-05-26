@@ -21,10 +21,11 @@ object Anchors {
     
     // Anchor at vertex of a mesh
     case class VertexAnchor(mesh: Mesh, index: Int) extends Anchor { 
+
         // TODO: use geometry traits to simplify
         def pos: Pos = mesh match {
-            // Index into position of primitive vertex
 
+            // Index into position of primitive vertex
             case Point(pos) => { assert(index == 0); pos }
 
             // TODO: use polyline to handle below
@@ -36,12 +37,17 @@ object Anchors {
 
             // For nested types recurse until primitive found
 
-            case AnchorAt(anchor, obj, at) => VertexAnchor(obj, index).pos
+            // Prioritise the anchoring mesh otherwise use the anchored mesh 
+            case AnchorAt(anchor, mesh, at) => anchor.mesh
+                .orElse(Some(mesh))
+                .map(VertexAnchor(_, index).pos)
+                .get
 
             case Rendered(mesh, shader) => VertexAnchor(mesh, index).pos
             case Scaffold(mesh) => VertexAnchor(mesh, index).pos
 
         } 
+        
     }
 
 
@@ -60,6 +66,16 @@ object Anchors {
     // Universal scene anchors
     case class ViewportAnchor(anchorType: AnchorType) 
         extends BoundsAnchor(Bounds.Viewport, anchorType) 
+
+    extension (anchor: Anchor) {
+        // Extract mesh from anchor
+        def mesh: Option[Mesh] = anchor match {
+            case Origin | ViewportAnchor(_) => None
+            case VertexAnchor(mesh, index) => Some(mesh)
+            case AABB(mesh, anchorType) => Some(mesh)
+            case OBB(mesh, anchorType) => Some(mesh)
+        }
+    }
 
 }
 
