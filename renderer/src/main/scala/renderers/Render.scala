@@ -80,10 +80,11 @@ object Render {
         }
 
 
-    // Resolve position
+    // Resolve anchoring such that all meshes have absolute positioning
     extension (anchorAt: AnchorAt) def resolve: Mesh = {
+        // Anchor position is in parent space, at position is in local space
         val AnchorAt(anchor, mesh, at) = anchorAt
-        val offset = at.pos - anchor.pos
+        val offset = anchor.pos - at.pos
 
         mesh match {
             // TODO: change to use translation
