@@ -18,37 +18,11 @@ import ginseng.maths.geometry.*
 object Render {
 
     // Render root
-    extension (mesh: Mesh) def render()(using Zone): Unit = mesh match {
-
-        // Cannot render a primitive without shader information
-        case p: Primitive => ??? // error! unreachable! 
-        
-        // Resolve positioning information and then render
-        case anchored@AnchorAt(anchor, mesh, at) => {
-            // Render the anchoring mesh
-            anchor.mesh.map(_.render())
-
-            // Render the anchored mesh
-            mesh.render()
-        }
-
-        // Render using shader information
-        case Rendered(mesh, shader) => mesh.render(shader, Dir.zero)
-        
-        // Do not render scaffolds (but maybe render nested meshes)
-        case Scaffold(mesh) => mesh match {
-            // Ignore any primitives
-            case p: Primitive => ()
-
-            // Otherwise delegate render call to nested
-            case other => other.render()
-        }
-        
-    }
-
+    extension (mesh: Mesh) def render()(using Zone): Unit = mesh.render(None, Dir.zero)
 
     // Render using shader information propagated through
-    extension (mesh: Mesh) def render(shader: ShaderAST, offset: Dir)(using Zone): Unit = mesh match {
+
+    extension (mesh: Mesh) private def render(shader: Option[ShaderAST], offset: Dir)(using Zone): Unit = mesh match {
 
         // Resolve positioning information and then render
         case anchored@AnchorAt(anchor, mesh, at) => {
@@ -59,7 +33,7 @@ object Render {
         }
         
         // Offset and render primitives
-        case p: Primitive => p.offset(offset).render(shader)
+        case p: Primitive => p.offset(offset).render(shader.get) // Must have a shader set by now
         
         // Do not render scaffolds (but maybe render nested meshes)
         case Scaffold(mesh) => mesh match {
@@ -71,7 +45,7 @@ object Render {
         }
         
         // Ignore current shader, render using nested shader
-        case Rendered(mesh, shader) => mesh.render(shader, offset)
+        case Rendered(mesh, shader) => mesh.render(Some(shader), offset)
         
         // If not a primitive mesh (i.e., for now not a Triangle) then ???
     }
