@@ -15,7 +15,8 @@ object Anchors {
     }
 
     // Universal scene anchor
-    case object Origin extends Anchor { def pos: Pos = Pos.origin } 
+    // TODO: use origin and resolve viewpoint origin later
+    case object Origin extends Anchor { def pos: Pos = Pos(0, 0, 0) } 
     
     
     // Anchor at vertex of a mesh
