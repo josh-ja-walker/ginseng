@@ -17,6 +17,7 @@ import ginseng.core.poly.polylines.given // TODO: ideally export from polylines
 import ginseng.core.poly.components.given // TODO: ideally export from components
 import ginseng.core.transformations.given // TODO: ideally export from transformations
 
+import ginseng.maths.units.*
 import ginseng.maths.angle.*
 import ginseng.maths.linalg.*
 import ginseng.maths.geometry.*

@@ -2,8 +2,8 @@ package ginseng.core.ast.conversion
 
 import ginseng.core.ast.*
 
-import scene.*
-import scene.Anchors.{ Anchor as SceneAnchor }
+import scene.AST.*
+import scene.Anchors.{ Anchor as SceneAnchor, * }
 import mesh.Anchors.{ Anchor as MeshAnchor }
 
 import ComputeMesh.*

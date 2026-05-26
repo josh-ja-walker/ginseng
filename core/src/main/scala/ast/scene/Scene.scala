@@ -1,7 +1,7 @@
-package ginseng.core.ast
+package ginseng.core.ast.scene
 
 
-package object scene {
+package object SceneAST {
     
     export AST.*
     export Anchors.*

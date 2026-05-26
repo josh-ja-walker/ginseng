@@ -9,30 +9,27 @@ import ginseng.renderer.renderers.polylines.*
 
 import ginseng.core.poly.*
 
-import ginseng.core.ast.*
-import ginseng.core.ast.mesh.AST.*
-import ginseng.core.ast.Shader
-import ginseng.core.ast.mesh.Anchors.Origin
-import ginseng.core.ast.mesh.Anchors.VertexAnchor
-import ginseng.core.ast.mesh.Anchors.ViewportAnchor
-import ginseng.maths.geometry.Pos
+import ginseng.core.ast.{ Shader as ShaderAST }
+import ginseng.core.ast.mesh.MeshAST.*
+import ginseng.maths.geometry.*
 
 
 object Render {
 
     // Render root
     extension (mesh: Mesh) def render()(using Zone): Unit = mesh match {
+
+        // Cannot render a primitive without shader information
+        case p: Primitive => ??? // error! unreachable! 
         
         // Resolve positioning information and then render
         case anchored: AnchorAt => anchored.resolve.render()
 
-        // Cannot render a primitive without shader information
-        case p: Primitive => ??? // error! unreachable! 
-
         // Propagate shader information
         case Rendered(mesh, shader) => mesh match {
 
-            case AnchorAt(_, _, _) => ???
+            // Resolve positioning information and then render
+            case anchored: AnchorAt => Rendered(anchored.resolve, shader).render()
             
             // Render primitives
             case p: Primitive => p.render(shader)
@@ -49,8 +46,7 @@ object Render {
             // Ignore current shader, render using nested shader
             case r: Rendered => r.render()
             
-            // If not a primitive mesh (i.e., for now not a Triangle) then recurse
-            // case mesh => Rendered(mesh, shader).render()
+            // If not a primitive mesh (i.e., for now not a Triangle) then ???
         }
 
         case Scaffold(mesh) => mesh.render()
@@ -58,7 +54,7 @@ object Render {
 
 
     // Render leaf nodes - i.e., primitives
-    extension (mesh: Primitive) def render(shader: Shader)(using Zone): Unit = {
+    extension (mesh: Primitive) def render(shader: ShaderAST)(using Zone): Unit = {
         // TODO: not a fan of the wildcard
         val renderer: Renderer[?] = mesh match {
             case Point(p) => PointRenderer(misc.Point(p))
@@ -75,11 +71,11 @@ object Render {
     }
 
     // Construct shader from AST shader information
-    extension (shader: ginseng.core.ast.Shader)
+    extension (shader: ShaderAST)
         def create(using Zone): ShaderProg = shader match {
-            case Shader.Flat(col) => Shaders.flatShader(col)
-            case Shader.Tri(a, b, c) => Shaders.interpolateShader(a, b, c)
-            case Shader.Interpolate(colours*) => Shaders.interpolateShader(colours*)
+            case ShaderAST.Flat(col) => Shaders.flatShader(col)
+            case ShaderAST.Tri(a, b, c) => Shaders.interpolateShader(a, b, c)
+            case ShaderAST.Interpolate(colours*) => Shaders.interpolateShader(colours*)
         }
 
 

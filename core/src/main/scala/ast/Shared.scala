@@ -6,11 +6,9 @@ import ginseng.maths.geometry.*
 
 
 enum Shader {
-    
     case Flat(col: Colour)
     case Tri(a: Colour, b: Colour, c: Colour)
     case Interpolate(colours: Colour*)
-
 }
 
 

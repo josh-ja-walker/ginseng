@@ -98,6 +98,7 @@ object AST {
 
     // Modification to a primitive
     sealed trait Modification extends Scene
+    
     case class ModifyFlat(modifiable: FlatModifiable, flat: Flat[?], modifier: FlatModifiable => FlatModifiable) extends Modification
     case class ModifyBody(modifiable: BodyModifiable, body: Body[?, ?], modifier: BodyModifiable => BodyModifiable) extends Modification
 

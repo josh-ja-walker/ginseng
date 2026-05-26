@@ -11,7 +11,7 @@ import ginseng.maths.angle.*
 import ginseng.maths.geometry.*
 import ginseng.maths.linalg.*
 
-import scene.*
+import scene.SceneAST.*
 import mesh.AST.Mesh
 
 import ComputeAnchor.*

@@ -1,10 +1,9 @@
-package ginseng.core.ast
+package ginseng.core.ast.mesh
 
 
-package object mesh {
+package object MeshAST {
     
     export AST.*
     export Anchors.*
-    export Geometry.given
     
 }

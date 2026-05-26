@@ -4,6 +4,8 @@ import ginseng.core.ast.*
 
 import ginseng.maths.geometry.*
 
+import AST.*
+
 
 // TODO:
 object Bounds {
