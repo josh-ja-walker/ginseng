@@ -15,7 +15,10 @@ object Bounds {
     }
 
     case object Viewport extends Bounds {
-        def resolve(anchorType: AnchorType): Pos = ???
+        def resolve(anchorType: AnchorType): Pos = PointCloud(
+            Pos.bottomLeft - Dir.forward, Pos.bottomRight - Dir.forward, Pos.topLeft - Dir.forward, Pos.topRight - Dir.forward,
+            Pos.bottomLeft + Dir.forward, Pos.bottomRight + Dir.forward, Pos.topLeft + Dir.forward, Pos.topRight + Dir.forward
+        ).resolve(anchorType)
     }
 
     // Bounding box aligned upon the axis
@@ -39,7 +42,7 @@ object Bounds {
                     
             }
 
-            PointCloud(allPositions(mesh)).resolve(anchorType)
+            PointCloud(allPositions(mesh)*).resolve(anchorType)
         }
     }
     
@@ -50,7 +53,7 @@ object Bounds {
     }
 
 
-    private class PointCloud(positions: Seq[Pos]) extends Bounds {
+    private class PointCloud(positions: Pos*) extends Bounds {
         def resolve(anchorType: AnchorType): Pos = {
             val minX = positions.minBy(_.x).x
             val minY = positions.minBy(_.y).y
