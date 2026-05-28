@@ -16,6 +16,19 @@ case class Pos(x: Double, y: Double, z: Double, w: Double = 1.0d)
     // Note: homogenous coordinate value must be nonzero for a Position Vector
     require(w != 0)
 
+    override def equals(obj: Any): Boolean = {
+        val epsilon = 0.005d
+        obj match {
+            case Pos(x2, y2, z2, w2) => {
+                   math.abs(x2 - x) < epsilon
+                && math.abs(y2 - y) < epsilon
+                && math.abs(z2 - z) < epsilon
+                && math.abs(w2 - w) < epsilon
+            }
+            case _ => false
+        }
+    }
+
     
     // Compute direction from current vector to other vector p
     def ->(p: Pos): Dir = p - this
