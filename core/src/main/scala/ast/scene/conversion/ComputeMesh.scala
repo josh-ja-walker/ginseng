@@ -11,6 +11,9 @@ import ginseng.maths.angle.*
 import ginseng.maths.geometry.*
 import ginseng.maths.linalg.*
 
+import ginseng.core.ast.mesh.*
+import ginseng.core.ast.mesh.given
+
 import scene.SceneAST.*
 import mesh.AST.Mesh
 
@@ -20,7 +23,7 @@ import ComputeAnchor.*
 object ComputeMesh {
 
     // Compute mesh for nested scenes (i.e., not primitives)
-    extension (scene: Scene) def computeMesh: Mesh = scene match {
+    extension (scene: Scene) def computeMesh: Mesh[?] = scene match {
 
         // Delegate to primitive mesh compute handler
         case p: Primitive => p.computeMesh
@@ -45,13 +48,15 @@ object ComputeMesh {
 
 
     // Compute mesh for primitive types - i.e., no positional or transformation operations
-    extension (primitive: Primitive) def computeMesh: mesh.AST.Primitive = primitive match {
+    extension (primitive: Primitive) def computeMesh: Mesh[?] = primitive match {
         
         // Propagate types for mesh supported types
         case Point(p) => mesh.AST.Point(p)
         case Direct(a, b) => mesh.AST.Direct(a, b)
-        case path: Path[n] => mesh.AST.Path[n](path.positions*)
-        case loop: Loop[n] => mesh.AST.Loop[n](loop.positions*)
+
+        // FIXME: requires using ValueOf[N]
+        // case path: Path[n] => mesh.AST.Path[n](path.positions*)(using path.v)
+        // case loop: Loop[n] => mesh.AST.Loop[n](loop.positions*)
 
         // Compute positions of triangle from SAS construction assuming point A at (0, 0, 0)
         case Tri(s1, angle, s2) => {
@@ -73,13 +78,8 @@ object ComputeMesh {
 
     }
 
-    
-    // TODO:
-    given transformations.Transform[Mesh] = ???
-
-    // TODO:
     // Compute mesh for transformed types by applying transformation to the computed sub-mesh
-    extension (transform: Transform) def computeMesh: Mesh = transform match {
+    extension (transform: Transform) def computeMesh: Mesh[?] = transform match {
         case Move(a, d) => a.computeMesh.translated(d)
         case MoveTo(a, anchor, to) => a.computeMesh.repositioned(anchor(a).compute.pos, to)
 
@@ -103,7 +103,7 @@ object ComputeMesh {
 
 
     // Compute mesh for positioned types by converting all helpers into anchors
-    extension (positioned: Positioning) def computeMesh: mesh.AST.AnchorAt = positioned match {
+    extension (positioned: Positioning) def computeMesh: mesh.AST.AnchorAt[?] = positioned match {
         // Propagate anchor information to mesh
         case AnchorAt(anchor, scene, at) => mesh.AST.AnchorAt(anchor.compute, scene.computeMesh, at(scene).compute)
         
@@ -120,7 +120,7 @@ object ComputeMesh {
     // extension (mesh: Mesh) def find(modifiable: Modifiable[?]): Component[Mesh] = ???
     
     // Compute mesh for modifications by applying the modification to the mesh
-    extension (modification: Modification) def computeMesh: Mesh = ???
+    extension (modification: Modification) def computeMesh: Mesh[?] = ???
     // modification match {
     //     case ModifyFlat(vertex, flat, modifier) => flat.computeMesh.find(vertex).modify(modifier)
     //     case ModifyBody(face, body, modifier) => body.computeMesh.find(face).modify(modifier)

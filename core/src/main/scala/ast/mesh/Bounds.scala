@@ -19,12 +19,12 @@ object Bounds {
     }
 
     // Bounding box aligned upon the axis
-    case class AABB(mesh: Mesh) extends Bounds {
+    case class AABB(mesh: Mesh[?]) extends Bounds {
         def resolve(anchorType: AnchorType): Pos = ???
     }
 
     // Bounding box orientated in the direction of the bound object
-    case class OBB(mesh: Mesh) extends Bounds {
+    case class OBB(mesh: Mesh[?]) extends Bounds {
         def resolve(anchorType: AnchorType): Pos = ???
     }
 

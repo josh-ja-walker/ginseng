@@ -22,7 +22,7 @@ object Render {
 
     // Render using shader information propagated through
 
-    extension (mesh: Mesh) private def render(shader: Option[ShaderAST], offset: Dir)(using Zone): Unit = mesh match {
+    extension (mesh: Mesh[?]) private def render(shader: Option[ShaderAST], offset: Dir)(using Zone): Unit = mesh match {
 
         // Resolve positioning information and then render
         case anchored@AnchorAt(anchor, mesh, at) => {
@@ -52,7 +52,7 @@ object Render {
 
 
     // Apply offset to primitives
-    extension (mesh: Primitive) def offset(offset: Dir): Primitive = mesh match {
+    extension (mesh: Primitive[?]) def offset(offset: Dir): Primitive[?] = mesh match {
 
         // TODO: change to use translation transformation
             // case p: Primitive => p.translate(offset)
@@ -60,8 +60,10 @@ object Render {
         case Point(pos) => Point(pos + offset)
         
         case Direct(a, b) => Direct(a + offset, b + offset)
-        case Path(positions*) => Path(positions.map(_ + offset)*)
-        case Loop(positions*) => Loop(positions.map(_ + offset)*)
+
+        // FIXME: requires using ValueOf[N]
+        // case Path(positions*) => Path(positions.map(_ + offset)*)
+        // case Loop(positions*) => Loop(positions.map(_ + offset)*)
         
         case Tri(a, b, c) => Tri(a + offset, b + offset, c + offset)
 
@@ -69,7 +71,7 @@ object Render {
 
 
     // Render leaf nodes - i.e., primitives
-    extension (mesh: Primitive) def render(shader: ShaderAST)(using Zone): Unit = {
+    extension (mesh: Primitive[?]) def render(shader: ShaderAST)(using Zone): Unit = {
         // FIXME: not a fan of the wildcard
         val renderer: Renderer[?] = mesh match { 
 
