@@ -109,6 +109,7 @@ import scala.util.Random
             Square(1.u).scaffolded
                 .aabb(AnchorType.Top)
                 .anchors(
+                    // FIXME: does not rotate about anchor - ??? - translation also does not work
                     cube.rotatedAbout(Deg(t * 3.6d), Dir.right, _ => ViewportAnchor(AnchorType.Center)),
                     from = _.aabb(AnchorType.AB)
                 ),

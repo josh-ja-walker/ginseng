@@ -15,7 +15,7 @@ object ComputeAnchor {
         
         // Convert a displaced anchor
         case Displaced(anchor, dir) => ???
-        // case class DisplacedAnchor(anchor, dir) extends Anchor { def pos: Pos = anchor.computeAnchor.pos + dir }
+            // case class DisplacedAnchor(anchor, dir) extends Anchor { def pos: Pos = anchor.computeAnchor.pos + dir }
 
         // Anchors with respect to the bounds of a scene
         case AABB(scene: Scene, anchorType: AnchorType) => mesh.Anchors.AABB(scene.computeMesh, anchorType)
@@ -28,8 +28,9 @@ object ComputeAnchor {
         case Origin => mesh.Anchors.Origin
 
         // Anchor to nth vertex of mesh corresponding to scene 
+        // FIXME: ideally do not copy meshes 
         case VertexAnchor(scene, index) => mesh.Anchors.VertexAnchor(scene.computeMesh, index)
-        
+
     }
 
 }
