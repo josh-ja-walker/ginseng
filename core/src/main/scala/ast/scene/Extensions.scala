@@ -22,10 +22,15 @@ object Extensions {
         def anchoredAt(anchor: Anchor, at: Scene => Anchor) = AnchorAt(anchor, scene, at)
         def vertex(index: Int) = VertexAnchor(scene, index)
 
-        def leftOf(b: Scene) = LeftOf(scene, b)
-        def rightOf(b: Scene) = RightOf(scene, b)
-        def above(b: Scene) = Above(scene, b)
-        def below(b: Scene) = Below(scene, b)
+        def isLeftOf(b: Scene) = LeftOf(scene, b)
+        def isRightOf(b: Scene) = RightOf(scene, b)
+        def isAbove(b: Scene) = Above(scene, b)
+        def isBelow(b: Scene) = Below(scene, b)
+
+        def toLeft(b: Scene) = b.isLeftOf(scene)
+        def toRight(b: Scene) = b.isRightOf(scene)
+        def above(b: Scene) = b.isAbove(scene)
+        def below(b: Scene) = b.isBelow(scene)
 
         def moved(d: Dir) = Move(scene, d)
         def movedTo(p: Pos, anchor: Scene => Anchor) = MoveTo(scene, anchor, p)
