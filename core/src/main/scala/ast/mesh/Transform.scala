@@ -30,7 +30,7 @@ given meshTransform: [N <: Int] => Transform[Mesh[N]] {
             case Loop(positions*) => ???
 
             case tri: Tri => triTransform.transform(tri)(transformation)
-            case anchorAt: AnchorAt[n] => anchorAtTransform.transform(anchorAt)(transformation)
+            case anchorAt: Anchoring[n] => anchorAtTransform.transform(anchorAt)(transformation)
             case rendered: Rendered[n] => renderedTransform.transform(rendered)(transformation)
             case scaffold: Scaffold[n] => scaffoldTransform.transform(scaffold)(transformation)
         }
@@ -66,14 +66,14 @@ given anchorTransform: Transform[Anchor] with
                 case OBB(mesh, anchorType) => OBB(mesh.transform(transformation), anchorType)
         }
 
-given anchorAtTransform: [N <: Int] => Transform[AnchorAt[N]] {
-    extension (t: AnchorAt[N]) 
-        def transform(transformation: Transformation): AnchorAt[N] = {
-            val AnchorAt(anchor, mesh, at) = t
-            AnchorAt(
-                anchor.transform(transformation), 
+given anchorAtTransform: [N <: Int] => Transform[Anchoring[N]] {
+    extension (t: Anchoring[N]) 
+        def transform(transformation: Transformation): Anchoring[N] = {
+            val Anchoring(to, mesh, from) = t
+            Anchoring(
+                to.transform(transformation), 
                 mesh.transform(transformation), 
-                at.transform(transformation)
+                from.transform(transformation)
             )
         }
 }

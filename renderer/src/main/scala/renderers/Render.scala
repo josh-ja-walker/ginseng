@@ -8,9 +8,8 @@ import ginseng.renderer.renderers.polygons.*
 import ginseng.renderer.renderers.polylines.*
 
 import ginseng.core.poly.*
-
-import ginseng.core.ast.mesh.MeshAST.*
 import ginseng.core.ast.{ Shader as ShaderAST }
+import ginseng.core.ast.mesh.MeshAST.*
 
 import ginseng.maths.geometry.*
 
@@ -21,21 +20,16 @@ object Render {
     extension (mesh: Mesh[?]) def render()(using Zone): Unit = mesh.render(None, Dir.zero)
 
     // Render using shader information propagated through
-
     extension (mesh: Mesh[?]) private def render(shader: Option[ShaderAST], offset: Dir)(using Zone): Unit = mesh match {
 
         // Resolve positioning information and then render
-        case anchored@AnchorAt(anchor, mesh, at) => {
-            anchor.mesh.map(_.render(shader, offset))
-
-            // Resolve the anchored mesh's position and render
-            mesh.render(shader, (offset + (anchor.pos  - at.pos)).toDir)
+        case anchoring@Anchoring(to, mesh, from) => {
+            to.mesh.map(_.render(shader, offset))
+            mesh.render(shader, offset + anchoring.offset)
         }
         
-        // Offset and render primitives
-        case p: Primitive[?] => shader.collect(
-            p.offset(offset).render(_) // Must have a shader set to render
-        )
+        // Offset and render primitives - NOTE: must have a shader set to render
+        case p: Primitive[?] => shader.collect(p.offset(offset).render(_))
 
         // Do not render scaffolds (but maybe render nested meshes)
         // So delete current shader and only render sub-mesh if it explicitly defines a shader

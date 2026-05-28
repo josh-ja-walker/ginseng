@@ -38,8 +38,7 @@ object Anchors {
             // For nested types recurse until primitive found
 
             // Prioritise the anchoring mesh otherwise use the anchored mesh 
-            case AnchorAt(anchor, mesh, at) => anchor.mesh
-                .orElse(Some(mesh))
+            case Anchoring(to, mesh, from) => to.mesh.orElse(Some(mesh))
                 .map(VertexAnchor(_, index).pos)
                 .get
 

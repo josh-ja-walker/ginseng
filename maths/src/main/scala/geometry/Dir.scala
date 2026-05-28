@@ -25,6 +25,8 @@ case class Dir(x: Double, y: Double, z: Double)
 
     override def *(scalar: Double): Dir = super.*(scalar).toDir
 
+    override def +(dir: Vec[4]): Dir = super.+(dir).toDir
+
 }
 
 

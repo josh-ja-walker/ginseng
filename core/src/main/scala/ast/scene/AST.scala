@@ -51,7 +51,7 @@ object AST {
     case object Viewport extends Scene // TODO: should this be a Cuboid? 
 
     // Position a scene at an anchor with respect to its own anchor (`at`) 
-    case class AnchorAt(anchor: Anchor, scene: Scene, at: Scene => Anchor) extends Positioning
+    case class Anchoring(to: Anchor, scene: Scene, from: Scene => Anchor) extends Positioning
 
     // Position two scenes with respect to each other
     case class LeftOf(a: Scene, b: Scene) extends Positioning
@@ -64,7 +64,7 @@ object AST {
 
     // TODO: provide access to local direcitons
     case class Move(a: Scene, d: Dir) extends Transform
-    case class MoveTo(a: Scene, anchor: Scene => Anchor, to: Pos) extends Transform
+    case class MoveTo(a: Scene, to: Pos, from: Scene => Anchor) extends Transform
 
     case class Scale(a: Scene, factor: Vec[3]) extends Transform
     case class Reflect(a: Scene, plane: Plane) extends Transform

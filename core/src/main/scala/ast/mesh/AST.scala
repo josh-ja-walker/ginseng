@@ -51,7 +51,13 @@ object AST {
     sealed trait Positioning[N <: Int] extends Mesh[N]
 
     // Position with respect to an anchor
-    case class AnchorAt[N <: Int](anchor: Anchor, mesh: Mesh[N], at: Anchor) extends Positioning[N] { def mat: Mat[4, N] = mesh.mat}
+    case class Anchoring[N <: Int](to: Anchor, mesh: Mesh[N], from: Anchor) extends Positioning[N] { 
+        
+        def mat: Mat[4, N] = mesh.mat
+
+        def offset: Dir = to.pos - from.pos
+        
+    }
 
     // Shader specification
     case class Rendered[N <: Int](mesh: Mesh[N], shader: Shader) extends Mesh[N] { def mat: Mat[4, N] = mesh.mat }

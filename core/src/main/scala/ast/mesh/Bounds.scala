@@ -24,14 +24,12 @@ object Bounds {
             
             def allPositions(mesh: Mesh[?], offset: Dir = Dir.zero): Seq[Pos] = mesh match {
 
-                case AnchorAt(anchor, mesh, at) => {
-                    val anchorPositions = anchor.mesh
+                case anchoring@Anchoring(to, mesh, from) => {
+                    val anchorPositions = to.mesh
                         .map(allPositions(_, offset))
                         .getOrElse(Nil) 
 
-                    val meshPositions = allPositions(mesh, (offset + (anchor.pos - at.pos)).toDir)
-
-                    (anchorPositions ++ meshPositions).distinct
+                    (anchorPositions ++ allPositions(mesh, offset + anchoring.offset)).distinct
                 }
                     
                 case p: Primitive[?] => p.mat.toPositions.map(_ + offset)

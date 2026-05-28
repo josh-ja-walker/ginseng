@@ -72,7 +72,7 @@ object ComputeMesh {
             val rightAngled = Tri(size, Deg(90), size)
             rightAngled.vertex(1).anchors(
                 rightAngled.rotated(Deg(180), Dir.forward),
-                at = _.vertex(2)
+                from = _.vertex(2)
             ).computeMesh
         }
 
@@ -105,11 +105,11 @@ object ComputeMesh {
                                     Tris.equil(size)
                                         .rotated(Rad(tiltAngle), Dir.right)
                                         .rotated(Deg(60), Dir.up),
-                                    at = _.vertex(1)
+                                    from = _.vertex(1)
                                 ),
-                            at = _.vertex(1)
+                            from = _.vertex(1)
                         ),
-                    at = _.vertex(0)
+                    from = _.vertex(0)
                 ).computeMesh
         }
         
@@ -141,15 +141,15 @@ object ComputeMesh {
                                                     // Bottom
                                                     Square(size)
                                                         .rotated(Deg(90), Dir.right),
-                                                    at = _.vertex(0)
+                                                    from = _.vertex(0)
                                                 ),
-                                            at = _.vertex(0)
+                                            from = _.vertex(0)
                                         ),
-                                    at = _.vertex(2)
+                                    from = _.vertex(2)
                                 ),
-                            at = _.vertex(1)
+                            from = _.vertex(1)
                         ),
-                    at = _.vertex(0)
+                    from = _.vertex(0)
                 ).computeMesh
         }
         
@@ -160,7 +160,7 @@ object ComputeMesh {
     // Compute mesh for transformed types by applying transformation to the computed sub-mesh
     extension (transform: Transform) def computeMesh: Mesh[?] = transform match {
         case Move(a, d) => a.computeMesh.translated(d)
-        case MoveTo(a, anchor, to) => a.computeMesh.repositioned(anchor(a).compute.pos, to)
+        case MoveTo(a, to, from) => a.computeMesh.repositioned(from(a).compute.pos, to)
 
         case Scale(a, factor) => a.computeMesh.scaled(factor)
         case Reflect(a, plane) => a.computeMesh.reflected(plane.normal, plane.point) 
@@ -182,9 +182,9 @@ object ComputeMesh {
 
 
     // Compute mesh for positioned types by converting all helpers into anchors
-    extension (positioned: Positioning) def computeMesh: mesh.AST.AnchorAt[?] = positioned match {
+    extension (positioned: Positioning) def computeMesh: mesh.AST.Anchoring[?] = positioned match {
         // Propagate anchor information to mesh
-        case AnchorAt(anchor, scene, at) => mesh.AST.AnchorAt(anchor.compute, scene.computeMesh, at(scene).compute)
+        case Anchoring(to, scene, from) => mesh.AST.Anchoring(to.compute, scene.computeMesh, from(scene).compute)
         
         // Convert positioning helpers into anchorings
         case LeftOf(a, b)  => a.aabb(AnchorType.Right) .anchors(b, _.aabb(AnchorType.Left))  .computeMesh
