@@ -68,12 +68,91 @@ object ComputeMesh {
         }
 
         // Convert 2D primitives to a mesh of tris
-        case Square(size) => ???
-        case Rect(width, height) => ???
+        case Square(size) => {
+            val rightAngled = Tri(size, Deg(90), size)
+            rightAngled.vertex(1).anchors(
+                rightAngled.rotated(Deg(180), Dir.forward),
+                at = _.vertex(2)
+            ).computeMesh
+        }
+
+        case Rect(width, height) => {
+            Square(width).scaled(Vec[3](1, height.toDouble / width.toDouble, 1)).computeMesh
+        }
+
         case Polygon(size) => ???
-        case Tetra(size) => ???
+
+        case Tetra(size) => {
+            val tiltAngle = math.asin(1d / 3d)
+            
+            // Base
+            Tris.equil(size)
+                .rotated(Deg(-90), Dir.right)
+                .vertex(0)
+                .anchors(
+                    // Front
+                    Tris.equil(size)
+                        .rotated(Rad(-tiltAngle), Dir.right)
+                        .vertex(1)
+                        .anchors(
+                            // Right back
+                            Tris.equil(size)
+                                .rotated(Rad(tiltAngle), Dir.right)
+                                .rotated(Deg(-60), Dir.up)
+                                .vertex(0)
+                                .anchors(
+                                    // Left back
+                                    Tris.equil(size)
+                                        .rotated(Rad(tiltAngle), Dir.right)
+                                        .rotated(Deg(60), Dir.up),
+                                    at = _.vertex(1)
+                                ),
+                            at = _.vertex(1)
+                        ),
+                    at = _.vertex(0)
+                ).computeMesh
+        }
+        
         case Pyramid(size) => ???
-        case Cube(size) => ???
+        
+        case Cube(size) => {
+            // Front
+            Square(size)
+                .vertex(1)
+                .anchors(
+                    // Right
+                    Square(size)
+                        .rotated(Deg(270), Dir.up)
+                        .vertex(2)
+                        .anchors(
+                            // Top
+                            Square(size)
+                                .rotated(Deg(90), Dir.right)
+                                .vertex(2)
+                                .anchors(
+                                    // Back
+                                    Square(size)
+                                        .vertex(0)
+                                        .anchors(
+                                            // Left
+                                            Square(size).rotated(Deg(90), Dir.up)
+                                                .vertex(1)
+                                                .anchors(
+                                                    // Bottom
+                                                    Square(size)
+                                                        .rotated(Deg(90), Dir.right),
+                                                    at = _.vertex(0)
+                                                ),
+                                            at = _.vertex(0)
+                                        ),
+                                    at = _.vertex(2)
+                                ),
+                            at = _.vertex(1)
+                        ),
+                    at = _.vertex(0)
+                ).computeMesh
+        }
+        
         case Cuboid(width, height, depth) => ???
 
     }
