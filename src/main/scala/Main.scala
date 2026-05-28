@@ -3,11 +3,10 @@ package ginseng
 import scala.scalanative.unsafe.*
 import scala.scalanative.unsigned.*
 
+import ginseng.core.ast.*
+
 import ginseng.core.colours.*
 
-import ginseng.core.poly.*
-import ginseng.core.poly.polygons.*
-import ginseng.core.poly.volumes.*
 import ginseng.core.poly.polylines.*
 import ginseng.core.transformations.*
 
@@ -16,6 +15,12 @@ import ginseng.core.poly.polygons.given // TODO: ideally export from polygons
 import ginseng.core.poly.polylines.given // TODO: ideally export from polylines
 import ginseng.core.poly.components.given // TODO: ideally export from components
 import ginseng.core.transformations.given // TODO: ideally export from transformations
+
+import ginseng.core.ast.Shader
+
+import ginseng.core.ast.scene.SceneAST.*
+import ginseng.core.ast.scene.Anchors
+import ginseng.core.ast.scene.conversion.ComputeMesh.*
 
 import ginseng.maths.units.*
 import ginseng.maths.angle.*
@@ -27,6 +32,9 @@ import ginseng.renderer.shaders.*
 import ginseng.renderer.context.*
 import ginseng.renderer.renderers.volumes.*
 import ginseng.renderer.renderers.polylines.*
+
+import ginseng.renderer.renderers.Render.*
+
 
 import opengl.bindings.glad.*
 import opengl.bindings.glfw.*
@@ -43,27 +51,14 @@ import scala.util.Random
         .build
 
     val context = Context(config)
-    
-    // Define hello triangle
 
-    var tri = Tri.equilateral(2)
-        .repositioned(_.center, Pos.center)
-
-    val triShader = Shaders.interpolateShader(
+    // Define shader
+    val triShader = Shader.Interpolate(
         Colour.hex("#B85450"),
         Colour.hex("#82B366"),
         Colour.hex("#6C8EBF")
     )
     
-    var tetra = Tetra.unital
-        .repositioned(_.center, Pos.center)
-        .rotated(30.toDegrees, Pos.center, Dir.right)
-    
-    var cube = Cube.unital
-        .repositioned(_.center, Pos.center)
-        .scaled(0.5f * Vec.one[3])
-        .rotated(15.toDegrees, Dir.right)
-
     // Define lines forming a grid
 
     def grid(n: Int): Seq[Line] = {
@@ -74,6 +69,7 @@ import scala.util.Random
             ))
     }
 
+    // Render lines directly at runtime - ignore AST and Meshes, etc.,
     val (lineRenderer, lineShader) = {
         val shader = Shaders.flatShader(Colour.hex("#eeeeee"))
         val renderer = LineRenderer(grid(50)*)
@@ -90,9 +86,12 @@ import scala.util.Random
     // Animation timestep - start halfway through growth phase
     var t = 25
 
+    // Begin rendering
+    print("Rendering.." )
+
     context.run(() => {
         
-        // Draw grid lines
+        // Draw grid lines (as mentioned - immediately)
         lineRenderer.render(lineShader)
         boldLineRenderer.render(boldLineShader)
 
@@ -101,42 +100,27 @@ import scala.util.Random
         // Increase animation timestep
         t += 1
         
+        // Loop timestep past 100
         if (t > 100) { t = 0 }
 
-        // Move triangle vertexs and rerender
-        tri = tri.gamma.modify { angle => {
-            val dir = if t < 50 then Dir.right else Dir.left
-            angle.rotate(Deg(1))
-        }}
+        val cube = Tetra(1.u).shaded(triShader)
 
-        // FIXME: now unable to create loop renderers for Loop[?]
-        // val loop2 = Loop[2](Pos.origin, Pos.topRight)
-        // val loop3 = Loop[3](Pos.origin, Pos.topRight, Pos.bottomRight)
-        // val loopRenderer = LoopRenderer(loop2, loop3).render(triShader)
-
-        val factor = if t >= 50 then 10d / 9d else 0.9d
-
-        // Resize triangle and rerender
-        tri = tri.transform {
-            Transformation.Scale(factor * Vec.one[3])
-                -> Transformation.Rotation(Deg(5), Dir.forward)
-        }
-
-        tetra = tetra
-            .rotated(15.toDegrees, Dir.up)
-            .rotated(5.toDegrees, Dir.right)
-            .rotated(3.toDegrees, Dir.forward)
-
-        cube = cube
-            .rotated(1.toDegrees, Dir.up)
-            .rotated(2.toDegrees, Dir.right)
-            .rotated(3.toDegrees, Dir.forward)
-
-        CuboidRenderer(cube).render(triShader)
-        TetraRenderer(tetra).render(Shaders.flatShader(Colours.red))
+        Anchors.Origin.anchors(
+            Square(1.u).scaffolded
+                .aabb(AnchorType.Top)
+                .anchors(
+                    cube.rotatedAbout(Deg(t * 3.6d), Dir.right, _ => ViewportAnchor(AnchorType.Center)),
+                    from = _.aabb(AnchorType.AB)
+                ),
+                from = _.vertex(0)
+            )
+            .computeMesh
+            .render()
 
         // Sleep for 0.05s
-        Thread.sleep(50)
+        Thread.sleep(200)
+
+        print(".")
     })
 
 }
