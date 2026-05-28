@@ -51,7 +51,7 @@ object AST {
     case object Viewport extends Scene // TODO: should this be a Cuboid? 
 
     // Position a scene at an anchor with respect to its own anchor (`at`) 
-    case class AnchorAt(anchor: Anchor, obj: Scene, at: Scene => Anchor) extends Positioning
+    case class AnchorAt(anchor: Anchor, scene: Scene, at: Scene => Anchor) extends Positioning
 
     // Position two scenes with respect to each other
     case class LeftOf(a: Scene, b: Scene) extends Positioning
