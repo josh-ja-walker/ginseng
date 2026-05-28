@@ -18,7 +18,7 @@ import ginseng.maths.geometry.*
 object Render {
 
     // Render root
-    extension (mesh: Mesh) def render()(using Zone): Unit = mesh.render(None, Dir.zero)
+    extension (mesh: Mesh[?]) def render()(using Zone): Unit = mesh.render(None, Dir.zero)
 
     // Render using shader information propagated through
 
@@ -29,20 +29,17 @@ object Render {
             anchor.mesh.map(_.render(shader, offset))
 
             // Resolve the anchored mesh's position and render
-            mesh.render(shader, (offset + (anchor.pos - at.pos)).toDir)
+            mesh.render(shader, (offset + (anchor.pos  - at.pos)).toDir)
         }
         
         // Offset and render primitives
-        case p: Primitive => p.offset(offset).render(shader.get) // Must have a shader set by now
-        
-        // Do not render scaffolds (but maybe render nested meshes)
-        case Scaffold(mesh) => mesh match {
-            // Ignore any primitives
-            case p: Primitive => ()
+        case p: Primitive[?] => shader.collect(
+            p.offset(offset).render(_) // Must have a shader set to render
+        )
 
-            // Otherwise delegate render call to nested
-            case other => other.render(shader, offset)
-        }
+        // Do not render scaffolds (but maybe render nested meshes)
+        // So delete current shader and only render sub-mesh if it explicitly defines a shader
+        case Scaffold(mesh) => mesh.render(None, offset)
         
         // Ignore current shader, render using nested shader
         case Rendered(mesh, shader) => mesh.render(Some(shader), offset)
