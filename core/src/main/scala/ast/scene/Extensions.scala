@@ -22,17 +22,17 @@ object Extensions {
         def anchoredTo(to: Anchor, from: Scene => Anchor) = Anchoring(to, scene, from)
         def vertex(index: Int) = VertexAnchor(scene, index)
 
-        def isLeftOf(b: Scene) = LeftOf(scene, b)
-        def isRightOf(b: Scene) = RightOf(scene, b)
-        def isAbove(b: Scene) = Above(scene, b)
-        def isBelow(b: Scene) = Below(scene, b)
+        def isLeftOf(other: Scene) = LeftOf(scene, other)
+        def isRightOf(other: Scene) = RightOf(scene, other)
+        def isAbove(other: Scene) = Above(scene, other)
+        def isBelow(other: Scene) = Below(scene, other)
 
-        def toLeft(b: Scene) = b.isLeftOf(scene)
-        def toRight(b: Scene) = b.isRightOf(scene)
-        def above(b: Scene) = b.isAbove(scene)
-        def below(b: Scene) = b.isBelow(scene)
+        def toLeft(other: Scene) = other.isLeftOf(scene)
+        def toRight(other: Scene) = other.isRightOf(scene)
+        def above(other: Scene) = other.isAbove(scene)
+        def below(other: Scene) = other.isBelow(scene)
 
-        def moved(d: Dir) = Move(scene, d)
+        def moved(other: Dir) = Move(scene, other)
         def movedTo(to: Pos, from: Scene => Anchor) = MoveTo(scene, to, from)
         def scaled(factor: Vec[3]) = Scale(scene, factor)
         def reflected(plane: Plane) = Reflect(scene, plane)
@@ -59,7 +59,7 @@ object Extensions {
 
     extension (anchor: Anchor) {
         // Helper for constructing `Anchoring` with `this`
-        def anchors(a: Scene, from: Scene => Anchor) = Anchoring(anchor, a, from)
+        def anchors(scene: Scene, from: Scene => Anchor) = Anchoring(anchor, scene, from)
     }
 
 }
