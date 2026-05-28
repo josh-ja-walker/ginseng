@@ -105,7 +105,7 @@ object ComputeMesh {
     // Compute mesh for positioned types by converting all helpers into anchors
     extension (positioned: Positioning) def computeMesh: mesh.AST.AnchorAt = positioned match {
         // Propagate anchor information to mesh
-        case AnchorAt(anchor, obj, at) => mesh.AST.AnchorAt(anchor.compute, obj.computeMesh, at(obj).compute)
+        case AnchorAt(anchor, scene, at) => mesh.AST.AnchorAt(anchor.compute, scene.computeMesh, at(scene).compute)
         
         // Convert positioning helpers into anchorings
         case LeftOf(a, b)  => a.aabb(AnchorType.Right) .anchors(b, _.aabb(AnchorType.Left))  .computeMesh
