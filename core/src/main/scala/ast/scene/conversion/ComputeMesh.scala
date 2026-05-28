@@ -56,8 +56,8 @@ object ComputeMesh {
         // Compute positions of triangle from SAS construction assuming point A at (0, 0, 0)
         case Tri(s1, angle, s2) => {
             val a = Pos(0, 0, 0)
-            val b = a + (Dir.right * s1.toDouble)
-            val c = a + (Dir.right.rotate(angle) * s2.toDouble)
+            val b = a + (Dir.right * s2.toDouble)
+            val c = a + (Dir.right.rotate(angle) * s1.toDouble)
 
             mesh.AST.Tri(a, b, c)
         }
