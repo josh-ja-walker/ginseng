@@ -30,7 +30,7 @@ object AST {
     case class Loop[N <: Int](positions: Pos*) extends Polyline[N]
 
     // 2D primitives
-    sealed trait Flat[N <: Int] extends Primitive with BodyModifiable
+    sealed trait Flat[N <: Int] extends Primitive
 
     case class Tri(s1: Length, angle: Angle, s3: Length) extends Flat[3]
     case class Square(size: Length) extends Flat[4]
@@ -86,23 +86,36 @@ object AST {
 
 
     // Can be modified using modification
-    sealed trait Modifiable[T] extends Scene
-
-    sealed trait FlatModifiable extends Modifiable[Flat[?]]
+    sealed trait Modifiable[T <: Scene]
 
     // TODO: can vertex take any scene object? prob no
-    case class Vertex(scene: Scene, index: Int) extends FlatModifiable    
-    case class Edge(a: Vertex, b: Vertex) extends FlatModifiable
-    
-    sealed trait BodyModifiable extends Modifiable[Body[?, ?]]
+    case class Vertex(index: Int)
+    case class Edge(a: Vertex, b: Vertex)
 
-    // Modification to a primitive
-    sealed trait Modification extends Scene
-    
-    case class ModifyFlat(modifiable: FlatModifiable, flat: Flat[?], modifier: FlatModifiable => FlatModifiable) extends Modification
-    case class ModifyBody(modifiable: BodyModifiable, body: Body[?, ?], modifier: BodyModifiable => BodyModifiable) extends Modification
+    // Components that can be modified on a body    
+    case class Face(index: Int)
 
-    // case class Modify[T, M <: Modifiable[T]](modifiable: M, modified: T, modifier: M => M)
+    // Modification to a Scene object
+    sealed trait Modification[S <: Scene]
+
+    // Modifications to a Flat object 
+    sealed trait FlatModification[S <: Flat[?]] extends Modification[S]
+
+    case class MoveVertex(vertex: Vertex, d: Dir) extends FlatModification
+    case class MoveVertexTo(vertex: Vertex, p: Pos) extends FlatModification
+    case class ReflectVertex(vertex: Vertex, plane: Plane) extends FlatModification
+    case class RotateVertexAbout(vertex: Vertex, angle: Angle, axis: Dir, about: Pos) extends FlatModification
+    
+    case class MoveEdge(edge: Edge, d: Dir) extends FlatModification
+    case class ScaleEdge(edge: Edge, f: Double) extends FlatModification
+
+    // Modifications to a Body object 
+    sealed trait BodyModification[S <: Body[?, ?]] extends Modification[S]
+
+    case class ModifyFace(face: Face, t: Transform) extends BodyModification
+
+    // Apply modification to a scene
+    case class Modify[S <: Scene](scene: S, modification: Modification[S]) extends Scene
 
     // Shader specification
     case class Rendered(scene: Scene, shader: Shader) extends Scene

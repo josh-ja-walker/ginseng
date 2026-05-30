@@ -3,8 +3,6 @@ package ginseng.core.ast.scene.conversion
 import ginseng.core.*
 import ginseng.core.ast.*
 import ginseng.core.transformations.given
-import ginseng.core.poly.components.*
-import ginseng.core.poly.components.given
 
 import ginseng.maths.units.*
 import ginseng.maths.angle.*
@@ -38,7 +36,7 @@ object ComputeMesh {
         // case Edge(_, _) => ???
 
         // Delegate to positioning mesh compute handler
-        case modification: Modification => modification.computeMesh
+        case Modify(scene, modification) => scene.computeMesh.modify(modification)
 
         // Compute mesh from scene and propagate shared shader information 
         case Rendered(scene, shader) => mesh.AST.Rendered(scene.computeMesh, shader)
@@ -194,15 +192,69 @@ object ComputeMesh {
     }
 
 
-    // TODO:
-    // given Modifier[Mesh, Modifiable[?]] = ???
-    // extension (mesh: Mesh) def find(modifiable: Modifiable[?]): Component[Mesh] = ???
-    
-    // Compute mesh for modifications by applying the modification to the mesh
-    extension (modification: Modification) def computeMesh: Mesh[?] = ???
-    // modification match {
-    //     case ModifyFlat(vertex, flat, modifier) => flat.computeMesh.find(vertex).modify(modifier)
-    //     case ModifyBody(face, body, modifier) => body.computeMesh.find(face).modify(modifier)
-    // }
+    extension (mesh: Mesh[?]) def modify(modification: Modification[?]): Mesh[?] = modification match {
+        case MoveVertex(Vertex(index), d) => mesh match {
+            case MeshAST.Tri(a, b, c) => {
+                assert(index <= 2)
+                val points: Seq[Pos] = Seq(a, b, c)
+                val Seq(newA, newB, newC) = points.updated(index, points(index) + d)
+                MeshAST.Tri(newA, newB, newC)
+            }
+
+            // TODO:
+                
+            case MeshAST.Anchoring(to, mesh: Flat[?], from) => MeshAST.Anchoring(to, mesh.modify(modification), from)
+            case MeshAST.Anchoring(to, mesh, from) => ???
+
+            case MeshAST.Rendered(mesh, shader) => MeshAST.Rendered(mesh.modify(modification), shader)
+            case MeshAST.Scaffold(mesh) => MeshAST.Scaffold(mesh.modify(modification))
+
+            case _ => ???
+        }
+        
+        case MoveEdge(Edge(v, u), d) => mesh match {
+            case MeshAST.Tri(a, b, c) => {
+                mesh.modify(MoveVertex(v, d))
+                    .modify(MoveVertex(u, d))
+            }
+            
+            // TODO:
+
+            case MeshAST.Anchoring(to, mesh: Flat[?], from) => MeshAST.Anchoring(to, mesh.modify(modification), from)
+            case MeshAST.Anchoring(to, mesh, from) => ???
+
+            case MeshAST.Rendered(mesh, shader) => MeshAST.Rendered(mesh.modify(modification), shader)
+            case MeshAST.Scaffold(mesh) => MeshAST.Scaffold(mesh.modify(modification))
+
+            case _ => ???
+        }
+
+        case ScaleEdge(Edge(v@Vertex(i), u@Vertex(j)), f) => mesh match {
+            case MeshAST.Tri(a, b, c) => {
+                val points = Seq(a, b, c)
+                
+                val edgeDir = points(j) - points(i)
+                val offset = (f * 0.5f * edgeDir)
+
+                val midpoint = points(i) + edgeDir * 0.5f  
+
+                mesh.modify(MoveVertex(v, (midpoint - offset) - points(i)))
+                    .modify(MoveVertex(u, (midpoint + offset) - points(j)))
+            }
+            
+            // TODO:
+                
+            case MeshAST.Anchoring(to, mesh: Flat[?], from) => MeshAST.Anchoring(to, mesh.modify(modification), from)
+            case MeshAST.Anchoring(to, mesh, from) => ???
+
+            case MeshAST.Rendered(mesh, shader) => MeshAST.Rendered(mesh.modify(modification), shader)
+            case MeshAST.Scaffold(mesh) => MeshAST.Scaffold(mesh.modify(modification))
+            
+            case _ => ???
+        }
+
+        // TODO:
+        case ModifyFace(Face(index), t) => ???
+    }
 
 }
