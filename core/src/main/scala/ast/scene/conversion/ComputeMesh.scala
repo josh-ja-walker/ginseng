@@ -86,23 +86,23 @@ object ComputeMesh {
             val tiltAngle = math.asin(1d / 3d)
             
             // Base
-            Tris.equil(size)
+            Tris.equilateral(size)
                 .rotated(Deg(-90), Dir.right)
                 .vertex(0)
                 .anchors(
                     // Front
-                    Tris.equil(size)
+                    Tris.equilateral(size)
                         .rotated(Rad(-tiltAngle), Dir.right)
                         .vertex(1)
                         .anchors(
                             // Right back
-                            Tris.equil(size)
+                            Tris.equilateral(size)
                                 .rotated(Rad(tiltAngle), Dir.right)
                                 .rotated(Deg(-60), Dir.up)
                                 .vertex(0)
                                 .anchors(
                                     // Left back
-                                    Tris.equil(size)
+                                    Tris.equilateral(size)
                                         .rotated(Rad(tiltAngle), Dir.right)
                                         .rotated(Deg(60), Dir.up),
                                     from = _.vertex(1)

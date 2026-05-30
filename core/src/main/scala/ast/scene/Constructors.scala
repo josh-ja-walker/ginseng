@@ -8,7 +8,8 @@ import ginseng.maths.angle.*
 object Constructors {
     
     object Tris {
-        def equil(s: Length) = AST.Tri(s, Deg(60), s)
+        def equilateral: AST.Tri = this.equilateral(1.u)
+        def equilateral(s: Length): AST.Tri = AST.Tri(s, Deg(60), s)
     }
 
     object Squares {
