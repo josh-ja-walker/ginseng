@@ -20,9 +20,8 @@ enum AnchorType {
 
     // Midpoint of respective lines
     case AB; case BC; case CD; case DA
-    case BF;          case GC; case CB
     case EF; case FG; case GH; case HE
-    case EA; case AD; case DH; 
+    case AE; case BF; case CG; case DH
 
     // Center of respective faces
     case Top   ; case Bottom

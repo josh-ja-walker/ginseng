@@ -79,23 +79,23 @@ object Bounds {
                 case BC => midpoint(B, C)
                 case CD => midpoint(C, D)
                 case DA => midpoint(D, A)
-                case BF => midpoint(B, F)
-                case GC => midpoint(G, C)
-                case CB => midpoint(C, B)
+                
                 case EF => midpoint(E, F)
                 case FG => midpoint(F, G)
                 case GH => midpoint(G, H)
                 case HE => midpoint(H, E)
-                case EA => midpoint(E, A)
-                case AD => midpoint(A, D)
-                case DH => midpoint(D, H)
 
-                case Front => midpoint(A, C)
-                case Right => midpoint(B, G)
-                case Back => midpoint(E, G)
-                case Left => midpoint(E, D)
+                case AE => midpoint(A, E)
+                case BF => midpoint(B, F)
+                case CG => midpoint(C, G)
+                case DH => midpoint(D, H)
+                
                 case Top => midpoint(D, G)
                 case Bottom => midpoint(A, F)
+                case Left => midpoint(E, D)
+                case Right => midpoint(B, G)
+                case Back => midpoint(E, G)
+                case Front => midpoint(A, C)
                 
                 case Center => midpoint(Top, Bottom)
             }
