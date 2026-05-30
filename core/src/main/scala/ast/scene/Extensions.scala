@@ -51,12 +51,19 @@ object Extensions {
         def squeezedY(f: Double) = SqueezeY(scene, f)
         def squeezedZ(f: Double) = SqueezeZ(scene, f)
 
-        // TODO: modify helpers
 
         def shaded(shader: Shader) = Rendered(scene, shader)
         def scaffolded = Scaffold(scene)
     }
 
+    extension (flat: Flat[?]) {
+        def modify(modification: Modification[Flat[?]]) = Modify(flat, modification)
+    }
+    
+    extension (body: Body[?, ?]) {
+        def modify(modification: Modification[Body[?, ?]]) = Modify(body, modification)
+    }
+    
     extension (anchor: Anchor) {
         // Helper for constructing `Anchoring` with `this`
         def anchors(scene: Scene, from: Scene => Anchor) = Anchoring(anchor, scene, from)
