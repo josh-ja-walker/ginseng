@@ -49,12 +49,12 @@ object ComputeMesh {
     extension (primitive: Primitive) def computeMesh: Mesh[?] = primitive match {
         
         // Propagate types for mesh supported types
-        case Point(p) => mesh.AST.Point(p)
-        case Direct(a, b) => mesh.AST.Direct(a, b)
+        case Point(p, size) => mesh.AST.Point(p, size)
+        case Direct(a, b, width) => mesh.AST.Direct(a, b, width)
 
         // FIXME: requires using ValueOf[N]
-        // case path: Path[n] => mesh.AST.Path[n](path.positions*)(using path.v)
-        // case loop: Loop[n] => mesh.AST.Loop[n](loop.positions*)
+        // case path: Path[n] => mesh.AST.Path[n](path.positions, path.width)(using path.v)
+        // case loop: Loop[n] => mesh.AST.Loop[n](loop.positions, path.width)(using path.v)
 
         // Compute positions of triangle from SAS construction assuming point A at (0, 0, 0)
         case Tri(s1, angle, s2) => {
@@ -193,6 +193,7 @@ object ComputeMesh {
 
 
     extension (mesh: Mesh[?]) def modify(modification: Modification[?]): Mesh[?] = modification match {
+
         case MoveVertex(Vertex(index), d) => mesh match {
             case MeshAST.Tri(a, b, c) => {
                 assert(index <= 2)
@@ -211,6 +212,10 @@ object ComputeMesh {
 
             case _ => ???
         }
+
+        case MoveVertexTo(vertex, p) => ???
+        case ReflectVertex(vertex, plane) => ???
+        case RotateVertexAbout(vertex, angle, axis, about) => ???
         
         case MoveEdge(Edge(v, u), d) => mesh match {
             case MeshAST.Tri(a, b, c) => {

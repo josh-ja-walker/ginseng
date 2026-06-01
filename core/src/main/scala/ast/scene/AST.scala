@@ -20,14 +20,14 @@ object AST {
     sealed trait Primitive extends Scene 
 
     // Special case of point primitive
-    case class Point(p: Pos) extends Scene with Primitive
+    case class Point(p: Pos, size: Double = 1) extends Scene with Primitive
 
     // Line primitives
-    sealed trait Polyline[N <: Int] extends Primitive 
+    sealed trait Polyline[N <: Int](width: Double) extends Primitive 
 
-    case class Direct(a: Pos, b: Pos) extends Polyline[2]
-    case class Path[N <: Int](positions: Pos*) extends Polyline[N]
-    case class Loop[N <: Int](positions: Pos*) extends Polyline[N]
+case class Direct(a: Pos, b: Pos, width: Double = 1) extends Polyline[2](width)
+case class Path[N <: Int](positions: Seq[Pos], width: Double = 1) extends Polyline[N](width)
+case class Loop[N <: Int](positions: Seq[Pos], width: Double = 1) extends Polyline[N](width)
 
     // 2D primitives
     sealed trait Flat[N <: Int] extends Primitive

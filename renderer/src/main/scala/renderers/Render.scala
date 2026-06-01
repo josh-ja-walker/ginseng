@@ -9,12 +9,19 @@ import ginseng.renderer.renderers.polylines.*
 
 import ginseng.core.poly.*
 import ginseng.core.ast.{ Shader as ShaderAST }
+import ginseng.core.ast.scene.SceneAST
 import ginseng.core.ast.mesh.MeshAST.*
 
 import ginseng.maths.geometry.*
 
 
 object Render {
+
+    // Helper for rendering a scene
+    extension (scene: SceneAST.Scene) def render()(using Zone): Unit = {
+        import ginseng.core.ast.scene.conversion.ComputeMesh.*
+        scene.computeMesh.render()
+    }
 
     // Render root
     extension (mesh: Mesh[?]) def render()(using Zone): Unit = mesh.render(None, Dir.zero)
@@ -48,13 +55,13 @@ object Render {
         // TODO: change to use translation transformation
             // case p: Primitive => p.translate(offset)
             
-        case Point(pos) => Point(pos + offset)
+        case Point(pos, size) => Point(pos + offset, size)
         
-        case Direct(a, b) => Direct(a + offset, b + offset)
+        case Direct(a, b, width) => Direct(a + offset, b + offset, width)
 
         // FIXME: requires using ValueOf[N]
-        // case Path(positions*) => Path(positions.map(_ + offset)*)
-        // case Loop(positions*) => Loop(positions.map(_ + offset)*)
+        // case Path(positions, width) => Path(positions.map(_ + offset), width)
+        // case Loop(positions, width) => Loop(positions.map(_ + offset), width)
         
         case Tri(a, b, c) => Tri(a + offset, b + offset, c + offset)
 
@@ -66,12 +73,12 @@ object Render {
         // FIXME: not a fan of the wildcard
         val renderer: Renderer[?] = mesh match { 
 
-            case Point(p) => PointRenderer(misc.Point(p))
-            case Direct(a, b) => LineRenderer(polylines.Line(a, b))
+            case Point(p, size) => PointRenderer.size(size.toFloat)(misc.Point(p))
+            case Direct(a, b, width) => LineRenderer.width(width.toFloat)(polylines.Line(a, b))
 
             // FIXME:
-            // case path: Path[n] => StripRenderer(polylines.Strip[n](path.positions*))
-            // case loop: Loop[n] => LoopRenderer(polylines.Loop[n](loop.positions*))
+            // case path: Path[n] => StripRenderer.width(width)(polylines.Strip[n](path.positions*))
+            // case loop: Loop[n] => LoopRenderer.width(width)(polylines.Loop[n](loop.positions*))
                 
             case Tri(a, b, c) => TriRenderer(polygons.Tri(a, b, c))
         }

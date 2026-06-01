@@ -26,8 +26,8 @@ given meshTransform: [N <: Int] => Transform[Mesh[N]] {
             case direct: Direct => directTransform.transform(direct)(transformation)
             
             // FIXME: requires ValueOf[N]
-            case Path(positions*) => ???
-            case Loop(positions*) => ???
+            case Path(positions, width) => ???
+            case Loop(positions, width) => ???
 
             case tri: Tri => triTransform.transform(tri)(transformation)
             case anchorAt: Anchoring[n] => anchorAtTransform.transform(anchorAt)(transformation)
@@ -40,15 +40,17 @@ given meshTransform: [N <: Int] => Transform[Mesh[N]] {
 given pointTransform: Transform[Point] with 
     extension (t: Point) 
         def transform(transformation: Transformation): Point = {
-            Point(t.mat.transform(transformation).pos(0))
+            Point(t.mat.transform(transformation).pos(0), t.size)
         }
 
 given directTransform: Transform[Direct] with 
     extension (t: Direct) 
         def transform(transformation: Transformation): Direct = {
             val Seq(a, b) = t.mat.transform(transformation).toPositions
-            Direct(a, b)
+            Direct(a, b, t.width)
         }
+
+// TODO: path and loop
 
 given triTransform: Transform[Tri] with 
     extension (t: Tri) 

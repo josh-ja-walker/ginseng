@@ -22,18 +22,18 @@ object AST {
     sealed trait Primitive[N <: Int] extends Mesh[N]
 
     // Special case of point primitive
-    case class Point(pos: Pos) extends Primitive[1] {
+    case class Point(pos: Pos, size: Double) extends Primitive[1] {
         override def mat: Mat[4, 1] = Mat(pos)
     }
 
     // Line primitives
-    sealed trait Polyline[N <: Int](positions: Pos*)(using v: ValueOf[N]) extends Primitive[N] {
+    sealed trait Polyline[N <: Int](positions: Seq[Pos], width: Double)(using v: ValueOf[N]) extends Primitive[N] {
         override def mat: Mat[4, N] = Mat(positions*)
     }
 
-    case class Direct(a: Pos, b: Pos) extends Polyline[2](a, b)
-    case class Path[N <: Int](positions: Pos*)(using v: ValueOf[N]) extends Polyline[N](positions*) 
-    case class Loop[N <: Int](positions: Pos*)(using v: ValueOf[N]) extends Polyline[N](positions*)
+    case class Direct(a: Pos, b: Pos, width: Double) extends Polyline[2](Seq(a, b), width)
+    case class Path[N <: Int](positions: Seq[Pos], width: Double)(using v: ValueOf[N]) extends Polyline[N](positions, width) 
+    case class Loop[N <: Int](positions: Seq[Pos], width: Double)(using v: ValueOf[N]) extends Polyline[N](positions, width)
 
     // 2D primitives
 

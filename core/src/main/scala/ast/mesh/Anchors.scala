@@ -26,12 +26,12 @@ object Anchors {
         def pos: Pos = mesh match {
 
             // Index into position of primitive vertex
-            case Point(pos) => { assert(index == 0); pos }
+            case Point(pos, _) => { assert(index == 0); pos }
 
             // TODO: use polyline to handle below
-            case Direct(a, b) => { assert(index <= 1); Seq(a, b)(index) }
-            case Path(positions*) => { assert(index < positions.length); positions(index) }
-            case Loop(positions*) => { assert(index < positions.length); positions(index) }
+            case Direct(a, b, _) => { assert(index <= 1); Seq(a, b)(index) }
+            case Path(positions, _) => { assert(index < positions.length); positions(index) }
+            case Loop(positions, _) => { assert(index < positions.length); positions(index) }
             
             case Tri(a, b, c) => { assert(index < 3); Seq(a, b, c)(index) }
 
