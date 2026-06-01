@@ -31,7 +31,7 @@ class StripRenderer(renderer: MultiPolyRenderer, lineWidth: Option[Float] = None
 object StripRenderer {
 
     private def apply[N <: Int](lineStrips: Seq[Strip[N]], lineWidth: Option[Float])(using Zone, ValueOf[N]): StripRenderer = {
-        val renderer = new MultiPolyRenderer(GL_LINE_LOOP, VertexBuffer(lineStrips*))
+        val renderer = new MultiPolyRenderer(GL_LINE_STRIP, VertexBuffer(lineStrips*))
         new StripRenderer(renderer, lineWidth)
     }
     
