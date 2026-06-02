@@ -16,10 +16,12 @@ import ginseng.core.poly.polylines.*
 import ginseng.core.poly.geometry.*
 import ginseng.core.poly.geometry.given
 
+import ginseng.core.ast.mesh.MeshAST.*
+
 import ginseng.maths.geometry.Pos
 
 
-trait Renderable[R <: Poly[?]] {
+trait Renderable[R] {
     extension (r: R) 
         def toPoints: Seq[Float]
 }
@@ -29,6 +31,15 @@ given [R <: Poly[?]] => Geometry[R] => Renderable[R] {
     extension (r: R)
         override def toPoints: Seq[Float] = {
             r.positions
+                .flatMap(_.take[3].toSeq)
+                .map(_.toFloat)
+        }
+}
+
+given [T <: Mesh[?]] => Renderable[T] {
+    extension (r: T)
+        override def toPoints: Seq[Float] = {
+            r.mat.toPositions
                 .flatMap(_.take[3].toSeq)
                 .map(_.toFloat)
         }

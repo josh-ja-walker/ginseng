@@ -29,7 +29,7 @@ class VertexBuffer(vao: Ptr[UInt], val sizes: Seq[Int]) {
 
 object VertexBuffer {
 
-    def apply[R <: Poly[?]](renderables: R*)(using zone: Zone)(using Renderable[R]): VertexBuffer = {
+    def apply[R](renderables: R*)(using zone: Zone)(using Renderable[R]): VertexBuffer = {
         // TODO: factor out points array intiialisation, etc. 
         // all of below is reused in TriangleRenderer, etc.
         
