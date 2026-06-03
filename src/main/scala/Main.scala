@@ -41,8 +41,10 @@ import opengl.bindings.glfw.*
 
 import scala.util.Random
 
+import ginseng.renderer.renderers.*
 
-@main def main: Unit = Zone {
+
+@main def main: Unit = Zone { z ?=> {
 
     val config = new ConfigBuilder()
         .withSize(800, 600)
@@ -90,39 +92,13 @@ import scala.util.Random
     print("Rendering.." )
 
     context.run(() => {
-        
-        // Draw grid lines (as mentioned - immediately)
-        lineRenderer.render(lineShader)
-        boldLineRenderer.render(boldLineShader)
+        MyMesh.render
 
-        // TODO: make lerp, slerp, etc., functions for animating as below
-
-        // Increase animation timestep
-        t += 1
-        
-        // Loop timestep past 100
-        if (t > 100) { t = 0 }
-
-        val cube = Tetra(1.u).shaded(triShader)
-
-        Anchors.Origin.anchors(
-            Square(1.u).scaffolded
-                .aabb(AnchorType.Top)
-                .anchors(
-                    // FIXME: does not rotate about anchor - ??? - translation also does not work
-                    cube.rotatedAbout(Deg(t * 3.6d), Dir.right, _ => ViewportAnchor(AnchorType.Center)),
-                    from = _.aabb(AnchorType.AB)
-                ),
-                from = _.vertex(0)
-            )
-            .computeMesh
-            .render()
-
-        // Sleep for 0.05s
         Thread.sleep(200)
 
         print(".")
     })
+    
+}}
 
-}
 

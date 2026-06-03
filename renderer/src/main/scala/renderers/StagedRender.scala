@@ -26,7 +26,7 @@ object StagedRender {
     type Renderer = Quotes ?=> Render
     type Render = Mesh[?] => Expr[Unit]
 
-    def render(using zone: Expr[Zone]): Renderer = _ match {
+    def render(using zone: Expr[Zone])(using Quotes): Render = _ match {
 
         case Tri(a, b, c) => {
             val render: (Expr[Pos], Expr[Pos], Expr[Pos]) => Expr[Unit] = 
@@ -65,12 +65,6 @@ object StagedRender {
         }
 
     }
-
-    val mesh: Mesh[?] = Tri(Pos.origin, Pos.center, Pos.topLeft)
-
-    def rndr(using z: Expr[Zone])(using Quotes) = render(using z)(mesh)
-    inline def rndrd()(using z: Zone): Unit = ${ rndr(using 'z) }
-    
     
 }
 
