@@ -92,7 +92,8 @@ import ginseng.renderer.renderers.*
     print("Rendering.." )
 
     context.run(() => {
-        MyMesh.render
+        
+        MyMesh.render()
 
         Thread.sleep(200)
 
