@@ -16,16 +16,17 @@ import opengl.bindings.glad.*
 
 object StagedRender {
 
-    def renderCode(tri: Expr[Tri], z: Expr[Zone])(using Quotes): Expr[Unit] = '{
+    // FIXME: mesh may not be tri !
+    def renderer(mesh: Expr[Mesh[?]], z: Expr[Zone])(using Quotes): Expr[Unit] = '{
         // Bind shader to OpenGL state machine
         Shaders.flatShader(Colours.red)(using $z).bind()
 
         // Bind vertex array to and draw
-        val vao = VertexBuffer($tri)(using $z)
+        val vao = VertexBuffer($mesh)(using $z)
         vao.bind()
         glDrawArrays(GL_TRIANGLES, 0, vao.length) 
     }
 
-    inline def inlineRender(tri: Tri)(using z: Zone): Unit = ${ renderCode('tri, 'z) }
+    inline def render(mesh: Mesh[?])(using z: Zone): Unit = ${ renderer('mesh, 'z) }
     
 }
