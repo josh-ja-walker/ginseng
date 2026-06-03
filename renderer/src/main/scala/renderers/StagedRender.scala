@@ -29,17 +29,28 @@ object StagedRender {
     
     type Renderer = Quotes ?=> Expr[Unit]
 
+    case class RenderInfo(shader: Option[ShaderAST], offset: Dir)
 
-    extension (scene: SceneAST.Scene) def render()(using z: Expr[Zone]): Renderer = 
-        scene.computeMesh.render()
+    object RenderInfo {
+        def default: RenderInfo = RenderInfo(None, Dir.zero)
+    }
+
+    given RenderInfoToExpr: ToExpr[ShaderAST] => ToExpr[Dir] => ToExpr[RenderInfo] {
+        def apply(x: RenderInfo)(using Quotes): Expr[RenderInfo] = {
+            '{ RenderInfo ( ${Expr(x.shader)}, ${Expr(x.offset)} ) }
+        }
+    }
 
 
-    extension (mesh: Mesh[?]) def render()(using z: Expr[Zone]): Renderer = render(None, Dir.zero)
 
-    extension (mesh: Mesh[?]) def render(shader: Option[ShaderAST], offset: Dir)(using z: Expr[Zone])(using Quotes): Expr[Unit] = {
+    extension (scene: SceneAST.Scene) def render()(using z: Expr[Zone]): Renderer = scene.computeMesh.render()
+
+    extension (mesh: Mesh[?]) def render()(using z: Expr[Zone]): Renderer = render(RenderInfo.default)
+
+
+    extension (mesh: Mesh[?]) def render(renderInfo: RenderInfo)(using z: Expr[Zone])(using Quotes): Expr[Unit] = {
         
-        val shaderExpr = Expr(shader)
-        val offsetExpr = Expr(offset)
+        val info = Expr(renderInfo)
         
         mesh match {
 
@@ -48,10 +59,10 @@ object StagedRender {
                     (a, b, c) => '{
 
                         // Bind shader to OpenGL state machine
-                        $shaderExpr.get.create(using $z).bind()
+                        $info.shader.get.create(using $z).bind()
 
                         // Bind vertex array to and draw
-                        val vao = VertexBuffer(Tri($a + $offsetExpr, $b + $offsetExpr, $c + $offsetExpr))(using $z)
+                        val vao = VertexBuffer(Tri($a + $info.offset, $b + $info.offset, $c + $info.offset))(using $z)
                         vao.bind()
 
                         glDrawArrays(GL_TRIANGLES, 0, vao.length)
@@ -64,10 +75,10 @@ object StagedRender {
                 val func: (Expr[Pos], Expr[Double]) => Expr[Unit] = 
                     (p, s) => '{
                         // Bind shader to OpenGL state machine
-                        $shaderExpr.get.create(using $z).bind()
+                        $info.shader.get.create(using $z).bind()
 
                         // Bind vertex array to and draw
-                        val vao = VertexBuffer(Point($p + $offsetExpr, $s))(using $z)
+                        val vao = VertexBuffer(Point($p + $info.offset, $s))(using $z)
                         vao.bind()
                         
                         Settings.PointSize.using(${s}.toFloat) {
@@ -83,12 +94,12 @@ object StagedRender {
             case Loop(_, _) => ???
 
             case anchoring@Anchoring(to, mesh, from) => {
-                to.mesh.collect(_.render(shader, offset))
-                mesh.render(shader, offset + anchoring.offset)
+                to.mesh.collect(_.render(renderInfo))
+                mesh.render(renderInfo.copy(offset = renderInfo.offset + anchoring.offset))
             }
             
-            case Rendered(mesh, shader) => mesh.render(Some(shader), offset)
-            case Scaffold(mesh) => mesh.render(shader, offset)
+            case Rendered(mesh, shader) => mesh.render(renderInfo.copy(shader = Some(shader)))
+            case Scaffold(mesh) => mesh.render(renderInfo)
 
         }
         
