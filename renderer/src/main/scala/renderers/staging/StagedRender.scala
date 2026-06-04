@@ -60,8 +60,6 @@ object StagedRender {
 
     extension (primitiveType: PrimitiveType) 
         def render(primitives: Seq[Primitive[?]], shader: ShaderAST)(using z: Expr[Zone]): Renderer = {
-
-            val vertexDataExpr = Expr(primitives.flatMap(_.toPoints))
             val shaderExpr = Expr(shader)
             
             primitiveType match {
@@ -71,11 +69,11 @@ object StagedRender {
 
                     val code = points.groupBy(_.size).map((size, points) => {
                         val sizeExpr = Expr(size)
-                        val pointsExpr = Expr(points)
+                        val pointsExpr = Expr(points.flatMap(_.toPoints))
 
                         '{
                             // Bind vertex array to and draw
-                            val vao = VertexBuffer($vertexDataExpr)(using $z)
+                            val vao = VertexBuffer($pointsExpr)(using $z)
                             vao.bind()
                             
                             Settings.PointSize.using($sizeExpr.toFloat) {
@@ -93,14 +91,18 @@ object StagedRender {
                     }
                 }
                 
-                case PrimitiveType.Tri => '{
-                    // Bind shader to OpenGL state machine
-                    $shaderExpr.create(using $z).bind()
+                case PrimitiveType.Tri => {
+                    val vertexDataExpr = Expr(primitives.flatMap(_.toPoints))
+                    
+                    '{
+                        // Bind shader to OpenGL state machine
+                        $shaderExpr.create(using $z).bind()
 
-                    // Bind vertex array to and draw
-                    val vao = VertexBuffer($vertexDataExpr)(using $z)
-                    vao.bind()
-                    vao.draw(GL_TRIANGLES)
+                        // Bind vertex array to and draw
+                        val vao = VertexBuffer($vertexDataExpr)(using $z)
+                        vao.bind()
+                        vao.draw(GL_TRIANGLES)
+                    }
                 }
 
             }
