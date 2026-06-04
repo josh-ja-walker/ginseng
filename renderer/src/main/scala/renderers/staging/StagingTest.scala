@@ -38,7 +38,6 @@ object MyMesh {
     val mesh = checked(8, 8).computeMesh
 
     def renderCode(z: Expr[Zone])(using Quotes): Expr[Unit] = mesh.render()(using z)
-    def test(z: Expr[Zone])(using Quotes): Expr[Unit] = { println(renderCode(z).show); '{} }
-    inline def render()(using z: Zone): Unit = ${ test('z) }
-    // inline def render()(using z: Zone): Unit = ${ renderCode('z) }
+    inline def render()(using z: Zone): Unit = ${ renderCode('z) }
+
 }
