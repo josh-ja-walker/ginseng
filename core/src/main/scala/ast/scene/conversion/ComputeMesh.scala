@@ -39,8 +39,8 @@ object ComputeMesh {
         case Modify(scene, modification) => scene.computeMesh.modify(modification)
 
         // Compute mesh from scene and propagate shared shader information 
-        case Rendered(scene, shader) => mesh.AST.Rendered(scene.computeMesh, shader)
-        case Scaffold(scene) => mesh.AST.Scaffold(scene.computeMesh)
+        case Rendered(scene, shader) => MeshAST.Rendered(scene.computeMesh, shader)
+        case Scaffold(scene) => MeshAST.Scaffold(scene.computeMesh)
 
     }
 
@@ -49,12 +49,12 @@ object ComputeMesh {
     extension (primitive: Primitive) def computeMesh: Mesh[?] = primitive match {
         
         // Propagate types for mesh supported types
-        case Point(p, size) => mesh.AST.Point(p, size)
-        case Direct(a, b, width) => mesh.AST.Direct(a, b, width)
+        case Point(p, size) => MeshAST.Point(p, size)
+        case Direct(a, b, width) => MeshAST.Direct(a, b, width)
 
         // FIXME: requires using ValueOf[N]
-        // case path: Path[n] => mesh.AST.Path[n](path.positions, path.width)(using path.v)
-        // case loop: Loop[n] => mesh.AST.Loop[n](loop.positions, path.width)(using path.v)
+        // case path: Path[n] => MeshAST.Path[n](path.positions, path.width)(using path.v)
+        // case loop: Loop[n] => MeshAST.Loop[n](loop.positions, path.width)(using path.v)
 
         // Compute positions of triangle from SAS construction assuming point A at (0, 0, 0)
         case Tri(s1, angle, s2) => {
@@ -62,7 +62,7 @@ object ComputeMesh {
             val b = a + (Dir.right * s2.toDouble)
             val c = a + (Dir.right.rotate(angle) * s1.toDouble)
 
-            mesh.AST.Tri(a, b, c)
+            MeshAST.Tri(a, b, c)
         }
 
         // Convert 2D primitives to a mesh of tris
@@ -180,9 +180,9 @@ object ComputeMesh {
 
 
     // Compute mesh for positioned types by converting all helpers into anchors
-    extension (positioned: Positioning) def computeMesh: mesh.AST.Anchoring[?] = positioned match {
+    extension (positioned: Positioning) def computeMesh: MeshAST.Anchoring[?] = positioned match {
         // Propagate anchor information to mesh
-        case Anchoring(to, scene, from) => mesh.AST.Anchoring(to.compute, scene.computeMesh, from(scene).compute)
+        case Anchoring(to, scene, from) => MeshAST.Anchoring(to.compute, scene.computeMesh, from.compute(scene))
         
         // Convert positioning helpers into anchorings
         case LeftOf(a, b)  => a.aabb(AnchorType.Right) .anchors(b, _.aabb(AnchorType.Left))  .computeMesh
@@ -192,7 +192,7 @@ object ComputeMesh {
     }
 
 
-    extension (mesh: Mesh[?]) def modify(modification: Modification[?]): Mesh[?] = modification match {
+    extension[N <: Int] (mesh: Mesh[N]) def modify(modification: Modification[?]): Mesh[N] = modification match {
 
         case MoveVertex(Vertex(index), d) => mesh match {
             case MeshAST.Tri(a, b, c) => {

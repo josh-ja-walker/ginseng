@@ -51,11 +51,11 @@ object AST {
     sealed trait Positioning[N <: Int] extends Mesh[N]
 
     // Position with respect to an anchor
-    case class Anchoring[N <: Int](to: Anchor, mesh: Mesh[N], from: Anchor) extends Positioning[N] { 
+    case class Anchoring[N <: Int](to: Anchor, mesh: Mesh[N], from: Mesh[N] => Anchor) extends Positioning[N] { 
         
         def mat: Mat[4, N] = mesh.mat
 
-        def offset: Dir = to.pos - from.pos
+        def offset: Dir = to.pos - from(mesh).pos
         
     }
 

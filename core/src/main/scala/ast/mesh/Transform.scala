@@ -75,7 +75,7 @@ given anchorAtTransform: [N <: Int] => Transform[Anchoring[N]] {
             Anchoring(
                 to.transform(transformation), 
                 mesh.transform(transformation), 
-                from.transform(transformation)
+                from
             )
         }
 }
