@@ -20,8 +20,8 @@ import ginseng.maths.geometry.*
 import ginseng.renderer.given
 import ginseng.renderer.shaders.*
 import ginseng.renderer.settings.*
-import ginseng.renderer.renderers.*
 import ginseng.renderer.renderers.given
+import ginseng.renderer.renderers.vertexbuffers.*
 
 import ginseng.renderer.renderers.Render.*
 import ginseng.renderer.settings.Settings.*
@@ -32,7 +32,7 @@ object StagedRender {
     type Renderer = Quotes ?=> Expr[Unit]
 
     import Lift.given
-    import Utilities.*
+    import Utility.*
     import ShaderMap.*
 
 
@@ -40,36 +40,72 @@ object StagedRender {
         def render()(using z: Expr[Zone]): Renderer = scene.computeMesh.render()
 
 
-    extension (mesh: Mesh[?]) 
+    extension (mesh: Mesh[?])
         def render()(using z: Expr[Zone]): Renderer = ShaderMap.from(mesh).render()
 
         
     extension (shaderMap: ShaderMap)
-        def render()(using z: Expr[Zone]): Renderer = shaderMap
-            .map((shader, prims) => {
-                val shaderExpr = Expr(shader)
-                val primitivesExpr = Expr(prims.toSeq)
-
-                prims.groupBy(PrimitiveType(_))
-                    .map((primitiveType, primitives) => {
-                        primitiveType.render(Expr(primitives.toSeq), shaderExpr)
-                    }).sequential
-            }).sequential
+        def render()(using z: Expr[Zone]): Renderer = {
+            shaderMap.map { 
+                (shader, prims) => prims
+                    .groupBy(PrimitiveType(_))
+                    .map { 
+                        (pType, prims) => pType.render(prims.toSeq, shader)
+                    }
+                    .sequential
+            }
+            .sequential
+        }
 
 
     extension (primitiveType: PrimitiveType) 
-        def render(primitives: Expr[Seq[Primitive[?]]], shader: Expr[ShaderAST])(using z: Expr[Zone]): Renderer = primitiveType match {
+        def render(primitives: Seq[Primitive[?]], shader: ShaderAST)(using z: Expr[Zone]): Renderer = {
 
-            case PrimitiveType.Tri => '{
-                // Bind shader to OpenGL state machine
-                $shader.create(using $z).bind()
+            val vertexDataExpr = Expr(primitives.flatMap(_.toPoints))
+            val shaderExpr = Expr(shader)
+            
+            primitiveType match {
+                
+                case PrimitiveType.Point => {
+                    val points = primitives.map(_.asInstanceOf[Point])
 
-                // Bind vertex array to and draw
-                val vao = VertexBuffer($primitives*)(using $z)
+                    val code = points.groupBy(_.size).map((size, points) => {
+                        val sizeExpr = Expr(size)
+                        val pointsExpr = Expr(points)
 
-                vao.bind()
-                glDrawArrays(GL_TRIANGLES, 0, vao.length)
+                        '{
+                            // Bind vertex array to and draw
+                            val vao = VertexBuffer($vertexDataExpr)(using $z)
+                            vao.bind()
+                            
+                            Settings.PointSize.using($sizeExpr.toFloat) {
+                                vao.draw(GL_POINTS)
+                            }(using $z)
+                            
+                        }
+
+                    }).sequential
+
+                    '{
+                        // Bind shader to OpenGL state machine
+                        $shaderExpr.create(using $z).bind()
+                        $code
+                    }
+                }
+                
+                case PrimitiveType.Tri => '{
+                    // Bind shader to OpenGL state machine
+                    $shaderExpr.create(using $z).bind()
+
+                    // Bind vertex array to and draw
+                    val vao = VertexBuffer($vertexDataExpr)(using $z)
+                    vao.bind()
+                    vao.draw(GL_TRIANGLES)
+                }
+
             }
+
         }
 
 }
+
