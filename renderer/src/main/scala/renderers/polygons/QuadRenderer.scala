@@ -9,6 +9,7 @@ import opengl.bindings.glfw.*
 import ginseng.renderer.shaders.*
 import ginseng.renderer.renderers.*
 import ginseng.renderer.renderers.given
+import ginseng.renderer.renderers.vertexbuffers.*
 
 import ginseng.core.poly.polygons.*
 import ginseng.core.poly.geometry.given
@@ -23,7 +24,7 @@ class QuadRenderer(renderer: MultiPolyRenderer) extends Renderer[Quad] {
 
 object QuadRenderer {
     def apply(quads: Quad*)(using zone: Zone): QuadRenderer = {
-        val renderer = MultiPolyRenderer(GL_TRIANGLE_FAN, VertexBuffer(quads*))
+        val renderer = MultiPolyRenderer(GL_TRIANGLE_FAN, MultiVertexBuffer(quads*))
         new QuadRenderer(renderer)
     }
 }

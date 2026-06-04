@@ -8,11 +8,12 @@ import opengl.bindings.glfw.*
 
 import ginseng.renderer.shaders.*
 import ginseng.renderer.renderers.*
+import ginseng.renderer.renderers.vertexbuffers.*
+import ginseng.renderer.renderers.given
+import ginseng.renderer.settings.*
 
 import ginseng.core.poly.misc.*
 import ginseng.core.poly.geometry.given
-import ginseng.renderer.settings.*
-import ginseng.renderer.renderers.given
 
 
 class PointRenderer(polyRenderer: PolyRenderer, pointSize: Option[Float] = None) extends Renderer[Point] {

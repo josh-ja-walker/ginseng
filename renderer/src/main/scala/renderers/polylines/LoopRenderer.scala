@@ -9,6 +9,7 @@ import ginseng.maths.linalg.*
 
 import ginseng.renderer.shaders.*
 import ginseng.renderer.renderers.*
+import ginseng.renderer.renderers.vertexbuffers.*
 import ginseng.renderer.renderers.given
 import ginseng.renderer.settings.*
 
@@ -28,7 +29,7 @@ class LoopRenderer(renderer: MultiPolyRenderer, lineWidth: Option[Float] = None)
 object LoopRenderer {
 
     private def apply[N <: Int](loops: Seq[Loop[N]], lineWidth: Option[Float])(using Zone, ValueOf[N]): LoopRenderer = {
-        val renderer = new MultiPolyRenderer(GL_LINE_LOOP, VertexBuffer(loops*))
+        val renderer = new MultiPolyRenderer(GL_LINE_LOOP, MultiVertexBuffer(loops*))
         new LoopRenderer(renderer, lineWidth)
     }
     

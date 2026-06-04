@@ -9,6 +9,7 @@ import opengl.bindings.glfw.*
 import ginseng.renderer.shaders.*
 import ginseng.renderer.renderers.*
 import ginseng.renderer.renderers.given
+import ginseng.renderer.renderers.vertexbuffers.*
 
 import ginseng.core.poly.polygons.*
 import ginseng.core.poly.geometry.given

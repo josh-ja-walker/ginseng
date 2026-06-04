@@ -9,6 +9,7 @@ import opengl.bindings.glfw.*
 import ginseng.renderer.shaders.*
 import ginseng.renderer.renderers.*
 import ginseng.renderer.renderers.given
+import ginseng.renderer.renderers.vertexbuffers.*
 
 import ginseng.core.poly.polygons.*
 import ginseng.core.poly.geometry.*
@@ -24,7 +25,7 @@ class RegPolygonRenderer(renderer: MultiPolyRenderer) extends Renderer[RegPolygo
 
 object RegPolygonRenderer {
     def apply[N <: Int](polygons: RegPolygon[N]*)(using Zone, ValueOf[N], N >= 3): RegPolygonRenderer = {
-        val renderer = MultiPolyRenderer(GL_TRIANGLE_FAN, VertexBuffer(polygons*))
+        val renderer = MultiPolyRenderer(GL_TRIANGLE_FAN, MultiVertexBuffer(polygons*))
         new RegPolygonRenderer(renderer)
     }
 }

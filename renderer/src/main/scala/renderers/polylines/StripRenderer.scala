@@ -15,6 +15,7 @@ import ginseng.maths.linalg.*
 import ginseng.renderer.shaders.*
 import ginseng.renderer.renderers.*
 import ginseng.renderer.renderers.given
+import ginseng.renderer.renderers.vertexbuffers.*
 import ginseng.renderer.settings.*
 
 
@@ -31,7 +32,7 @@ class StripRenderer(renderer: MultiPolyRenderer, lineWidth: Option[Float] = None
 object StripRenderer {
 
     private def apply[N <: Int](lineStrips: Seq[Strip[N]], lineWidth: Option[Float])(using Zone, ValueOf[N]): StripRenderer = {
-        val renderer = new MultiPolyRenderer(GL_LINE_STRIP, VertexBuffer(lineStrips*))
+        val renderer = new MultiPolyRenderer(GL_LINE_STRIP, MultiVertexBuffer(lineStrips*))
         new StripRenderer(renderer, lineWidth)
     }
     

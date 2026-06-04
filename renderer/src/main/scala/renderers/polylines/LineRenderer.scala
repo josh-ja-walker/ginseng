@@ -13,6 +13,7 @@ import ginseng.core.poly.geometry.given
 import ginseng.renderer.shaders.*
 import ginseng.renderer.renderers.*
 import ginseng.renderer.renderers.given
+import ginseng.renderer.renderers.vertexbuffers.*
 import ginseng.renderer.settings.*
 
 

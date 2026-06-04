@@ -7,20 +7,18 @@ import opengl.bindings.glad.*
 import opengl.bindings.glfw.*
 
 import ginseng.renderer.shaders.*
+import ginseng.renderer.renderers.vertexbuffers.*
+import ginseng.renderer.renderers.vertexbuffers.given
 
 import ginseng.core.poly.*
 
 
-class MultiPolyRenderer(drawMode: GLenum, vao: VertexBuffer) extends Renderer[Poly[?]] {
+class MultiPolyRenderer(drawMode: GLenum, vao: MultiVertexBuffer) extends Renderer[Poly[?]] {
     def render(shader: ShaderProg)(using zone: Zone) = {
-        // Bind shader to OpenGL state machine
-        shader.bind()
-        
-        // Bind vertex array to and draw
-        vao.bind()
+        shader.bind() // Bind shader to OpenGL state machine
 
-        val starts = vao.sizes.scanLeft(0)(_ + _).dropRight(1).toArray
-        val sizes = vao.sizes.toArray
-        glMultiDrawArrays(drawMode, starts.at(0), sizes.at(0), vao.count)
+        // Bind vertex array and draw
+        vao.bind()
+        vao.draw(drawMode) 
     }
 }

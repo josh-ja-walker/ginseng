@@ -9,16 +9,16 @@ import opengl.bindings.glfw.*
 import ginseng.renderer.shaders.*
 
 import ginseng.core.poly.*
+import ginseng.renderer.renderers.vertexbuffers.*
+import ginseng.renderer.renderers.vertexbuffers.given
 
 
 class PolyRenderer(drawMode: GLenum, vao: VertexBuffer) extends Renderer[Poly[?]] {
     def render(shader: ShaderProg)(using zone: Zone) = {
-        // Bind shader to OpenGL state machine
-        shader.bind()
-
-        // Bind vertex array to and draw
+        shader.bind() // Bind shader to OpenGL state machine
+        
+        // Bind vertex array and draw
         vao.bind()
-
-        glDrawArrays(drawMode, 0, vao.length) 
+        vao.draw(drawMode)
     }
 }
