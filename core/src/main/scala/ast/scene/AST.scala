@@ -25,9 +25,9 @@ object AST {
     // Line primitives
     sealed trait Polyline[N <: Int](width: Double) extends Primitive 
 
-case class Direct(a: Pos, b: Pos, width: Double = 1) extends Polyline[2](width)
-case class Path[N <: Int](positions: Seq[Pos], width: Double = 1) extends Polyline[N](width)
-case class Loop[N <: Int](positions: Seq[Pos], width: Double = 1) extends Polyline[N](width)
+    case class Direct(a: Pos, b: Pos, width: Double = 1) extends Polyline[2](width)
+    case class Path[N <: Int](positions: Seq[Pos], width: Double = 1) extends Polyline[N](width)
+    case class Loop[N <: Int](positions: Seq[Pos], width: Double = 1) extends Polyline[N](width)
 
     // 2D primitives
     sealed trait Flat[N <: Int] extends Primitive
