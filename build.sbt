@@ -10,6 +10,7 @@ lazy val ginseng = project
     .enablePlugins(ScalaNativePlugin, VcpkgNativePlugin)
     .settings(vcpkgDependencies := VcpkgDependencies("glfw3"))
     .settings(openglSettings)
+    .settings(scalacOptions += "-Xcheck-macros")
 
 
 // Note: required to duplicate between projects
@@ -43,3 +44,4 @@ lazy val renderer = project
     .settings(vcpkgDependencies := VcpkgDependencies("glfw3"))
     .settings(libraryDependencies += "io.github.josh-ja-walker" %%% "opengl-bindings" % "0.1.4")
     .settings(openglSettings)
+    .settings(scalacOptions += "-Xcheck-macros")
