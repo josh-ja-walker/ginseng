@@ -12,7 +12,7 @@ import ginseng.maths.angle.*
 import ginseng.maths.units.*
 import ginseng.maths.geometry.*
 
-import ginseng.renderer.renderers.StagedRender.*
+import ginseng.renderer.renderers.staging.StagedRender.*
 import ginseng.core.ast.scene.conversion.ComputeMesh.*
 
 
