@@ -27,10 +27,10 @@ object Extensions {
         def isAbove(other: Scene) = Above(scene, other)
         def isBelow(other: Scene) = Below(scene, other)
 
-        def toLeft(other: Scene) = other.isLeftOf(scene)
+        def toLeftIs(other: Scene) = other.isLeftOf(scene)
         def toRight(other: Scene) = other.isRightOf(scene)
-        def above(other: Scene) = other.isAbove(scene)
-        def below(other: Scene) = other.isBelow(scene)
+        def aboveIs(other: Scene) = other.isAbove(scene)
+        def belowIs(other: Scene) = other.isBelow(scene)
 
         def moved(other: Dir) = Move(scene, other)
         def movedTo(to: Pos, from: Scene => Anchor) = MoveTo(scene, to, from)
