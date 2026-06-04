@@ -33,9 +33,7 @@ object VertexBuffer {
 
     def apply(values: Seq[Float])(using zone: Zone): VertexBuffer = {
         // Define line points array
-        // val points: Array[Float] = values.toArray
-        // val pointsPtr: Ptr[Byte] = points.at(0).asInstanceOf[Ptr[Byte]]
-        val points: Array[Float] = Seq(0f, 0, 0).toArray
+        val points: Array[Float] = values.toArray
         val pointsPtr: Ptr[Byte] = points.at(0).asInstanceOf[Ptr[Byte]]
 
         // Initialise vertex buffer
