@@ -43,7 +43,7 @@ object VertexBuffer {
 
         glGenBuffers(1, vbo)
         glBindBuffer(GL_ARRAY_BUFFER, !vbo)
-        glBufferData(GL_ARRAY_BUFFER, points.length * sizeOf[Float], pointsPtr, GL_STATIC_DRAW)
+        glBufferData(GL_ARRAY_BUFFER, count * sizeOf[Float], pointsPtr, GL_STATIC_DRAW)
 
         // Initialise vertex array
         val vao: Ptr[UInt] = alloc[UInt]()
