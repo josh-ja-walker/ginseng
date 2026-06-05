@@ -50,7 +50,9 @@ object StagedRender {
                 (shader, prims) => prims
                     .groupBy(PrimitiveType(_))
                     .map { 
-                        (pType, prims) => pType.render(prims.toSeq, shader)
+                        (pType, prims) => 
+                            // Cull any duplicates with the same shader
+                            pType.render(prims.toSeq.distinct, shader)
                     }
                     .sequential
             }
