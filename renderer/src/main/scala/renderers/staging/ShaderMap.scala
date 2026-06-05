@@ -19,7 +19,7 @@ object ShaderMap {
         mesh match {
 
             case p: Primitive[?] => shader
-                .map(s => Map(s -> Seq(p.offset(offset))))
+                .map(s => Map(s -> Seq(p.offsetBy(offset))))
                 .getOrElse(Map())
             
             case anchoring@Anchoring(to, mesh, from) => {
@@ -27,17 +27,18 @@ object ShaderMap {
                     .map(ShaderMap.from(renderInfo, _))
                     .getOrElse(Map())
                 
-                anchorMap.join(ShaderMap.from(renderInfo.copy(offset = offset + anchoring.offset), mesh))
+                anchorMap.join(ShaderMap.from(renderInfo.offsetBy(anchoring.offset), mesh))
             }
             
-            case Rendered(mesh, shader) => ShaderMap.from(renderInfo.copy(shader = Some(shader)), mesh)
-            case Scaffold(mesh) => ShaderMap.from(renderInfo.copy(shader = None), mesh)
+            case Rendered(mesh, shader) => ShaderMap.from(renderInfo.withShader(shader), mesh)
+            case Scaffold(mesh) => ShaderMap.from(renderInfo.withoutShader, mesh)
 
         }
     }
 
     
     extension (shaderMap: ShaderMap) 
+        // TODO: cull hidden primitives here
         def join(other: ShaderMap) = {
             shaderMap ++ other.map { 
                 case (shader, primitives) => 

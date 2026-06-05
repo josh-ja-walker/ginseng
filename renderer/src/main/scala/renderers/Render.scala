@@ -36,7 +36,7 @@ object Render {
         }
         
         // Offset and render primitives - NOTE: must have a shader set to render
-        case p: Primitive[?] => shader.collect(p.offset(offset).render(_))
+        case p: Primitive[?] => shader.collect(p.offsetBy(offset).render(_))
 
         // Do not render scaffolds (but maybe render nested meshes)
         // So delete current shader and only render sub-mesh if it explicitly defines a shader
@@ -50,7 +50,7 @@ object Render {
 
 
     // Apply offset to primitives
-    extension (mesh: Primitive[?]) def offset(offset: Dir): Primitive[?] = mesh match {
+    extension (mesh: Primitive[?]) def offsetBy(offset: Dir): Primitive[?] = mesh match {
 
         // TODO: change to use translation transformation
             // case p: Primitive => p.translate(offset)
