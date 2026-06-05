@@ -33,8 +33,9 @@ object VertexBuffer {
 
     def apply(values: Seq[Float])(using zone: Zone): VertexBuffer = {
         // Define line points array
-        val points: Array[Float] = values.toArray
-        val pointsPtr: Ptr[Byte] = points.at(0).asInstanceOf[Ptr[Byte]]
+        val count: Int = values.length
+        val pointsPtr: Ptr[Byte] = values.toArray.at(0).asInstanceOf[Ptr[Byte]]
+        // FIXME: may require defining pointsPtr by hand to avoid heap OOM exception
 
         // Initialise vertex buffer
         val vbo: Ptr[UInt] = alloc[UInt]()
@@ -54,7 +55,7 @@ object VertexBuffer {
         glBindBuffer(GL_ARRAY_BUFFER, !vbo)
         glVertexAttribPointer(0.toUInt, 3, GL_FLOAT, GL_FALSE, 0, null)
 
-        new VertexBuffer(vao, points.length / 3)
+        new VertexBuffer(vao, count)
     }
     
 }
