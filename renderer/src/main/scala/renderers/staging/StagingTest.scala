@@ -1,6 +1,6 @@
 package ginseng.renderer.renderers.staging
 
-object MyMesh {
+object Test {
         
     import scala.quoted.*
     import scala.scalanative.unsafe.*
@@ -35,9 +35,12 @@ object MyMesh {
         .anchoredTo(Origin, _.aabb(AnchorType.A))
     }
 
-    val mesh = checked(8, 8).computeMesh
+
+    val scene = checked(5, 5)
+    val mesh = scene.computeMesh
 
     def renderCode(z: Expr[Zone])(using Quotes): Expr[Unit] = mesh.render()(using z)
     inline def render()(using z: Zone): Unit = ${ renderCode('z) }
+
 
 }

@@ -44,7 +44,7 @@ import scala.util.Random
 import ginseng.renderer.renderers.*
 
 
-@main def main: Unit = Zone { z ?=> {
+def main: Unit = Zone {
 
     val config = new ConfigBuilder()
         .withSize(800, 600)
@@ -93,13 +93,13 @@ import ginseng.renderer.renderers.*
 
     context.run(() => {
         
-        MyMesh.render()
+        staging.Test.render()
 
         Thread.sleep(200)
 
         print(".")
     })
     
-}}
+}
 
 
