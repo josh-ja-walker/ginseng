@@ -30,7 +30,14 @@ given meshTransform: [N <: Int] => Transform[Mesh[N]] {
             case Loop(positions, width) => ???
 
             case tri: Tri => triTransform.transform(tri)(transformation)
-            case anchorAt: Anchoring[n] => anchorAtTransform.transform(anchorAt)(transformation)
+
+            // Fake primitives must modify anchorings
+            case Quad(anchoring) => Quad(anchoringTransform.transform(anchoring)(transformation))
+            case Tetra(anchoring) => Tetra(anchoringTransform.transform(anchoring)(transformation))
+            case Pyramid(anchoring) => Pyramid(anchoringTransform.transform(anchoring)(transformation))
+            case Cuboid(anchoring) => Cuboid(anchoringTransform.transform(anchoring)(transformation))
+            
+            case anchoring: Anchoring[n] => anchoringTransform.transform(anchoring)(transformation)
             case rendered: Rendered[n] => renderedTransform.transform(rendered)(transformation)
             case scaffold: Scaffold[n] => scaffoldTransform.transform(scaffold)(transformation)
         }
@@ -59,6 +66,7 @@ given triTransform: Transform[Tri] with
             Tri(a, b, c)
         }
 
+
 given anchorTransform: Transform[Anchor] with
     extension (t: Anchor) 
         def transform(transformation: Transformation): Anchor = t match {
@@ -68,7 +76,7 @@ given anchorTransform: Transform[Anchor] with
                 case OBB(mesh, anchorType) => OBB(mesh.transform(transformation), anchorType)
         }
 
-given anchorAtTransform: [N <: Int] => Transform[Anchoring[N]] {
+given anchoringTransform: [N <: Int] => Transform[Anchoring[N]] {
     extension (t: Anchoring[N]) 
         def transform(transformation: Transformation): Anchoring[N] = {
             val Anchoring(to, mesh, from) = t

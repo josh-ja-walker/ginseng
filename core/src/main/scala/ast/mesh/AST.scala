@@ -47,6 +47,19 @@ object AST {
         def mat: Mat[4, 3] = Mat(a, b, c)
     }
 
+
+    sealed trait FalsePrimitive[N <: Int](val anchoring: Anchoring[N]) extends Mesh[N] {
+        override def mat: Mat[4, N] = anchoring.mat
+    }
+
+    case class Quad(quadAnchor: Anchoring[4]) extends FalsePrimitive[4](quadAnchor)
+    // TODO: case class Polygon[N <: Int](size: Length)(using v: ValueOf[N]) extends Flat[N]
+
+    case class Tetra(tetraAnchor: Anchoring[4]) extends FalsePrimitive[4](tetraAnchor)
+    case class Pyramid(pyramidAnchor: Anchoring[5]) extends FalsePrimitive[5](pyramidAnchor)
+    case class Cuboid(cuboidAnchor: Anchoring[8]) extends FalsePrimitive[8](cuboidAnchor)
+
+
     // Positioning
     sealed trait Positioning[N <: Int] extends Mesh[N]
 

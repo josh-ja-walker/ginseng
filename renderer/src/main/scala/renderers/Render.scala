@@ -37,6 +37,8 @@ object Render {
         
         // Offset and render primitives - NOTE: must have a shader set to render
         case p: Primitive[?] => shader.collect(p.offsetBy(offset).render(_))
+            
+        case falsePrimitive: FalsePrimitive[?] => falsePrimitive.anchoring.render(shader, offset)
 
         // Ignore current shader, render using nested shader
         case Rendered(mesh, shader) => mesh.render(Some(shader), offset)

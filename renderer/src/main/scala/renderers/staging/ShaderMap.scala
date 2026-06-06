@@ -30,6 +30,8 @@ object ShaderMap {
                 anchorMap.join(ShaderMap.from(renderInfo.offsetBy(anchoring.offset), mesh))
             }
             
+            case falsePrimitive: FalsePrimitive[?] => ShaderMap.from(renderInfo, falsePrimitive.anchoring)
+            
             case Rendered(mesh, shader) => ShaderMap.from(renderInfo.withShader(shader), mesh)
             case Scaffold(mesh) => ShaderMap.from(renderInfo.withoutShader, mesh)
 

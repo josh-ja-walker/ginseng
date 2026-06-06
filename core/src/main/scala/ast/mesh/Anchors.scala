@@ -35,6 +35,48 @@ object Anchors {
             
             case Tri(a, b, c) => { assert(index < 3); Seq(a, b, c)(index) }
 
+            // Use type of false primitive to determine vertex
+            case Quad(anchoring@Anchoring(VertexAnchor(lt: Tri, _), ut: Tri, from)) => {
+                index match {
+                    // use lower triangle for vertices A B
+                    case 0 | 1 => VertexAnchor(lt, index).pos
+                    // use upper triangle for vertices C D
+                    case 2 | 3 => VertexAnchor(ut, index - 2).pos + anchoring.offset 
+                }
+            }
+
+            case Tetra(anchoring@Anchoring(VertexAnchor(base: Tri, _), others, from)) => {
+                index match {
+                    // use base triangle for vertices A B C
+                    case i if i < 3 => VertexAnchor(base, index).pos
+                    // use any other triangle for D
+                    case 3 => {
+                        val Anchoring(VertexAnchor(front, _), rightAnchor, _) = others.runtimeChecked
+                        VertexAnchor(front, 2).pos + anchoring.offset
+                    }
+                }
+            }
+
+            case Pyramid(anchoring) => ???
+            
+            case Cuboid(anchoring@Anchoring(VertexAnchor(front: Quad, _), others, from)) => {
+                index match {
+                    // use front face for vertices A B C D
+                    case i if i < 4 => VertexAnchor(front, index).pos
+
+                    // use back face for E F G H
+                    case i => {
+                        val topAnchoring@Anchoring(right, topAnchor, _) = others.runtimeChecked
+                        val backAnchoring@Anchoring(top, backAnchor, _) = topAnchor.runtimeChecked
+                        val Anchoring(VertexAnchor(back, _), _, _) = backAnchor.runtimeChecked
+                        
+                        VertexAnchor(back, i - 4).pos 
+                            + anchoring.offset + topAnchoring.offset + backAnchoring.offset
+                    }
+                }
+            }
+
+
             // For nested types recurse until primitive found
 
             // Prioritise the anchoring mesh otherwise use the anchored mesh 
@@ -45,8 +87,9 @@ object Anchors {
             case Rendered(mesh, shader) => VertexAnchor(mesh, index).pos
             case Scaffold(mesh) => VertexAnchor(mesh, index).pos
 
+            case _ => ???
         } 
-        
+
     }
 
 

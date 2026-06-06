@@ -68,15 +68,20 @@ object ComputeMesh {
         // Convert 2D primitives to a mesh of tris
         case Square(size) => {
             val rightAngled = Tri(size, Deg(90), size)
-            rightAngled.vertex(1).anchors(
-                rightAngled.rotated(Deg(180), Dir.forward),
-                from = _.vertex(2)
-            ).computeMesh
+
+            MeshAST.Quad(
+                rightAngled.vertex(1).anchors(
+                    rightAngled.rotated(Deg(180), Dir.forward),
+                    from = _.vertex(2)
+                )
+                .computeMesh
+                .asInstanceOf[MeshAST.Anchoring[4]]
+            )
         }
 
-        case Rect(width, height) => {
-            Square(width).scaled(Vec[3](1, height.toDouble / width.toDouble, 1)).computeMesh
-        }
+        case Rect(width, height) => 
+            Square(width).scaled(Vec[3](1, height.toDouble / width.toDouble, 1))
+                .computeMesh
 
         case Polygon(size) => ???
 
@@ -84,71 +89,78 @@ object ComputeMesh {
             val tiltAngle = math.asin(1d / 3d)
             
             // Base
-            Tris.equilateral(size)
-                .rotated(Deg(-90), Dir.right)
-                .vertex(0)
-                .anchors(
-                    // Front
-                    Tris.equilateral(size)
-                        .rotated(Rad(-tiltAngle), Dir.right)
-                        .vertex(1)
-                        .anchors(
-                            // Right back
-                            Tris.equilateral(size)
-                                .rotated(Rad(tiltAngle), Dir.right)
-                                .rotated(Deg(-60), Dir.up)
-                                .vertex(0)
-                                .anchors(
-                                    // Left back
-                                    Tris.equilateral(size)
-                                        .rotated(Rad(tiltAngle), Dir.right)
-                                        .rotated(Deg(60), Dir.up),
-                                    from = _.vertex(1)
-                                ),
-                            from = _.vertex(1)
-                        ),
-                    from = _.vertex(0)
-                ).computeMesh
+            val anchoringMesh = 
+                Tris.equilateral(size)
+                    .rotated(Deg(-90), Dir.right)
+                    .vertex(0)
+                    .anchors(
+                        // Front
+                        Tris.equilateral(size)
+                            .rotated(Rad(-tiltAngle), Dir.right)
+                            .vertex(1)
+                            .anchors(
+                                // Right back
+                                Tris.equilateral(size)
+                                    .rotated(Rad(tiltAngle), Dir.right)
+                                    .rotated(Deg(-60), Dir.up)
+                                    .vertex(0)
+                                    .anchors(
+                                        // Left back
+                                        Tris.equilateral(size)
+                                            .rotated(Rad(tiltAngle), Dir.right)
+                                            .rotated(Deg(60), Dir.up),
+                                        from = _.vertex(1)
+                                    ),
+                                from = _.vertex(1)
+                            ),
+                        from = _.vertex(0)
+                    )
+                .computeMesh
+
+            MeshAST.Tetra(anchoringMesh.asInstanceOf[MeshAST.Anchoring[4]])
         }
         
         case Pyramid(size) => ???
         
         case Cube(size) => {
-            // Front
-            Square(size)
-                .vertex(1)
-                .anchors(
-                    // Right
-                    Square(size)
-                        .rotated(Deg(270), Dir.up)
-                        .vertex(2)
-                        .anchors(
-                            // Top
-                            Square(size)
-                                .rotated(Deg(90), Dir.right)
-                                .vertex(2)
-                                .anchors(
-                                    // Back
-                                    Square(size)
-                                        .vertex(0)
-                                        .anchors(
-                                            // Left
-                                            Square(size).rotated(Deg(90), Dir.up)
-                                                .vertex(1)
-                                                .anchors(
-                                                    // Bottom
-                                                    Square(size)
-                                                        .rotated(Deg(90), Dir.right),
-                                                    from = _.vertex(0)
-                                                ),
-                                            from = _.vertex(0)
-                                        ),
-                                    from = _.vertex(2)
-                                ),
-                            from = _.vertex(1)
-                        ),
-                    from = _.vertex(0)
-                ).computeMesh
+            val anchoringMesh =
+                // Front
+                Square(size)
+                    .vertex(1)
+                    .anchors(
+                        // Right
+                        Square(size)
+                            .rotated(Deg(270), Dir.up)
+                            .vertex(3)
+                            .anchors(
+                                // Top
+                                Square(size)
+                                    .rotated(Deg(-90), Dir.right)
+                                    .vertex(3)
+                                    .anchors(
+                                        // Back
+                                        Square(size)
+                                            .vertex(0)
+                                            .anchors(
+                                                // Left
+                                                Square(size).rotated(Deg(90), Dir.up)
+                                                    .vertex(1)
+                                                    .anchors(
+                                                        // Bottom
+                                                        Square(size)
+                                                            .rotated(Deg(-90), Dir.right),
+                                                        from = _.vertex(0)
+                                                    ),
+                                                from = _.vertex(0)
+                                            ),
+                                        from = _.vertex(3)
+                                    ),
+                                from = _.vertex(1)
+                            ),
+                        from = _.vertex(0)
+                    ).computeMesh
+
+            MeshAST.Cuboid(anchoringMesh.asInstanceOf[MeshAST.Anchoring[8]])
         }
         
         case Cuboid(width, height, depth) => ???
