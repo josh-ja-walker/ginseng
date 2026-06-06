@@ -89,7 +89,7 @@ object AST {
     sealed trait Modifiable[T <: Scene]
 
     // TODO: can vertex take any scene object? prob no
-    case class Vertex(index: Int)
+    case class Vertex(index: VertexIndex)
     case class Edge(a: Vertex, b: Vertex)
 
     // Components that can be modified on a body    

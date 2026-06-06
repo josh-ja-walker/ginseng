@@ -30,15 +30,15 @@ object Anchors {
             // TODO: use polyline to handle below
             case Direct(a, b, _) => { 
                 assert(index == VertexIndex.A || index == VertexIndex.B)
-                Seq(a, b)(index.i)
+                Seq(a, b)(index.value)
             }
                 
-            case Path(positions, _) => positions(index.i)
-            case Loop(positions, _) => positions(index.i)
+            case Path(positions, _) => positions(index.value)
+            case Loop(positions, _) => positions(index.value)
             
             case Tri(a, b, c) => { 
                 assert(index == VertexIndex.A || index == VertexIndex.B || index == VertexIndex.C)
-                Seq(a, b, c)(index.i) 
+                Seq(a, b, c)(index.value) 
             }
 
             // Use type of false primitive to determine vertex
@@ -83,7 +83,7 @@ object Anchors {
                         val anchorBack@Anchoring(_, back, _) = top.runtimeChecked
                         val Anchoring(VertexAnchor(backFace, _), _, _) = back.runtimeChecked
                         
-                        val backIndex = VertexIndex(index.i - 4) // Offset index for use on Quad
+                        val backIndex = VertexIndex(index.value - 4) // Offset index for use on Quad
                         VertexAnchor(backFace, backIndex).pos 
                             + anchorRight.offset + anchorTop.offset + anchorBack.offset
                     }

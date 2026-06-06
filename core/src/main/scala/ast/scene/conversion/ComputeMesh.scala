@@ -209,9 +209,11 @@ object ComputeMesh {
 
         case MoveVertex(Vertex(index), d) => mesh match {
             case MeshAST.Tri(a, b, c) => {
-                assert(index <= 2)
+                assert(index == VertexIndex.A || index == VertexIndex.B || index == VertexIndex.C)
+                
                 val points: Seq[Pos] = Seq(a, b, c)
-                val Seq(newA, newB, newC) = points.updated(index, points(index) + d)
+                val Seq(newA, newB, newC) = points.updated(index.value, points(index.value) + d)
+
                 MeshAST.Tri(newA, newB, newC)
             }
 
@@ -251,13 +253,13 @@ object ComputeMesh {
             case MeshAST.Tri(a, b, c) => {
                 val points = Seq(a, b, c)
                 
-                val edgeDir = points(j) - points(i)
+                val edgeDir = points(j.value) - points(i.value)
                 val offset = (f * 0.5f * edgeDir)
 
-                val midpoint = points(i) + edgeDir * 0.5f  
+                val midpoint = points(i.value) + edgeDir * 0.5f  
 
-                mesh.modify(MoveVertex(v, (midpoint - offset) - points(i)))
-                    .modify(MoveVertex(u, (midpoint + offset) - points(j)))
+                mesh.modify(MoveVertex(v, (midpoint - offset) - points(i.value)))
+                    .modify(MoveVertex(u, (midpoint + offset) - points(j.value)))
             }
             
             // TODO:
