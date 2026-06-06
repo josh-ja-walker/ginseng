@@ -38,14 +38,12 @@ object Render {
         // Offset and render primitives - NOTE: must have a shader set to render
         case p: Primitive[?] => shader.collect(p.offsetBy(offset).render(_))
 
-        // Do not render scaffolds (but maybe render nested meshes)
-        // So delete current shader and only render sub-mesh if it explicitly defines a shader
-        case Scaffold(mesh) => mesh.render(None, offset)
-        
         // Ignore current shader, render using nested shader
         case Rendered(mesh, shader) => mesh.render(Some(shader), offset)
         
-        // If not a primitive mesh (i.e., for now not a Triangle) then ???
+        // Do not render scaffolds (but maybe render nested meshes)
+        // So delete current shader and only render sub-mesh if it explicitly defines a shader
+        case Scaffold(mesh) => mesh.render(None, offset)
     }
 
 
