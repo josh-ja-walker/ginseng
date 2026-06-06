@@ -20,7 +20,7 @@ object Extensions {
         def obb(anchorType: AnchorType) = OBB(scene, anchorType)
 
         def anchoredTo(to: Anchor, from: Scene => Anchor) = Anchoring(to, scene, from)
-        def vertex(index: Int) = VertexAnchor(scene, index)
+        def vertex(index: VertexIndex) = VertexAnchor(scene, index)
 
         def isLeftOf(other: Scene) = LeftOf(scene, other)
         def isRightOf(other: Scene) = RightOf(scene, other)

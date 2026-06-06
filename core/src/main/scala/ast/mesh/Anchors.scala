@@ -20,61 +20,76 @@ object Anchors {
     
     
     // Anchor at vertex of a mesh
-    case class VertexAnchor(mesh: Mesh[?], index: Int) extends Anchor { 
+    case class VertexAnchor(mesh: Mesh[?], index: VertexIndex) extends Anchor { 
 
-        // TODO: use geometry traits to simplify
         def pos: Pos = mesh match {
 
             // Index into position of primitive vertex
-            case Point(pos, _) => { assert(index == 0); pos }
+            case Point(pos, _) => { assert(index == VertexIndex.A); pos }
 
             // TODO: use polyline to handle below
-            case Direct(a, b, _) => { assert(index <= 1); Seq(a, b)(index) }
-            case Path(positions, _) => { assert(index < positions.length); positions(index) }
-            case Loop(positions, _) => { assert(index < positions.length); positions(index) }
+            case Direct(a, b, _) => { 
+                assert(index == VertexIndex.A || index == VertexIndex.B)
+                Seq(a, b)(index.i)
+            }
+                
+            case Path(positions, _) => positions(index.i)
+            case Loop(positions, _) => positions(index.i)
             
-            case Tri(a, b, c) => { assert(index < 3); Seq(a, b, c)(index) }
+            case Tri(a, b, c) => { 
+                assert(index == VertexIndex.A || index == VertexIndex.B || index == VertexIndex.C)
+                Seq(a, b, c)(index.i) 
+            }
 
             // Use type of false primitive to determine vertex
-            case Quad(anchoring@Anchoring(VertexAnchor(lt: Tri, _), ut: Tri, from)) => {
+            case Quad(anchoring@Anchoring(VertexAnchor(lt: Tri, _), ut: Tri, from)) => 
                 index match {
                     // use lower triangle for vertices A B
-                    case 0 | 1 => VertexAnchor(lt, index).pos
-                    // use upper triangle for vertices C D
-                    case 2 | 3 => VertexAnchor(ut, index - 2).pos + anchoring.offset 
-                }
-            }
+                    case VertexIndex.A | VertexIndex.B => VertexAnchor(lt, index).pos
 
-            case Tetra(anchoring@Anchoring(VertexAnchor(base: Tri, _), others, from)) => {
+                    // use upper triangle for vertices C D
+                    case VertexIndex.C => VertexAnchor(ut, VertexIndex.A).pos + anchoring.offset 
+                    case VertexIndex.D => VertexAnchor(ut, VertexIndex.B).pos + anchoring.offset 
+
+                    case _ => ???
+                }
+
+            case Tetra(anchoring@Anchoring(VertexAnchor(base: Tri, _), others, from)) => 
                 index match {
                     // use base triangle for vertices A B C
-                    case i if i < 3 => VertexAnchor(base, index).pos
-                    // use any other triangle for D
-                    case 3 => {
-                        val Anchoring(VertexAnchor(front, _), rightAnchor, _) = others.runtimeChecked
-                        VertexAnchor(front, 2).pos + anchoring.offset
-                    }
-                }
-            }
+                    case VertexIndex.A | VertexIndex.B | VertexIndex.C =>
+                         VertexAnchor(base, index).pos
 
+                    // use any other triangle for D
+                    case VertexIndex.D => {
+                        val Anchoring(VertexAnchor(front, _), rightAnchor, _) = others.runtimeChecked
+                        VertexAnchor(front, VertexIndex.C).pos + anchoring.offset
+                    }
+                    
+                    case _ => ???
+                }
+            
             case Pyramid(anchoring) => ???
             
-            case Cuboid(anchoring@Anchoring(VertexAnchor(front: Quad, _), others, from)) => {
+            case Cuboid(anchorRight@Anchoring(VertexAnchor(front: Quad, _), right, from)) =>
                 index match {
                     // use front face for vertices A B C D
-                    case i if i < 4 => VertexAnchor(front, index).pos
+                    case VertexIndex.A | VertexIndex.B | VertexIndex.C | VertexIndex.D
+                         => VertexAnchor(front, index).pos
 
                     // use back face for E F G H
-                    case i => {
-                        val topAnchoring@Anchoring(right, topAnchor, _) = others.runtimeChecked
-                        val backAnchoring@Anchoring(top, backAnchor, _) = topAnchor.runtimeChecked
-                        val Anchoring(VertexAnchor(back, _), _, _) = backAnchor.runtimeChecked
+                    case VertexIndex.E | VertexIndex.F | VertexIndex.G | VertexIndex.H => {
+                        val anchorTop@Anchoring(_, top, _) = right.runtimeChecked
+                        val anchorBack@Anchoring(_, back, _) = top.runtimeChecked
+                        val Anchoring(VertexAnchor(backFace, _), _, _) = back.runtimeChecked
                         
-                        VertexAnchor(back, i - 4).pos 
-                            + anchoring.offset + topAnchoring.offset + backAnchoring.offset
+                        val backIndex = VertexIndex(index.i - 4) // Offset index for use on Quad
+                        VertexAnchor(backFace, backIndex).pos 
+                            + anchorRight.offset + anchorTop.offset + anchorBack.offset
                     }
+                    
+                    case _ => ???
                 }
-            }
 
 
             // For nested types recurse until primitive found

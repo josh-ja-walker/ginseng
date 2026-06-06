@@ -14,6 +14,7 @@ import ginseng.core.ast.mesh.given
 
 import scene.SceneAST.*
 import mesh.AST.Mesh
+import ginseng.core.ast.VertexIndex.*
 
 import ComputeAnchor.*
 
@@ -70,9 +71,9 @@ object ComputeMesh {
             val rightAngled = Tri(size, Deg(90), size)
 
             MeshAST.Quad(
-                rightAngled.vertex(1).anchors(
+                rightAngled.vertex(B).anchors(
                     rightAngled.rotated(Deg(180), Dir.forward),
-                    from = _.vertex(2)
+                    from = _.vertex(C)
                 )
                 .computeMesh
                 .asInstanceOf[MeshAST.Anchoring[4]]
@@ -92,28 +93,28 @@ object ComputeMesh {
             val anchoringMesh = 
                 Tris.equilateral(size)
                     .rotated(Deg(-90), Dir.right)
-                    .vertex(0)
+                    .vertex(A)
                     .anchors(
                         // Front
                         Tris.equilateral(size)
                             .rotated(Rad(-tiltAngle), Dir.right)
-                            .vertex(1)
+                            .vertex(B)
                             .anchors(
                                 // Right back
                                 Tris.equilateral(size)
                                     .rotated(Rad(tiltAngle), Dir.right)
                                     .rotated(Deg(-60), Dir.up)
-                                    .vertex(0)
+                                    .vertex(A)
                                     .anchors(
                                         // Left back
                                         Tris.equilateral(size)
                                             .rotated(Rad(tiltAngle), Dir.right)
                                             .rotated(Deg(60), Dir.up),
-                                        from = _.vertex(1)
+                                        from = _.vertex(B)
                                     ),
-                                from = _.vertex(1)
+                                from = _.vertex(B)
                             ),
-                        from = _.vertex(0)
+                        from = _.vertex(A)
                     )
                 .computeMesh
 
@@ -126,38 +127,38 @@ object ComputeMesh {
             val anchoringMesh =
                 // Front
                 Square(size)
-                    .vertex(1)
+                    .vertex(B)
                     .anchors(
                         // Right
                         Square(size)
                             .rotated(Deg(270), Dir.up)
-                            .vertex(3)
+                            .vertex(D)
                             .anchors(
                                 // Top
                                 Square(size)
                                     .rotated(Deg(-90), Dir.right)
-                                    .vertex(3)
+                                    .vertex(D)
                                     .anchors(
                                         // Back
                                         Square(size)
-                                            .vertex(0)
+                                            .vertex(A)
                                             .anchors(
                                                 // Left
                                                 Square(size).rotated(Deg(90), Dir.up)
-                                                    .vertex(1)
+                                                    .vertex(B)
                                                     .anchors(
                                                         // Bottom
                                                         Square(size)
                                                             .rotated(Deg(-90), Dir.right),
-                                                        from = _.vertex(0)
+                                                        from = _.vertex(A)
                                                     ),
-                                                from = _.vertex(0)
+                                                from = _.vertex(A)
                                             ),
-                                        from = _.vertex(3)
+                                        from = _.vertex(D)
                                     ),
-                                from = _.vertex(1)
+                                from = _.vertex(B)
                             ),
-                        from = _.vertex(0)
+                        from = _.vertex(A)
                     ).computeMesh
 
             MeshAST.Cuboid(anchoringMesh.asInstanceOf[MeshAST.Anchoring[8]])
