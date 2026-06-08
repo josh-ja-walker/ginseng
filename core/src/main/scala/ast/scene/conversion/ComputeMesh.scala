@@ -17,6 +17,7 @@ import mesh.AST.Mesh
 import ginseng.core.ast.VertexIndex.*
 
 import ComputeAnchor.*
+import ginseng.core.colours.Colours
 
 
 object ComputeMesh {
@@ -88,8 +89,8 @@ object ComputeMesh {
         case Tetra(size) => {
             val tiltAngle = math.asin(1d / 3d)
             
-            // Base
             val anchoringMesh = 
+                // Base
                 Tris.equilateral(size)
                     .rotated(Deg(-90), Dir.right)
                     .vertex(A)
@@ -97,21 +98,21 @@ object ComputeMesh {
                         // Front
                         Tris.equilateral(size)
                             .rotated(Rad(-tiltAngle), Dir.right)
-                            .vertex(B)
+                            .vertex(C)
                             .anchors(
                                 // Right back
                                 Tris.equilateral(size)
                                     .rotated(Rad(tiltAngle), Dir.right)
                                     .rotated(Deg(-60), Dir.up)
-                                    .vertex(A)
+                                    .vertex(C)
                                     .anchors(
                                         // Left back
                                         Tris.equilateral(size)
                                             .rotated(Rad(tiltAngle), Dir.right)
                                             .rotated(Deg(60), Dir.up),
-                                        from = _.vertex(B)
+                                        from = _.vertex(C)
                                     ),
-                                from = _.vertex(B)
+                                from = _.vertex(C)
                             ),
                         from = _.vertex(A)
                     )
@@ -120,7 +121,46 @@ object ComputeMesh {
             MeshAST.Tetra(anchoringMesh.asInstanceOf[MeshAST.Anchoring[4]])
         }
         
-        case Pyramid(size) => ???
+        case Pyramid(size) => {
+            val tiltAngle = (math.Pi / 2d) - math.atan(math.sqrt(2))
+
+            // Base
+            val anchoringMesh = Square(size)
+                .rotated(Deg(-90), Dir.right)
+                .vertex(A)
+                .anchors(
+                    // Front
+                    Tris.equilateral(size)
+                        .rotated(Rad(-tiltAngle), Dir.right)
+                        .vertex(C)
+                        .anchors(
+                            // Right
+                            Tris.equilateral(size)
+                                .rotated(Rad(-tiltAngle), Dir.right)
+                                .rotated(Deg(-90), Dir.up)
+                                .vertex(C)
+                                .anchors(
+                                    // Back
+                                    Tris.equilateral(size)
+                                        .rotated(Rad(tiltAngle), Dir.right)
+                                        .vertex(C)
+                                        .anchors(
+                                            // Left
+                                            Tris.equilateral(size)
+                                                .rotated(Rad(-tiltAngle), Dir.right)
+                                                .rotated(Deg(90), Dir.up),
+                                            from = _.vertex(C)
+                                        ), 
+                                    from = _.vertex(C)
+                                ),
+                            from = _.vertex(C)
+                        ),
+                    from = _.vertex(A)
+                ).computeMesh
+
+            MeshAST.Pyramid(anchoringMesh.asInstanceOf[MeshAST.Anchoring[5]])
+        }
+        
         
         case Cube(size) => {
             val anchoringMesh =
