@@ -28,12 +28,12 @@ lazy val openglSettings: Seq[Def.Setting[_]] = Seq(
 lazy val core = project
     .in(file("core"))
     .dependsOn(maths)
-    .enablePlugins(ScalaNativePlugin, VcpkgNativePlugin)
+    .enablePlugins(ScalaNativePlugin)
 
 // Project containing mathematics helpers for Vectors, Matrices, etc.,
 lazy val maths = project
     .in(file("maths"))
-    .enablePlugins(ScalaNativePlugin, VcpkgNativePlugin)
+    .enablePlugins(ScalaNativePlugin)
     .settings(libraryDependencies += "ai.dragonfly" %%% "slash" %  "0.4.3")
 
 // Project containing renderers and OpenGL handlers
