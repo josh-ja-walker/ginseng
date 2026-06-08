@@ -12,6 +12,7 @@ object Colours {
     def yellow = Colour.rgb(255, 255, 0)    
     
     def black = Colour.rgb(0, 0, 0)
+    def grey = Colour.rgb(128, 128, 128)
     def white = Colour.rgb(255, 255, 255)
 
     def transparent = Colour.rgba(0, 0, 0, 0)
