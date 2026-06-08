@@ -10,7 +10,7 @@ enum PrimitiveType {
 
 object PrimitiveType {
     
-    def apply(p: Primitive[?]) = p match {
+    def apply(p: Primitive) = p match {
         case p: Point => PrimitiveType.Point
         case t: Tri => PrimitiveType.Tri
         // TODO:

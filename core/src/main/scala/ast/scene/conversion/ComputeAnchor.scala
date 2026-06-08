@@ -32,7 +32,7 @@ object ComputeAnchor {
 
     }
 
-    extension (from: (Scene => Anchor)) def compute(scene: Scene): (MeshAST.Mesh[?] => MeshAST.Anchor) = 
+    extension (from: (Scene => Anchor)) def compute(scene: Scene): (MeshAST.Mesh => MeshAST.Anchor) = 
         (mesh) => {
 
             val anchor = from(scene)

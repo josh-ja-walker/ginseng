@@ -14,67 +14,40 @@ object AST {
 
     import Anchors.*
 
-    sealed trait Mesh[N <: Int] {
-        def mat: Mat[4, N]
-    }
+    sealed trait Mesh
 
     // Primitives
-    sealed trait Primitive[N <: Int] extends Mesh[N]
+    sealed trait Primitive extends Mesh
 
     // Special case of point primitive
-    case class Point(pos: Pos, size: Double) extends Primitive[1] {
-        override def mat: Mat[4, 1] = Mat(pos)
-    }
+    case class Point(pos: Pos, size: Double) extends Primitive
 
     // Line primitives
-    sealed trait Polyline[N <: Int](positions: Seq[Pos], width: Double)(using v: ValueOf[N]) extends Primitive[N] {
-        override def mat: Mat[4, N] = Mat(positions*)
-    }
+    sealed trait Polyline[N <: Int](val positions: Seq[Pos], width: Double)(using v: ValueOf[N]) extends Primitive
 
     case class Direct(a: Pos, b: Pos, width: Double) extends Polyline[2](Seq(a, b), width)
-    case class Path[N <: Int](positions: Seq[Pos], width: Double)(using v: ValueOf[N]) extends Polyline[N](positions, width) 
-    case class Loop[N <: Int](positions: Seq[Pos], width: Double)(using v: ValueOf[N]) extends Polyline[N](positions, width)
+    case class Path[N <: Int](ps: Seq[Pos], width: Double)(using v: ValueOf[N]) extends Polyline[N](ps, width) 
+    case class Loop[N <: Int](ps: Seq[Pos], width: Double)(using v: ValueOf[N]) extends Polyline[N](ps, width)
 
-    // 2D primitives
+    // Only 2D primitive
+    case class Tri(a: Pos, b: Pos, c: Pos) extends Primitive
 
-    // ==========================
-    // POSITIONS ARE NOT ABSOLUTE
-    // ==========================
+    // Scene primitives handled by anchorings
+    sealed trait FalsePrimitive(val anchoring: Anchoring) extends Mesh
+    case class Quad(quadAnchor: Anchoring) extends FalsePrimitive(quadAnchor)
+    case class Tetra(tetraAnchor: Anchoring) extends FalsePrimitive(tetraAnchor)
+    case class Pyramid(pyramidAnchor: Anchoring) extends FalsePrimitive(pyramidAnchor)
+    case class Cuboid(cuboidAnchor: Anchoring) extends FalsePrimitive(cuboidAnchor)
+    // TODO: case class Polygon[N <: Int](polygonAnchor: Anchoring) extends FalsePrimitive(polygonAnchor)
 
-    // NOTE: a, b, c are Positions RELATIVE TO ORIGIN
-    // this origin MAY CHANGE - it is the anchor
-    case class Tri(a: Pos, b: Pos, c: Pos) extends Primitive[3] {
-        def mat: Mat[4, 3] = Mat(a, b, c)
-    }
-
-
-    sealed trait FalsePrimitive[N <: Int](val anchoring: Anchoring[N]) extends Mesh[N] {
-        override def mat: Mat[4, N] = anchoring.mat
-    }
-
-    case class Quad(quadAnchor: Anchoring[4]) extends FalsePrimitive[4](quadAnchor)
-    // TODO: case class Polygon[N <: Int](size: Length)(using v: ValueOf[N]) extends Flat[N]
-
-    case class Tetra(tetraAnchor: Anchoring[4]) extends FalsePrimitive[4](tetraAnchor)
-    case class Pyramid(pyramidAnchor: Anchoring[5]) extends FalsePrimitive[5](pyramidAnchor)
-    case class Cuboid(cuboidAnchor: Anchoring[8]) extends FalsePrimitive[8](cuboidAnchor)
-
-
-    // Positioning
-    sealed trait Positioning[N <: Int] extends Mesh[N]
 
     // Position with respect to an anchor
-    case class Anchoring[N <: Int](to: Anchor, mesh: Mesh[N], from: Mesh[N] => Anchor) extends Positioning[N] { 
-        
-        def mat: Mat[4, N] = mesh.mat
-
+    case class Anchoring(to: Anchor, mesh: Mesh, from: Mesh => Anchor) extends Mesh { 
         def offset: Dir = to.pos - from(mesh).pos
-        
     }
 
     // Shader specification
-    case class Rendered[N <: Int](mesh: Mesh[N], shader: Shader) extends Mesh[N] { def mat: Mat[4, N] = mesh.mat }
-    // DO NOT RENDER Scaffold even if nested underneath a Rendered scene
-    case class Scaffold[N <: Int](mesh: Mesh[N]) extends Mesh[N] { def mat: Mat[4, N] = mesh.mat }
+    case class Rendered(mesh: Mesh, shader: Shader) extends Mesh 
+    case class Scaffold(mesh: Mesh) extends Mesh // Do not render a Scaffold
 
 }

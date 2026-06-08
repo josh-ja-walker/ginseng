@@ -32,5 +32,4 @@ object Anchors {
     // Universal viewport bounds
     case class ViewportAnchor(anchorType: AnchorType) extends BoundsAnchor(Viewport, anchorType)
 
-
 }

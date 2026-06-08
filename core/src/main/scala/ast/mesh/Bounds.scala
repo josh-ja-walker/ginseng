@@ -22,10 +22,10 @@ object Bounds {
     }
 
     // Bounding box aligned upon the axis
-    case class AABB(mesh: Mesh[?]) extends Bounds {
+    case class AABB(mesh: Mesh) extends Bounds {
         def resolve(anchorType: AnchorType): Pos = {
             
-            def allPositions(mesh: Mesh[?], offset: Dir = Dir.zero): Seq[Pos] = mesh match {
+            def allPositions(mesh: Mesh, offset: Dir = Dir.zero): Seq[Pos] = mesh match {
 
                 case anchoring@Anchoring(to, mesh, from) => {
                     val anchorPositions = to.mesh
@@ -35,11 +35,11 @@ object Bounds {
                     (anchorPositions ++ allPositions(mesh, offset + anchoring.offset)).distinct
                 }
                     
-                case p: Primitive[?] => p.mat.toPositions.map(_ + offset)
+                case p: Primitive => p.vertices.map(_ + offset)
+                case f: FalsePrimitive => allPositions(f.anchoring, offset)
                 
                 case Rendered(mesh, shader) => allPositions(mesh)
                 case Scaffold(mesh) => allPositions(mesh)
-                    
             }
 
             PointCloud(allPositions(mesh)*).resolve(anchorType)
@@ -48,7 +48,7 @@ object Bounds {
     
 
     // Bounding box orientated in the direction of the bound object
-    case class OBB(mesh: Mesh[?]) extends Bounds {
+    case class OBB(mesh: Mesh) extends Bounds {
         def resolve(anchorType: AnchorType): Pos = ???
     }
 

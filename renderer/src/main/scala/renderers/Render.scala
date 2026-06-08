@@ -24,10 +24,10 @@ object Render {
     }
 
     // Render root
-    extension (mesh: Mesh[?]) def render()(using Zone): Unit = mesh.render(None, Dir.zero)
+    extension (mesh: Mesh) def render()(using Zone): Unit = mesh.render(None, Dir.zero)
 
     // Render using shader information propagated through
-    extension (mesh: Mesh[?]) private def render(shader: Option[ShaderAST], offset: Dir)(using Zone): Unit = mesh match {
+    extension (mesh: Mesh) private def render(shader: Option[ShaderAST], offset: Dir)(using Zone): Unit = mesh match {
 
         // Resolve positioning information and then render
         case anchoring@Anchoring(to, mesh, from) => {
@@ -36,9 +36,9 @@ object Render {
         }
         
         // Offset and render primitives - NOTE: must have a shader set to render
-        case p: Primitive[?] => shader.collect(p.offsetBy(offset).render(_))
+        case p: Primitive => shader.collect(p.offsetBy(offset).render(_))
             
-        case falsePrimitive: FalsePrimitive[?] => falsePrimitive.anchoring.render(shader, offset)
+        case falsePrimitive: FalsePrimitive => falsePrimitive.anchoring.render(shader, offset)
 
         // Ignore current shader, render using nested shader
         case Rendered(mesh, shader) => mesh.render(Some(shader), offset)
@@ -50,7 +50,7 @@ object Render {
 
 
     // Apply offset to primitives
-    extension (mesh: Primitive[?]) def offsetBy(offset: Dir): Primitive[?] = mesh match {
+    extension (mesh: Primitive) def offsetBy(offset: Dir): Primitive = mesh match {
 
         // TODO: change to use translation transformation
             // case p: Primitive => p.translate(offset)
@@ -69,7 +69,7 @@ object Render {
 
 
     // Render leaf nodes - i.e., primitives
-    extension (mesh: Primitive[?]) def render(shader: ShaderAST)(using Zone): Unit = {
+    extension (mesh: Primitive) def render(shader: ShaderAST)(using Zone): Unit = {
         // FIXME: not a fan of the wildcard
         val renderer: Renderer[?] = mesh match { 
 

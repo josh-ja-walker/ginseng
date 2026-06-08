@@ -11,13 +11,13 @@ import ginseng.maths.geometry.*
 // because composite matrix is computed rather than applying individual transformations step-by-step
 // TODO: improve qualified transformation calls to use composite transformation matrices
 
-trait Transform[T] {
+trait Transform[V] {
 
-    extension (t: T)
-        def transform(transformation: Transformation): T
+    extension (v: V)
+        def transform(t: Transformation): V
     
-    extension (transformation: Transformation)
-        def apply(t: T): T = t.transform(transformation)
+    extension (t: Transformation)
+        def apply(v: V): V = v.transform(t)
 
 }
 

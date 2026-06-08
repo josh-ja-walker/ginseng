@@ -48,7 +48,7 @@ object AST {
     // Positioning
     sealed trait Positioning extends Scene
 
-    case object Viewport extends Scene // TODO: should this be a Cuboid? 
+    case object Viewport extends Scene // TODO: delete
 
     // Position a scene at an anchor with respect to its own anchor (`at`) 
     case class Anchoring(to: Anchor, scene: Scene, from: Scene => Anchor) extends Positioning
@@ -119,7 +119,6 @@ object AST {
 
     // Shader specification
     case class Rendered(scene: Scene, shader: Shader) extends Scene
-    // DO NOT RENDER Scaffold even if nested underneath a Rendered scene 
-    case class Scaffold(scene: Scene) extends Scene
+    case class Scaffold(scene: Scene) extends Scene // Do not render a Scaffold
 
 }

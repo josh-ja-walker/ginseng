@@ -29,7 +29,7 @@ object MultiVertexBuffer {
 
     def apply[R](renderables: R*)(using zone: Zone)(using Renderable[R]): MultiVertexBuffer = {
         // Convert to list of points per primitive
-        val primitives: Seq[Seq[Float]] = renderables.map(_.toPoints)
+        val primitives: Seq[Seq[Float]] = renderables.map(_.pointArray)
 
         // Count number of vertices in each primitive
         // NOTE: div 3 because float values per vertex

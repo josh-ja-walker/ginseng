@@ -55,8 +55,8 @@ object Lift {
         }
     }
 
-    given ToExpr[Primitive[?]] {
-        def apply(x: Primitive[?])(using Quotes): Expr[Primitive[?]] = x match {
+    given ToExpr[Primitive] {
+        def apply(x: Primitive)(using Quotes): Expr[Primitive] = x match {
             case Point(pos, size) => '{ Point( ${ Expr(pos) }, ${ Expr(size) } ) } 
             // case Direct(a, b, width) => '{ Point( ${ Expr(pos) }, ${ Expr(size) } ) }
             // case Path(positions, width) => '{ Point( ${ Expr(pos) }, ${ Expr(size) } ) }
@@ -80,12 +80,12 @@ object Lift {
             '{ RenderInfo ( ${ Expr(x.shader) }, ${ Expr(x.offset) } ) }
     }
 
-    // given [T <: Primitive[?]] => ToExpr[T] => ToExpr[Batch[T]] {
+    // given [T <: Primitive] => ToExpr[T] => ToExpr[Batch[T]] {
     //     def apply(x: Batch[T])(using Quotes): Expr[Batch[T]] = 
     //         '{ Batch( ${ Expr(x.shader) }, ${ Expr(x.primitives) } )  }
     // }
 
-    // given ToExpr[Batch[? <: Primitive[?]]] {
+    // given ToExpr[Batch[? <: Primitive]] {
     //     def apply(x: Batch[?])(using Quotes): Expr[Batch[?]] = 
     //         '{ Batch( ${ Expr(x.shader) }, ${ Expr(x.primitives) } )  }
     // }

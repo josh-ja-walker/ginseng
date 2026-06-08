@@ -28,7 +28,7 @@ object VertexBuffer {
 
     def apply[R](renderables: R*)(using zone: Zone)(using Renderable[R]): VertexBuffer = {
         // Convert to list of points per primitive and flatten to create buffer
-        VertexBuffer(renderables.map(_.toPoints).flatten)
+        VertexBuffer(renderables.map(_.pointArray).flatten)
     }
 
     def apply(values: Seq[Float])(using zone: Zone): VertexBuffer = {

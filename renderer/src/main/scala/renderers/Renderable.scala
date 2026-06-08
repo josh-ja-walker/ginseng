@@ -19,28 +19,31 @@ import ginseng.core.poly.geometry.given
 import ginseng.core.ast.mesh.MeshAST.*
 
 import ginseng.maths.geometry.Pos
+import ginseng.core.ast.mesh.Vertices
 
 
 trait Renderable[R] {
     extension (r: R) 
-        def toPoints: Seq[Float]
+        def pointArray: Array[Float]
 }
-
 
 given [R <: Poly[?]] => Geometry[R] => Renderable[R] {
     extension (r: R)
-        override def toPoints: Seq[Float] = {
-            r.positions
-                .flatMap(_.take[3].toSeq)
-                .map(_.toFloat)
-        }
+        override def pointArray: Array[Float] = 
+            r.positions.toSeq.floats.toArray
 }
 
-given [T <: Mesh[?]] => Renderable[T] {
+given [T] => Vertices[T] => Renderable[T] {
     extension (r: T)
-        override def toPoints: Seq[Float] = {
-            r.mat.toPositions
-                .flatMap(_.take[3].toSeq)
-                .map(_.toFloat)
-        }
+        override def pointArray: Array[Float] =
+            r.vertices.floats.toArray
 }
+
+
+
+extension (p: Pos)
+    def floats: Seq[Float] = p.take[3].toSeq.map(_.toFloat)
+
+extension (ps: Seq[Pos])
+    def floats: Seq[Float] = ps.flatMap(_.floats)
+

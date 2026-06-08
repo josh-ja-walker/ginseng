@@ -7,18 +7,18 @@ import ginseng.core.ast.mesh.MeshAST.*
 import ginseng.renderer.renderers.Render.*
 
 
-type ShaderMap = Map[ShaderAST, Seq[Primitive[?]]]
+type ShaderMap = Map[ShaderAST, Seq[Primitive]]
 
 object ShaderMap {
 
-    def from(mesh: Mesh[?]): ShaderMap = ShaderMap.from(RenderInfo.default, mesh)
+    def from(mesh: Mesh): ShaderMap = ShaderMap.from(RenderInfo.default, mesh)
 
-    def from(renderInfo: RenderInfo, mesh: Mesh[?]): ShaderMap = {
+    def from(renderInfo: RenderInfo, mesh: Mesh): ShaderMap = {
         val RenderInfo(shader, offset) = renderInfo
 
         mesh match {
 
-            case p: Primitive[?] => shader
+            case p: Primitive => shader
                 .map(s => Map(s -> Seq(p.offsetBy(offset))))
                 .getOrElse(Map())
             
@@ -30,7 +30,7 @@ object ShaderMap {
                 anchorMap.join(ShaderMap.from(renderInfo.offsetBy(anchoring.offset), mesh))
             }
             
-            case falsePrimitive: FalsePrimitive[?] => ShaderMap.from(renderInfo, falsePrimitive.anchoring)
+            case falsePrimitive: FalsePrimitive => ShaderMap.from(renderInfo, falsePrimitive.anchoring)
             
             case Rendered(mesh, shader) => ShaderMap.from(renderInfo.withShader(shader), mesh)
             case Scaffold(mesh) => ShaderMap.from(renderInfo.withoutShader, mesh)

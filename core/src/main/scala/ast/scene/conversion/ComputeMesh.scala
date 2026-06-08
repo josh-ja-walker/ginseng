@@ -23,7 +23,7 @@ import ginseng.core.colours.Colours
 object ComputeMesh {
 
     // Compute mesh for nested scenes (i.e., not primitives)
-    extension (scene: Scene) def computeMesh: Mesh[?] = scene match {
+    extension (scene: Scene) def computeMesh: Mesh = scene match {
 
         // Delegate to primitive mesh compute handler
         case p: Primitive => p.computeMesh
@@ -33,9 +33,6 @@ object ComputeMesh {
 
         // Delegate to positioning mesh compute handler
         case positioned: Positioning => positioned.computeMesh
-
-        // case Vertex(_, _) => ???
-        // case Edge(_, _) => ???
 
         // Delegate to positioning mesh compute handler
         case Modify(scene, modification) => scene.computeMesh.modify(modification)
@@ -48,7 +45,7 @@ object ComputeMesh {
 
 
     // Compute mesh for primitive types - i.e., no positional or transformation operations
-    extension (primitive: Primitive) def computeMesh: Mesh[?] = primitive match {
+    extension (primitive: Primitive) def computeMesh: Mesh = primitive match {
         
         // Propagate types for mesh supported types
         case Point(p, size) => MeshAST.Point(p, size)
@@ -77,7 +74,7 @@ object ComputeMesh {
                     from = _.vertex(C)
                 )
                 .computeMesh
-                .asInstanceOf[MeshAST.Anchoring[4]]
+                .asInstanceOf[MeshAST.Anchoring]
             )
         }
 
@@ -118,7 +115,7 @@ object ComputeMesh {
                     )
                 .computeMesh
 
-            MeshAST.Tetra(anchoringMesh.asInstanceOf[MeshAST.Anchoring[4]])
+            MeshAST.Tetra(anchoringMesh.asInstanceOf[MeshAST.Anchoring])
         }
         
         case Pyramid(size) => {
@@ -158,7 +155,7 @@ object ComputeMesh {
                     from = _.vertex(A)
                 ).computeMesh
 
-            MeshAST.Pyramid(anchoringMesh.asInstanceOf[MeshAST.Anchoring[5]])
+            MeshAST.Pyramid(anchoringMesh.asInstanceOf[MeshAST.Anchoring])
         }
         
         
@@ -200,7 +197,7 @@ object ComputeMesh {
                         from = _.vertex(A)
                     ).computeMesh
 
-            MeshAST.Cuboid(anchoringMesh.asInstanceOf[MeshAST.Anchoring[8]])
+            MeshAST.Cuboid(anchoringMesh.asInstanceOf[MeshAST.Anchoring])
         }
         
         case Cuboid(width@Length(x), Length(y), Length(z)) => 
@@ -209,7 +206,7 @@ object ComputeMesh {
     }
 
     // Compute mesh for transformed types by applying transformation to the computed sub-mesh
-    extension (transform: Transform) def computeMesh: Mesh[?] = transform match {
+    extension (transform: Transform) def computeMesh: Mesh = transform match {
         case Move(a, d) => a.computeMesh.translated(d)
         case MoveTo(a, to, from) => a.computeMesh.repositioned(from(a).compute.pos, to)
 
@@ -233,7 +230,7 @@ object ComputeMesh {
 
 
     // Compute mesh for positioned types by converting all helpers into anchors
-    extension (positioned: Positioning) def computeMesh: MeshAST.Anchoring[?] = positioned match {
+    extension (positioned: Positioning) def computeMesh: MeshAST.Anchoring = positioned match {
         // Propagate anchor information to mesh
         case Anchoring(to, scene, from) => MeshAST.Anchoring(to.compute, scene.computeMesh, from.compute(scene))
         
@@ -245,7 +242,7 @@ object ComputeMesh {
     }
 
 
-    extension[N <: Int] (mesh: Mesh[N]) def modify(modification: Modification[?]): Mesh[N] = modification match {
+    extension[N <: Int] (mesh: Mesh) def modify(modification: Modification[?]): Mesh = modification match {
 
         case MoveVertex(Vertex(index), d) => mesh match {
             case MeshAST.Tri(a, b, c) => {

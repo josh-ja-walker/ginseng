@@ -20,7 +20,7 @@ object Anchors {
     
     
     // Anchor at vertex of a mesh
-    case class VertexAnchor(mesh: Mesh[?], index: VertexIndex) extends Anchor { 
+    case class VertexAnchor(mesh: Mesh, index: VertexIndex) extends Anchor { 
 
         def pos: Pos = mesh match {
 
@@ -113,11 +113,11 @@ object Anchors {
         def pos: Pos = bounds.resolve(anchorType)
     }
 
-    case class AABB(mesh: Mesh[?], anchorType: AnchorType) 
+    case class AABB(mesh: Mesh, anchorType: AnchorType) 
         extends BoundsAnchor(Bounds.AABB(mesh), anchorType)
 
     // TODO: add directions to oriented bounding box OR make a local
-    case class OBB(mesh: Mesh[?], anchorType: AnchorType)
+    case class OBB(mesh: Mesh, anchorType: AnchorType)
         extends BoundsAnchor(Bounds.OBB(mesh), anchorType)
 
     // Universal scene anchors
@@ -126,7 +126,7 @@ object Anchors {
 
     extension (anchor: Anchor) {
         // Extract mesh from anchor
-        def mesh: Option[Mesh[?]] = anchor match {
+        def mesh: Option[Mesh] = anchor match {
             case Origin | ViewportAnchor(_) => None
             case VertexAnchor(mesh, index) => Some(mesh)
             case AABB(mesh, anchorType) => Some(mesh)

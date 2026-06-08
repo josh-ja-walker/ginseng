@@ -13,6 +13,7 @@ import ginseng.core.colours.*
 import ginseng.core.ast.{ Shader as ShaderAST }
 import ginseng.core.ast.scene.SceneAST
 import ginseng.core.ast.mesh.MeshAST.*
+import ginseng.core.ast.mesh.given
 import ginseng.core.ast.scene.conversion.ComputeMesh.*
 
 import ginseng.maths.geometry.*
@@ -40,7 +41,7 @@ object StagedRender {
         def render()(using z: Expr[Zone]): Renderer = scene.computeMesh.render()
 
 
-    extension (mesh: Mesh[?])
+    extension (mesh: Mesh)
         def render()(using z: Expr[Zone]): Renderer = ShaderMap.from(mesh).render()
 
         
@@ -61,7 +62,7 @@ object StagedRender {
 
 
     extension (primitiveType: PrimitiveType) 
-        def render(primitives: Seq[Primitive[?]], shader: ShaderAST)(using z: Expr[Zone]): Renderer = {
+        def render(primitives: Seq[Primitive], shader: ShaderAST)(using z: Expr[Zone]): Renderer = {
             val shaderExpr = Expr(shader)
             
             primitiveType match {
@@ -71,7 +72,7 @@ object StagedRender {
 
                     val code = points.groupBy(_.size).map((size, points) => {
                         val sizeExpr = Expr(size)
-                        val pointsExpr = Expr(points.flatMap(_.toPoints))
+                        val pointsExpr = Expr(points.flatMap(_.pointArray))
 
                         '{
                             // Bind vertex array to and draw
@@ -94,7 +95,7 @@ object StagedRender {
                 }
                 
                 case PrimitiveType.Tri => {
-                    val vertexDataExpr = Expr(primitives.flatMap(_.toPoints))
+                    val vertexDataExpr = Expr(primitives.flatMap(_.pointArray))
                     
                     '{
                         // Bind shader to OpenGL state machine
