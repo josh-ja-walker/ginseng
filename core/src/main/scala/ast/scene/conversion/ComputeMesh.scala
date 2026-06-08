@@ -67,11 +67,11 @@ object ComputeMesh {
         }
 
         // Convert 2D primitives to a mesh of tris
-        case Square(size) => {
-            val rightAngled = Tri(size, Deg(90), size)
+        case Square(size@Length(x)) => {
+            val rightAngled = Tri(math.sqrt(2 * x * x).u, Deg(45), size)
 
             MeshAST.Quad(
-                rightAngled.vertex(B).anchors(
+                rightAngled.vertex(A).anchors(
                     rightAngled.rotated(Deg(180), Dir.forward),
                     from = _.vertex(C)
                 )
@@ -80,9 +80,8 @@ object ComputeMesh {
             )
         }
 
-        case Rect(width, height) => 
-            Square(width).scaled(Vec[3](1, height.toDouble / width.toDouble, 1))
-                .computeMesh
+        case Rect(width@Length(x), Length(y)) => 
+            Square(width).scaled(Vec[3](1, x / y, 1)).computeMesh
 
         case Polygon(size) => ???
 
@@ -164,7 +163,8 @@ object ComputeMesh {
             MeshAST.Cuboid(anchoringMesh.asInstanceOf[MeshAST.Anchoring[8]])
         }
         
-        case Cuboid(width, height, depth) => ???
+        case Cuboid(width@Length(x), Length(y), Length(z)) => 
+            Cube(width).scaled(Vec[3](1, x / y, x / z)).computeMesh
 
     }
 
