@@ -131,12 +131,12 @@ object ComputeMesh {
                     .anchors(
                         // Right
                         Square(size)
-                            .rotated(Deg(270), Dir.up)
+                            .rotated(Deg(-90), Dir.up)
                             .vertex(D)
                             .anchors(
                                 // Top
                                 Square(size)
-                                    .rotated(Deg(-90), Dir.right)
+                                    .rotated(Deg(90), Dir.right)
                                     .vertex(D)
                                     .anchors(
                                         // Back
@@ -149,11 +149,11 @@ object ComputeMesh {
                                                     .anchors(
                                                         // Bottom
                                                         Square(size)
-                                                            .rotated(Deg(-90), Dir.right),
+                                                            .rotated(Deg(90), Dir.right),
                                                         from = _.vertex(A)
                                                     ),
                                                 from = _.vertex(A)
-                                            ),
+                                            ), 
                                         from = _.vertex(D)
                                     ),
                                 from = _.vertex(B)
