@@ -17,7 +17,7 @@ object Test {
     import ginseng.maths.units.*
     import ginseng.maths.geometry.*
 
-    import ginseng.renderer.staging.StagedRender.*
+    import ginseng.renderer.staging.*
 
 
     def checked(m: Int, n: Int) = {
@@ -41,7 +41,7 @@ object Test {
     val scene = checked(5, 5)
     val mesh = scene.computeMesh
 
-    def renderCode(z: Expr[Zone])(using Quotes): Expr[Unit] = mesh.render()(using z)
+    def renderCode(z: Expr[Zone])(using Quotes): Expr[Unit] = mesh.renderCode(using z)
     inline def render()(using z: Zone): Unit = ${ renderCode('z) }
 
 

@@ -12,7 +12,8 @@ import ginseng.maths.angle.*
 import ginseng.maths.units.*
 import ginseng.maths.geometry.*
 
-import ginseng.renderer.staging.StagedRender.*
+import ginseng.renderer.staging.*
+import ginseng.renderer.staging.given
 
 import ginseng.core.scene.conversion.*
 import ginseng.core.scene.conversion.given
@@ -32,9 +33,9 @@ object MyMesh {
             from = _.vertex(VertexIndex.A) 
     ).computeMesh
 
+
+    def renderCode(z: Expr[Zone])(using Quotes): Expr[Unit] = mesh.renderCode(using z)
+
     inline def render()(using z: Zone): Unit = ${ renderCode('z) }
 
-
-    def renderCode(z: Expr[Zone])(using Quotes): Expr[Unit] = mesh.render()(using z)
-        
 }

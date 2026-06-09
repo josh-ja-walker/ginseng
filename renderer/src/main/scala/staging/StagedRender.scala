@@ -30,27 +30,37 @@ import ginseng.renderer.vertices.given
 import ginseng.renderer.settings.Settings.*
 import ginseng.renderer.staging.utils.*
 
-
-object StagedRender {
-    
-    type Renderer = Quotes ?=> Expr[Unit]
-
-    import Lift.given
-
-    import ShaderMap.*
+import Lift.given
+import ShaderMap.*
 
 
-    extension (scene: SceneAST.Scene) 
-        def render()(using z: Expr[Zone]): Renderer = scene.computeMesh.render()
+type RenderCode = Quotes ?=> Expr[Unit]
+
+trait StagedRenderer[T] {
+    extension (t: T) 
+        def renderCode(using z: Expr[Zone]): RenderCode
+}
 
 
-    extension (mesh: Mesh)
-        def render()(using z: Expr[Zone]): Renderer = ShaderMap.from(mesh).render()
+given StagedRenderer[SceneAST.Scene]:
+    extension (t: SceneAST.Scene) 
+        def renderCode(using z: Expr[Zone]): RenderCode = t.computeMesh.renderCode
 
-        
-    extension (shaderMap: ShaderMap)
-        def render()(using z: Expr[Zone]): Renderer = {
-            shaderMap.map { 
+
+given StagedRenderer[Mesh]:
+    extension (t: Mesh)
+        def renderCode(using z: Expr[Zone]): RenderCode = {
+            import Staging.given
+            ShaderMap.from(t).renderCode
+        }
+
+
+
+object Staging {
+
+    given StagedRenderer[ShaderMap]:
+        extension (t: ShaderMap) 
+            def renderCode(using z: Expr[Zone]): RenderCode = t.map { 
                 (shader, prims) => prims
                     .groupBy(PrimitiveType(_))
                     .map { 
@@ -61,11 +71,9 @@ object StagedRender {
                     .sequential
             }
             .sequential
-        }
-
 
     extension (primitiveType: PrimitiveType) 
-        def render(primitives: Seq[Primitive], shader: ShaderAST)(using z: Expr[Zone]): Renderer = {
+        def render(primitives: Seq[Primitive], shader: ShaderAST)(using z: Expr[Zone]): RenderCode = {
             val shaderExpr = Expr(shader)
             
             primitiveType match {
@@ -115,5 +123,5 @@ object StagedRender {
 
         }
 
-}
 
+}

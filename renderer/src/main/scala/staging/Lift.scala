@@ -13,7 +13,6 @@ import ginseng.maths.geometry.*
 object Lift {
     
     import scala.quoted.ToExpr
-    import StagedRender.*
 
 
     given PosToExpr: ToExpr[Pos] {

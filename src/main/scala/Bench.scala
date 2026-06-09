@@ -9,7 +9,7 @@ import ginseng.core.colours.*
 
 import ginseng.renderer.context.*
 import ginseng.renderer.Render
-import ginseng.renderer.staging.StagedRender
+import ginseng.renderer.staging.*
 import ginseng.renderer.staging.Test
 
 import ginseng.core.scene.conversion.*
