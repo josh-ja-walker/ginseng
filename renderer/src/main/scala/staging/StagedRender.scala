@@ -28,9 +28,7 @@ import ginseng.renderer.vertices.given
 import ginseng.renderer.settings.Settings.*
 import ginseng.renderer.staging.utils.*
 
-import Lift.given
 import ShaderMap.*
-
 
 type RenderCode = Quotes ?=> Expr[Unit]
 
