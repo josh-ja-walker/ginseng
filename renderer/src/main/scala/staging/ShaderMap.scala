@@ -1,10 +1,10 @@
-package ginseng.renderer.renderers.staging
+package ginseng.renderer.staging
 
 import ginseng.core.shared.{ Shader as ShaderAST }
 import ginseng.core.scene.SceneAST
 import ginseng.core.mesh.MeshAST.*
 
-import ginseng.renderer.renderers.Render.*
+import ginseng.renderer.Render.*
 
 
 type ShaderMap = Map[ShaderAST, Seq[Primitive]]

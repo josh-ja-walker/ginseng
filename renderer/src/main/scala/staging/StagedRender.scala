@@ -1,4 +1,4 @@
-package ginseng.renderer.renderers.staging
+package ginseng.renderer.staging
 
 import scala.scalanative.unsafe.*
 import scala.scalanative.unsigned.*
@@ -22,14 +22,13 @@ import ginseng.core.mesh.geometry.given
 
 import ginseng.maths.geometry.*
 
-import ginseng.renderer.given
+import ginseng.renderer.Render.*
 import ginseng.renderer.shaders.*
 import ginseng.renderer.settings.*
-import ginseng.renderer.renderers.given
-import ginseng.renderer.renderers.vertices.*
-import ginseng.renderer.renderers.vertices.given
-import ginseng.renderer.renderers.Render.*
+import ginseng.renderer.vertices.*
+import ginseng.renderer.vertices.given
 import ginseng.renderer.settings.Settings.*
+import ginseng.renderer.staging.utils.*
 
 
 object StagedRender {
@@ -37,7 +36,7 @@ object StagedRender {
     type Renderer = Quotes ?=> Expr[Unit]
 
     import Lift.given
-    import Utility.*
+
     import ShaderMap.*
 
 

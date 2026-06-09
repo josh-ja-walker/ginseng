@@ -1,4 +1,4 @@
-package ginseng.renderer.renderers.vertices
+package ginseng.renderer.vertices
 
 import scala.scalanative.unsafe.*
 import scala.scalanative.unsigned.*

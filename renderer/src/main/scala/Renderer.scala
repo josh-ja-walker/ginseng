@@ -1,5 +1,4 @@
-package ginseng.renderer.renderers
-
+package ginseng.renderer
 import scala.scalanative.unsafe.Zone
 
 import ginseng.renderer.shaders.*

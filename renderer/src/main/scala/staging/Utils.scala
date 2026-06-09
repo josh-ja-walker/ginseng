@@ -1,9 +1,8 @@
-package ginseng.renderer.renderers.staging
-
+package ginseng.renderer.staging
 import scala.quoted.*
 
 
-object Utility {
+package object utils {
 
     extension (code: Iterable[Expr[Unit]]) 
         def sequential(using Quotes): Expr[Unit] = Expr.block(code.toList, '{})

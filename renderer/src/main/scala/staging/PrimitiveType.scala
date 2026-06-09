@@ -1,4 +1,4 @@
-package ginseng.renderer.renderers.staging
+package ginseng.renderer.staging
 
 import ginseng.core.mesh.MeshAST.*
 

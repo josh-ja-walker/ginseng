@@ -22,13 +22,13 @@ import ginseng.maths.geometry.*
 import ginseng.renderer.*
 import ginseng.renderer.shaders.*
 import ginseng.renderer.context.*
-import ginseng.renderer.renderers.*
-import ginseng.renderer.renderers.Render.*
+import ginseng.renderer.Render.*
 
 import opengl.bindings.glad.*
 import opengl.bindings.glfw.*
 
 import scala.util.Random
+
 
 @main
 def main: Unit = Zone {

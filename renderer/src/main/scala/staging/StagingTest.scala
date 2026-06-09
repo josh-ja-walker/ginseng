@@ -1,4 +1,4 @@
-package ginseng.renderer.renderers.staging
+package ginseng.renderer.staging
 
 object Test {
         
@@ -17,7 +17,7 @@ object Test {
     import ginseng.maths.units.*
     import ginseng.maths.geometry.*
 
-    import ginseng.renderer.renderers.staging.StagedRender.*
+    import ginseng.renderer.staging.StagedRender.*
 
 
     def checked(m: Int, n: Int) = {

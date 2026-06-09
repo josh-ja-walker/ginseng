@@ -1,4 +1,4 @@
-package ginseng.renderer.renderers.vertices
+package ginseng.renderer.vertices
 
 import ginseng.core.mesh.geometry.*
 

@@ -8,9 +8,9 @@ import opengl.bindings.glfw.*
 import ginseng.core.colours.*
 
 import ginseng.renderer.context.*
-import ginseng.renderer.renderers.Render
-import ginseng.renderer.renderers.staging.StagedRender
-import ginseng.renderer.renderers.staging.Test
+import ginseng.renderer.Render
+import ginseng.renderer.staging.StagedRender
+import ginseng.renderer.staging.Test
 
 import ginseng.core.scene.conversion.*
 import ginseng.core.scene.conversion.given
@@ -18,7 +18,7 @@ import ginseng.core.scene.conversion.given
 import scala.util.boundary, boundary.break
 
 
-@main 
+// @main 
 def renderMesh: Unit = Zone {
     Benchmark.run  { () => Render.render(Test.mesh)() }
 }
@@ -32,6 +32,7 @@ def stagedRenderMesh: Unit = Zone {
 object Benchmark {
 
     val maxFrames: Option[Int] = None
+    // val maxFrames: Option[Int] = Some(1)
 
 
     def benchContext(using Zone) = {
