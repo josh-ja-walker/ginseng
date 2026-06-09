@@ -1,13 +1,23 @@
 package ginseng.renderer
+
 import scala.scalanative.unsafe.*
 
+import opengl.bindings.glfw.*
+import opengl.bindings.glad.*
+
 import ginseng.renderer.shaders.*
+import ginseng.renderer.vertices.*
+import ginseng.renderer.vertices.given
+import ginseng.renderer.settings.Settings
 
 import ginseng.core.shared.{ Shader as ShaderAST }
 import ginseng.core.scene.SceneAST
-import ginseng.core.mesh.MeshAST.*
 import ginseng.core.scene.conversion.*
 import ginseng.core.scene.conversion.given
+
+import ginseng.core.mesh.MeshAST.*
+import ginseng.core.mesh.geometry.*
+import ginseng.core.mesh.geometry.given
 
 import ginseng.maths.geometry.*
 
@@ -66,22 +76,51 @@ object Render {
 
 
     // Render leaf nodes - i.e., primitives
-    extension (mesh: Primitive) def render(shader: ShaderAST)(using Zone): Unit = {
-        // FIXME: not a fan of the wildcard
-        val renderer: Renderer[?] = mesh match { 
-            case _ => ???
-            // case Point(p, size) => PointRenderer.size(size.toFloat)(misc.Point(p))
-            // case Direct(a, b, width) => LineRenderer.width(width.toFloat)(polylines.Line(a, b))
+    extension (mesh: Primitive) def render(shader: ShaderAST)(using Zone): Unit = mesh match {
 
-            // FIXME:
-            // case path: Path[n] => StripRenderer.width(width)(polylines.Strip[n](path.positions*))
-            // case loop: Loop[n] => LoopRenderer.width(width)(polylines.Loop[n](loop.positions*))
-                
-            // case Tri(a, b, c) => TriRenderer(polygons.Tri(a, b, c))
+        case Point(p, size) => {
+            // Bind shader to OpenGL state machine
+            shader.create.bind()
+
+            // Bind vertex array to and draw
+            val vao = VertexBuffer(mesh.data)
+            vao.bind()
+            
+            Settings.PointSize.using(size.toFloat) {
+                vao.draw(GL_POINTS)
+            }
+        }
+        
+        case Direct(a, b, width) =>{
+            // Bind shader to OpenGL state machine
+            shader.create.bind()
+
+            // Bind vertex array to and draw
+            val vao = VertexBuffer(mesh.data)
+            vao.bind()
+
+            Settings.LineWidth.using(width.toFloat) {
+                vao.draw(GL_LINES)
+            }
         }
 
-        renderer.render(shader.create)
+        // FIXME:
+        // case path: Path[n] => StripRenderer.width(width)(polylines.Strip[n](path.positions*))
+        // case loop: Loop[n] => LoopRenderer.width(width)(polylines.Loop[n](loop.positions*))
+            
+        case Tri(a, b, c) => {
+            // Bind shader to OpenGL state machine
+            shader.create.bind()
+
+            // Bind vertex array to and draw
+            val vao = VertexBuffer(mesh.data)
+            vao.bind()
+
+            vao.draw(GL_TRIANGLES)
+        }
+
     }
+
 
 
     // Construct shader from AST shader information
