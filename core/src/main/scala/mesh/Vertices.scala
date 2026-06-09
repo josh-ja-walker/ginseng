@@ -20,18 +20,17 @@ given primitiveVertices: Vertices[Primitive] {
         }
 }
 
-given matVertices: [N <: Int, T] => ToMat[N, T] => Vertices[T] {
+given matVertices: [N <: Int, T] => ToPosMat[N, T] => Vertices[T] {
     extension (t: T) 
-        def vertices: Seq[Pos] = t.toMat.toPositions
+        def vertices: Seq[Pos] = t.toMat.toPosSeq
 }
 
 
-// Define ToMat instances using Vertices
-given vertexMat: [N <: Int, T] => ValueOf[N] => Vertices[T] => ToMat[N, T] {
+// Define ToPosMat instances using Vertices
+given vertexMat: [N <: Int, T] => ValueOf[N] => Vertices[T] => ToPosMat[N, T] {
     extension (t: T) 
-        def toMat: Mat[4, N] = Mat(t.vertices*)
+        def toMat: PosMat[N] = Mat(t.vertices*)
 }
 
-given primitiveMat: [N <: Int] => ValueOf[N] => ToMat[N, Primitive] = 
-    vertexMat[N, Primitive]
+given primitiveMat: [N <: Int] => ValueOf[N] => ToPosMat[N, Primitive] = vertexMat[N, Primitive]
 

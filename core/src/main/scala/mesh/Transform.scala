@@ -49,7 +49,7 @@ given pointTransform: Transform[Point]:
 given directTransform: Transform[Direct]: 
     extension (v: Direct) 
         def transform(t: Transformation): Direct = {
-            val Seq(a, b) = (t.toMat * primitiveMat[2].toMat(v)).toPositions
+            val Seq(a, b) = (t.toMat * primitiveMat[2].toMat(v)).toPosSeq
             Direct(a, b, v.width)
         }
 
@@ -59,11 +59,9 @@ given directTransform: Transform[Direct]:
 given triTransform: Transform[Tri] with 
     extension (v: Tri) 
         def transform(t: Transformation): Tri = {
-            val Seq(a, b, c) = (t.toMat * primitiveMat[3].toMat(v)).toPositions
+            val Seq(a, b, c) = (t.toMat * primitiveMat[3].toMat(v)).toPosSeq
             Tri(a, b, c)
         }
-
-
 
 
 given anchorTransform: Transform[Anchor] with
@@ -75,7 +73,7 @@ given anchorTransform: Transform[Anchor] with
             case OBB(mesh, anchorType) => OBB(mesh.transform(transformation), anchorType)
         }
 
-given anchoringTransform: [N <: Int] => Transform[Anchoring] {
+given anchoringTransform: Transform[Anchoring] {
     extension (v: Anchoring) 
         def transform(t: Transformation): Anchoring = {
             val Anchoring(to, mesh, from) = v
