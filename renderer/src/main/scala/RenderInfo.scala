@@ -1,4 +1,4 @@
-package ginseng.renderer.staging
+package ginseng.renderer
 
 import ginseng.core.shared.{ Shader as ShaderAST }
 

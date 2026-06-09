@@ -21,7 +21,6 @@ import ginseng.core.mesh.MeshAST.*
 import ginseng.core.mesh.anchoring.utils.*
 
 import ginseng.maths.geometry.*
-import ginseng.renderer.staging.RenderInfo
 
 
 trait Renderer[T <: Mesh] {

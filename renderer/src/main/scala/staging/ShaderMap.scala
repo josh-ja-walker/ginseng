@@ -6,6 +6,7 @@ import ginseng.core.shared.{ Shader as ShaderAST }
 import ginseng.core.scene.SceneAST
 import ginseng.core.mesh.MeshAST.*
 import ginseng.core.mesh.anchoring.utils.*
+import ginseng.renderer.RenderInfo
 
 
 type ShaderMap = Map[ShaderAST, Seq[Primitive]]

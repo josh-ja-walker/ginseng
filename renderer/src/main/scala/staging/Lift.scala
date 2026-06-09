@@ -7,6 +7,7 @@ import ginseng.core.shared.{ Shader as ShaderAST }
 import ginseng.core.mesh.MeshAST.*
 
 import ginseng.maths.geometry.*
+import ginseng.renderer.RenderInfo
 
 
 
