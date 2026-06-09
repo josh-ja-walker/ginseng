@@ -21,11 +21,6 @@ trait Renderable[R] {
         def pointArray: Array[Float]
 }
 
-given [R <: Poly[?]] => Geometry[R] => Renderable[R] {
-    extension (r: R)
-        override def pointArray: Array[Float] = 
-            r.positions.toSeq.floats.toArray
-}
 
 given [T] => Vertices[T] => Renderable[T] {
     extension (r: T)

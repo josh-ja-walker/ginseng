@@ -8,14 +8,17 @@ import scala.quoted.*
 import opengl.bindings.glfw.*
 import opengl.bindings.glad.*
 
-
 import ginseng.core.colours.*
-import ginseng.core.{ Shader as ShaderAST }
+import ginseng.core.shared.{ Shader as ShaderAST }
+
 import ginseng.core.scene.SceneAST
 import ginseng.core.scene.conversion.*
 import ginseng.core.scene.conversion.given
+
 import ginseng.core.mesh.MeshAST.*
 import ginseng.core.mesh.given
+import ginseng.core.mesh.geometry.*
+import ginseng.core.mesh.geometry.given
 
 import ginseng.maths.geometry.*
 
@@ -24,7 +27,6 @@ import ginseng.renderer.shaders.*
 import ginseng.renderer.settings.*
 import ginseng.renderer.renderers.given
 import ginseng.renderer.renderers.vertexbuffers.*
-
 import ginseng.renderer.renderers.Render.*
 import ginseng.renderer.settings.Settings.*
 

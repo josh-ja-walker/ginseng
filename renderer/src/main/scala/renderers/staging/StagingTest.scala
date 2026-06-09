@@ -5,8 +5,9 @@ object Test {
     import scala.quoted.*
     import scala.scalanative.unsafe.*
 
-    import ginseng.core.colours.*
     import ginseng.core.*
+    import ginseng.core.colours.*
+    import ginseng.core.shared.*
     import ginseng.core.mesh.*
     import ginseng.core.scene.SceneAST.*
     import ginseng.core.scene.conversion.*

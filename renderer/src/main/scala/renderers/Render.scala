@@ -3,11 +3,8 @@ package ginseng.renderer.renderers
 import scala.scalanative.unsafe.*
 
 import ginseng.renderer.shaders.*
-import ginseng.renderer.renderers.misc.*
-import ginseng.renderer.renderers.polygons.*
-import ginseng.renderer.renderers.polylines.*
 
-import ginseng.core.{ Shader as ShaderAST }
+import ginseng.core.shared.{ Shader as ShaderAST }
 import ginseng.core.scene.SceneAST
 import ginseng.core.mesh.MeshAST.*
 import ginseng.core.scene.conversion.*

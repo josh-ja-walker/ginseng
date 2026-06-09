@@ -4,8 +4,9 @@ import scala.scalanative.unsafe.Zone
 
 import ginseng.renderer.shaders.*
 
+import ginseng.core.mesh.AST.Mesh
 
-trait Renderer[A <: Poly[?]] {
+
+trait Renderer[A <: Mesh] {
     def render(shader: ShaderProg)(using zone: Zone): Unit
-    // def render(vao: VertexBuffer, shader: ShaderProg)(using zone: Zone): Unit
 }
