@@ -6,11 +6,11 @@ object Test {
     import scala.scalanative.unsafe.*
 
     import ginseng.core.colours.*
-    import ginseng.core.ast.*
-    import ginseng.core.ast.mesh.*
-    import ginseng.core.ast.scene.SceneAST.*
-    import ginseng.core.ast.scene.conversion.*
-    import ginseng.core.ast.scene.conversion.given
+    import ginseng.core.*
+    import ginseng.core.mesh.*
+    import ginseng.core.scene.SceneAST.*
+    import ginseng.core.scene.conversion.*
+    import ginseng.core.scene.conversion.given
 
     import ginseng.maths.angle.*
     import ginseng.maths.units.*

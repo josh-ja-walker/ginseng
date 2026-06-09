@@ -3,25 +3,20 @@ package ginseng
 import scala.scalanative.unsafe.*
 import scala.scalanative.unsigned.*
 
-import ginseng.core.ast.*
+import ginseng.core.*
 
 import ginseng.core.colours.*
 
-import ginseng.core.poly.polylines.*
 import ginseng.core.transformations.*
 
-import ginseng.core.poly.geometry.given // TODO: ideally export from geometry
-import ginseng.core.poly.polygons.given // TODO: ideally export from polygons
-import ginseng.core.poly.polylines.given // TODO: ideally export from polylines
-import ginseng.core.poly.components.given // TODO: ideally export from components
 import ginseng.core.transformations.given // TODO: ideally export from transformations
 
-import ginseng.core.ast.Shader
+import ginseng.core.Shader
 
-import ginseng.core.ast.scene.SceneAST.*
-import ginseng.core.ast.scene.Anchors
-import ginseng.core.ast.scene.conversion.*
-import ginseng.core.ast.scene.conversion.given
+import ginseng.core.scene.SceneAST.*
+import ginseng.core.scene.Anchors
+import ginseng.core.scene.conversion.*
+import ginseng.core.scene.conversion.given
 
 import ginseng.maths.units.*
 import ginseng.maths.angle.*
@@ -43,6 +38,7 @@ import opengl.bindings.glfw.*
 import scala.util.Random
 
 import ginseng.renderer.renderers.*
+import scene.ast.scene.Anchors
 
 
 def main: Unit = Zone {

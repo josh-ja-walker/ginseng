@@ -3,17 +3,19 @@ package ginseng
 import scala.quoted.*
 import scala.scalanative.unsafe.*
 
+import ginseng.core.*
 import ginseng.core.colours.*
-import ginseng.core.ast.*
-import ginseng.core.ast.mesh.*
-import ginseng.core.ast.scene.SceneAST.*
+import ginseng.core.mesh.*
+import ginseng.core.scene.SceneAST.*
 
 import ginseng.maths.angle.*
 import ginseng.maths.units.*
 import ginseng.maths.geometry.*
 
 import ginseng.renderer.renderers.staging.StagedRender.*
-import ginseng.core.ast.scene.conversion.ComputeMesh.*
+
+import ginseng.core.scene.conversion.*
+import ginseng.core.scene.conversion.given
 
 
 object MyMesh {
