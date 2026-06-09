@@ -5,6 +5,7 @@ import scala.scalanative.unsafe.*
 import opengl.bindings.glfw.*
 import opengl.bindings.glad.*
 
+import ginseng.renderer.utils.*
 import ginseng.renderer.shaders.*
 import ginseng.renderer.vertices.*
 import ginseng.renderer.vertices.given
@@ -20,114 +21,91 @@ import ginseng.core.mesh.geometry.*
 import ginseng.core.mesh.geometry.given
 
 import ginseng.maths.geometry.*
+import ginseng.renderer.staging.RenderInfo
 
 
-object Render {
-
-    // Helper for rendering a scene
-    extension (scene: SceneAST.Scene) def render()(using Zone): Unit = {
-
-        scene.computeMesh.render()
-    }
-
-    // Render root
-    extension (mesh: Mesh) def render()(using Zone): Unit = mesh.render(None, Dir.zero)
-
-    // Render using shader information propagated through
-    extension (mesh: Mesh) private def render(shader: Option[ShaderAST], offset: Dir)(using Zone): Unit = mesh match {
-
-        // Resolve positioning information and then render
-        case anchoring@Anchoring(to, mesh, from) => {
-            to.mesh.map(_.render(shader, offset))
-            mesh.render(shader, offset + anchoring.offset)
-        }
-        
-        // Offset and render primitives - NOTE: must have a shader set to render
-        case p: Primitive => shader.collect(p.offsetBy(offset).render(_))
-            
-        case falsePrimitive: FalsePrimitive => falsePrimitive.anchoring.render(shader, offset)
-
-        // Ignore current shader, render using nested shader
-        case Rendered(mesh, shader) => mesh.render(Some(shader), offset)
-        
-        // Do not render scaffolds (but maybe render nested meshes)
-        // So delete current shader and only render sub-mesh if it explicitly defines a shader
-        case Scaffold(mesh) => mesh.render(None, offset)
-    }
-
-
-    // Apply offset to primitives
-    extension (mesh: Primitive) def offsetBy(offset: Dir): Primitive = mesh match {
-
-        // TODO: change to use translation transformation
-            // case p: Primitive => p.translate(offset)
-            
-        case Point(pos, size) => Point(pos + offset, size)
-        
-        case Direct(a, b, width) => Direct(a + offset, b + offset, width)
-
-        // FIXME: requires using ValueOf[N]
-        // case Path(positions, width) => Path(positions.map(_ + offset), width)
-        // case Loop(positions, width) => Loop(positions.map(_ + offset), width)
-        
-        case Tri(a, b, c) => Tri(a + offset, b + offset, c + offset)
-
-    }
-
-
-    // Render leaf nodes - i.e., primitives
-    extension (mesh: Primitive) def render(shader: ShaderAST)(using Zone): Unit = mesh match {
-
-        case Point(p, size) => {
-            // Bind shader to OpenGL state machine
-            shader.create.bind()
-
-            // Bind vertex array to and draw
-            val vao = VertexBuffer(mesh.data)
-            vao.bind()
-            
-            Settings.PointSize.using(size.toFloat) {
-                vao.draw(GL_POINTS)
-            }
-        }
-        
-        case Direct(a, b, width) =>{
-            // Bind shader to OpenGL state machine
-            shader.create.bind()
-
-            // Bind vertex array to and draw
-            val vao = VertexBuffer(mesh.data)
-            vao.bind()
-
-            Settings.LineWidth.using(width.toFloat) {
-                vao.draw(GL_LINES)
-            }
-        }
-
-        // FIXME:
-        // case path: Path[n] => StripRenderer.width(width)(polylines.Strip[n](path.positions*))
-        // case loop: Loop[n] => LoopRenderer.width(width)(polylines.Loop[n](loop.positions*))
-            
-        case Tri(a, b, c) => {
-            // Bind shader to OpenGL state machine
-            shader.create.bind()
-
-            // Bind vertex array to and draw
-            val vao = VertexBuffer(mesh.data)
-            vao.bind()
-
-            vao.draw(GL_TRIANGLES)
-        }
-
-    }
-
-
-
-    // Construct shader from AST shader information
-    extension (shader: ShaderAST) def create(using Zone): ShaderProg = shader match {
-        case ShaderAST.Flat(col) => Shaders.flatShader(col)
-        case ShaderAST.Tri(a, b, c) => Shaders.interpolateShader(a, b, c)
-        case ShaderAST.Interpolate(colours*) => Shaders.interpolateShader(colours*)
-    }
-
+trait Renderer[T <: Mesh] {
+    extension (t: T) 
+        def render(renderInfo: RenderInfo)(using Zone): Unit
 }
+
+
+extension (t: SceneAST.Scene)
+    def render()(using Zone): Unit = t.computeMesh.render()
+
+
+extension (t: Mesh)
+    def render()(using Zone): Unit = meshRenderer.render(t)(RenderInfo.default)
+
+
+given meshRenderer: Renderer[Mesh] with
+    extension (t: Mesh)
+        def render(renderInfo: RenderInfo)(using Zone): Unit = t match {
+
+            case p: Primitive => primitiveRenderer.render(p)(renderInfo)
+
+            // Use nested anchoring node to render FalsePrimitives
+            case f: FalsePrimitive => f.anchoring.render(renderInfo)
+            
+            case a: Anchoring => anchoringRenderer.render(a)(renderInfo)
+            
+            // Overwrite current shader with new shader
+            case Rendered(mesh, shader) => mesh.render(renderInfo.withShader(shader))
+            
+            // Do not render scaffolds (but maybe render nested meshes)
+            // So delete current shader and only render primitive if it explicitly defines a shader
+            case Scaffold(mesh) => mesh.render(renderInfo.withoutShader)
+        }
+
+
+given anchoringRenderer: Renderer[Anchoring] with
+    extension (t: Anchoring)
+        def render(renderInfo: RenderInfo)(using Zone): Unit = {
+            val Anchoring(to, mesh, from) = t
+
+            // Render anchors nested mesh if it exists
+            to.mesh.foreach(_.render(renderInfo))
+
+            // Then render anchored mesh with additional offset determined by anchoring
+            mesh.render(renderInfo.offsetBy(t.offset))
+        }
+
+
+given primitiveRenderer: Renderer[Primitive] with
+    extension (t: Primitive) def render(renderInfo: RenderInfo)(using Zone): Unit = {
+        val RenderInfo(shaderOpt, offset) = renderInfo
+        
+        // Offset primitive before rendering
+        val offsetPrimitive = t.offsetBy(offset)
+
+        shaderOpt.foreach { shader => 
+
+            // Bind shader to OpenGL state machine
+            shader.create.bind()
+
+            // Bind vertex array to and draw
+            val vao = VertexBuffer(offsetPrimitive.data)
+            vao.bind()
+            
+            offsetPrimitive match {
+                case Point(p, size) => 
+                    Settings.PointSize.using(size.toFloat) {
+                        vao.draw(GL_POINTS)
+                    }
+                
+                case Direct(a, b, width) =>
+                    Settings.LineWidth.using(width.toFloat) {
+                        vao.draw(GL_LINES)
+                    }
+
+                // FIXME:
+                // case path: Path[n] => StripRenderer.width(width)(polylines.Strip[n](path.positions*))
+                // case loop: Loop[n] => LoopRenderer.width(width)(polylines.Loop[n](loop.positions*))
+                
+                case Tri(a, b, c) => vao.draw(GL_TRIANGLES)
+            }
+
+        }
+
+    }
+

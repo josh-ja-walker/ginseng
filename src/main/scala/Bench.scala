@@ -7,8 +7,8 @@ import opengl.bindings.glfw.*
 
 import ginseng.core.colours.*
 
+import ginseng.renderer.*
 import ginseng.renderer.context.*
-import ginseng.renderer.Render
 import ginseng.renderer.staging.*
 import ginseng.renderer.staging.Test
 
@@ -20,7 +20,7 @@ import scala.util.boundary, boundary.break
 
 // @main 
 def renderMesh: Unit = Zone {
-    Benchmark.run  { () => Render.render(Test.mesh)() }
+    Benchmark.run  { () => Test.mesh.render() }
 }
 
 // @main 

@@ -22,7 +22,7 @@ import ginseng.core.mesh.geometry.given
 
 import ginseng.maths.geometry.*
 
-import ginseng.renderer.Render.*
+import ginseng.renderer.utils.*
 import ginseng.renderer.shaders.*
 import ginseng.renderer.settings.*
 import ginseng.renderer.vertices.*
