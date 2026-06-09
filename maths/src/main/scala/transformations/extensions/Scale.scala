@@ -1,4 +1,4 @@
-package ginseng.core.transformations
+package ginseng.maths.transformations.extensions
 
 import ginseng.maths.linalg.*
 import ginseng.maths.transformations.*

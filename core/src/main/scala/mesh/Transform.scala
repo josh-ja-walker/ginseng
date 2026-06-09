@@ -5,8 +5,8 @@ import ginseng.core.mesh.MeshAST.*
 import ginseng.core.mesh.geometry.*
 import ginseng.core.mesh.geometry.given
 
-import ginseng.core.transformations.*
-import ginseng.core.transformations.given
+import ginseng.maths.transformations.extensions.*
+import ginseng.maths.transformations.extensions.given
 
 import ginseng.maths.linalg.*
 import ginseng.maths.geometry.*

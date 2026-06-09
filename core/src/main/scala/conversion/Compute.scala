@@ -11,9 +11,6 @@ import ginseng.core.mesh.given
 import ginseng.core.mesh.MeshAST
 import ginseng.core.mesh.AST.Mesh
 
-import ginseng.core.transformations.*
-import ginseng.core.transformations.given
-
 import ginseng.maths.units.*
 import ginseng.maths.angle.*
 import ginseng.maths.linalg.*
@@ -21,6 +18,8 @@ import ginseng.maths.geometry.*
 
 import ginseng.maths.transformations.{ Transformation as _, * }
 import ginseng.maths.transformations.given
+import ginseng.maths.transformations.extensions.*
+import ginseng.maths.transformations.extensions.given
 
 import ginseng.core.mesh.AST.FalsePrimitive
 import ginseng.core.mesh.given

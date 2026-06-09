@@ -12,13 +12,13 @@ import ginseng.core.mesh.given
 import ginseng.core.mesh.MeshAST
 import ginseng.core.mesh.AST.Mesh
 
-import ginseng.core.transformations.*
-import ginseng.core.transformations.given
-
 import ginseng.maths.units.*
 import ginseng.maths.angle.*
-import ginseng.maths.transformations.{Transformation => *, *}
 import ginseng.maths.linalg.*
+
+import ginseng.maths.transformations.{Transformation => _, *}
+import ginseng.maths.transformations.extensions.*
+import ginseng.maths.transformations.extensions.given
 
 
 trait Resolve[S <: Anchor, M <: MeshAST.Anchor] {

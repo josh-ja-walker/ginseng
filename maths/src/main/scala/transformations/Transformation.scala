@@ -5,9 +5,7 @@ import ginseng.maths.angle.*
 import ginseng.maths.linalg.*
 import ginseng.maths.geometry.*
 
-import TransformMats.*
 
-// TODO: make mat private[Transformation] 
 enum Transformation {
 
     case Rotation(theta: Angle, axis: Dir)

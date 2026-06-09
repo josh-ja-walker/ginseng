@@ -2,7 +2,6 @@ package ginseng.core.mesh
 
 import ginseng.core.*
 import ginseng.core.shared.*
-import ginseng.core.transformations.*
 
 import ginseng.maths.units.*
 import ginseng.maths.angle.*

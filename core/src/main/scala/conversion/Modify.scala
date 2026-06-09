@@ -11,15 +11,10 @@ import ginseng.core.mesh.given
 import ginseng.core.mesh.MeshAST
 import ginseng.core.mesh.AST.Mesh
 
-import ginseng.core.transformations.*
-import ginseng.core.transformations.given
-
 import ginseng.maths.units.*
 import ginseng.maths.angle.*
 import ginseng.maths.geometry.{ * }
-import ginseng.maths.transformations.{Transformation => *}
 import ginseng.maths.linalg.*
-import ginseng.core.mesh.AST.FalsePrimitive
 
 
 extension (mesh: Mesh) def modify(modification: Modification[?]): Mesh = modification match {
