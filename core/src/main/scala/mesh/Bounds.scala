@@ -2,8 +2,6 @@ package ginseng.core.mesh
 
 import ginseng.core.*
 import ginseng.core.shared.*
-import ginseng.core.mesh.geometry.*
-import ginseng.core.mesh.geometry.given
 
 import ginseng.maths.geometry.*
 

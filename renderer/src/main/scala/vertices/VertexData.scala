@@ -1,6 +1,6 @@
 package ginseng.renderer.vertices
 
-import ginseng.core.mesh.geometry.*
+import ginseng.core.mesh.*
 
 
 trait VertexData[T] {

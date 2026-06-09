@@ -1,16 +1,15 @@
-package ginseng.core.mesh.geometry
+package ginseng.core.mesh
 
 import ginseng.core.mesh.AST.*
 
+import ginseng.maths.linalg.*
 import ginseng.maths.geometry.*
-import ginseng.maths.geometry.ToMat
 
 
 trait Vertices[T] {
     extension (t: T)
         def vertices: Seq[Pos]
 }
-
 
 given primitiveVertices: Vertices[Primitive] {
     extension (t: Primitive) 
@@ -25,3 +24,14 @@ given matVertices: [N <: Int, T] => ToMat[N, T] => Vertices[T] {
     extension (t: T) 
         def vertices: Seq[Pos] = t.toMat.toPositions
 }
+
+
+// Define ToMat instances using Vertices
+given vertexMat: [N <: Int, T] => ValueOf[N] => Vertices[T] => ToMat[N, T] {
+    extension (t: T) 
+        def toMat: Mat[4, N] = Mat(t.vertices*)
+}
+
+given primitiveMat: [N <: Int] => ValueOf[N] => ToMat[N, Primitive] = 
+    vertexMat[N, Primitive]
+
