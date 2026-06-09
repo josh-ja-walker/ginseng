@@ -6,8 +6,6 @@ import scala.scalanative.unsigned.*
 import ginseng.core.*
 import ginseng.core.shared.{ Shader as ShaderAST }
 import ginseng.core.colours.*
-import ginseng.core.transformations.*
-import ginseng.core.transformations.given // TODO: ideally export from transformations
 
 import ginseng.core.scene.SceneAST.*
 import ginseng.core.scene.Anchors
