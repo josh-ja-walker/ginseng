@@ -126,38 +126,36 @@ given matComposite: ToTransformMat[Composite] with
 
 object RotateMat {
 
-    def mat2x2(theta: Angle): Mat[2, 2] = 
-        Mat(
-            Vec[2](math.cos(theta.toRadians), math.sin(theta.toRadians)), 
-            Vec[2](-math.sin(theta.toRadians), math.cos(theta.toRadians))
-        )
-
     // TODO: handle case where axis is not Right/Up/Forward
     def apply(theta: Angle, axis: Dir): TransformMat = {
-        
-        val mat: Mat[3, 3] = axis.normalized.map(_.abs.toInt) match {
-            
+
+        val mat: Mat[3, 3] = axis.normalized.map(_.abs.toInt).toDir match {
+
+            case Dir.right => replace2x2(theta, 1, 1)
+    
             case Dir.up => {
                 val p = Vec[3](math.cos(theta.toRadians), 0, -math.sin(theta.toRadians))
                 val r = Vec[3](math.sin(theta.toRadians), 0, math.cos(theta.toRadians))
                 Mat(p, Vec.up[3], r)
             }
 
-            case Dir.right => {
-                val id = Mat.identity[3, 3].underlying
-                id.setMatrix[2, 2](1, 1, mat2x2(theta).underlying)
-                Mat.fromSlash(id)
-            }
-
-            case Dir.forward | _ => {
-                val id = Mat.identity[3, 3].underlying
-                id.setMatrix[2, 2](0, 0, mat2x2(theta).underlying)
-                Mat.fromSlash(id)
-            }
+            case Dir.forward | _ => replace2x2(theta, 0, 0)
 
         }
         
         mat.extend[4]
     }
+
+    private def mat2x2(theta: Angle): Mat[2, 2] = Mat(
+        Vec[2](math.cos(theta.toRadians), math.sin(theta.toRadians)), 
+        Vec[2](-math.sin(theta.toRadians), math.cos(theta.toRadians))
+    )
+    
+    private def replace2x2(theta: Angle, i: Int, j: Int): Mat[3, 3] = {
+        val id = Mat.identity[3, 3].underlying
+        id.setMatrix[2, 2](i, j, mat2x2(theta).underlying)
+        Mat.fromSlash(id)
+    }
+
 
 }
