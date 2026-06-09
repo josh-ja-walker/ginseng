@@ -88,6 +88,7 @@ given primitiveRenderer: Renderer[Primitive] with
             vao.bind()
             
             offsetPrimitive match {
+                
                 case Point(p, size) => 
                     Settings.PointSize.using(size.toFloat) {
                         vao.draw(GL_POINTS)
@@ -103,6 +104,7 @@ given primitiveRenderer: Renderer[Primitive] with
                 // case loop: Loop[n] => LoopRenderer.width(width)(polylines.Loop[n](loop.positions*))
                 
                 case Tri(a, b, c) => vao.draw(GL_TRIANGLES)
+                
             }
 
         }

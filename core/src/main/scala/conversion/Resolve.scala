@@ -17,7 +17,7 @@ import ginseng.core.transformations.given
 
 import ginseng.maths.units.*
 import ginseng.maths.angle.*
-import ginseng.maths.geometry.{ Transformation as _, * }
+import ginseng.maths.transformations.{Transformation => *, *}
 import ginseng.maths.linalg.*
 
 

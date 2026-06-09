@@ -2,6 +2,7 @@ package ginseng.core.transformations
 
 import ginseng.maths.linalg.*
 import ginseng.maths.geometry.*
+import ginseng.maths.transformations.*
 
 
 trait Skew[A] {

@@ -3,6 +3,7 @@ package ginseng.core.transformations
 import ginseng.maths.angle.*
 import ginseng.maths.linalg.*
 import ginseng.maths.geometry.*
+import ginseng.maths.transformations.*
 
 
 trait Rotate[A] {
@@ -26,7 +27,6 @@ trait Rotate[A] {
 
 
 given [A] => Transform[A] => Rotate[A]:
-
     def rotate(a: A, theta: Angle, axis: Dir): A = Transformation.Rotation(theta, axis)(a)
     def rotate(a: A, theta: Angle, around: Pos, axis: Dir): A = Transformation.RotationAbout(theta, around, axis)(a)
 

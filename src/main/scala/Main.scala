@@ -22,7 +22,6 @@ import ginseng.maths.geometry.*
 import ginseng.renderer.*
 import ginseng.renderer.shaders.*
 import ginseng.renderer.context.*
-import ginseng.renderer.Render.*
 
 import opengl.bindings.glad.*
 import opengl.bindings.glfw.*
@@ -56,7 +55,14 @@ def main: Unit = Zone {
 
     context.run(() => {
         
-        staging.Test.render()
+        // staging.Test.render()
+        
+        t += 1
+
+        Cube(0.5.u)
+            .rotated(Deg(5 * t), Dir.up)
+            .rotated(Deg(5 * t), Dir.right)
+            .render()
 
         Thread.sleep(200)
 

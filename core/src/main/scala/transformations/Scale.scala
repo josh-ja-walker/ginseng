@@ -1,7 +1,7 @@
 package ginseng.core.transformations
 
 import ginseng.maths.linalg.*
-import ginseng.maths.geometry.*
+import ginseng.maths.transformations.*
 
 
 trait Scale[A] {
@@ -15,6 +15,5 @@ trait Scale[A] {
 
 
 given [A] => Transform[A] => Scale[A]:
-
     def scale(a: A, f: Vec[3]): A = Transformation.Scale(f)(a)
 

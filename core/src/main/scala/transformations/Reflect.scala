@@ -2,6 +2,7 @@ package ginseng.core.transformations
 
 import ginseng.maths.linalg.*
 import ginseng.maths.geometry.*
+import ginseng.maths.transformations.*
 
 
 // Reflect in the plane defined by the position vector p and normal vector n
@@ -19,6 +20,5 @@ trait Reflect[A] {
 
 
 given [A] => Transform[A] => Reflect[A]:
-
     def reflect(a: A, normal: Dir): A = Transformation.Householder(normal)(a)
     def reflect(a: A, normal: Dir, point: Pos): A = Transformation.Reflection(normal, point)(a)

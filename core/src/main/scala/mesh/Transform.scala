@@ -10,9 +10,11 @@ import ginseng.core.transformations.given
 
 import ginseng.maths.linalg.*
 import ginseng.maths.geometry.*
+import ginseng.maths.transformations.*
+import ginseng.maths.transformations.given
 
 
-given meshTransform: [N <: Int] => Transform[Mesh] {
+given meshTransform: Transform[Mesh] with
     extension (v: Mesh) 
         def transform(t: Transformation): Mesh = v match {
             case p: Point => pointTransform.transform(p)(t)
@@ -36,20 +38,20 @@ given meshTransform: [N <: Int] => Transform[Mesh] {
             case Scaffold(mesh) => Scaffold(mesh.transform(t))
 
         }
-}
+
 
 
 given pointTransform: Transform[Point]:
     extension (v: Point) 
         def transform(t: Transformation): Point = {
-            Point((t.mat * v.pos).toPos, v.size)
+            Point((t.toMat * v.pos).toPos, v.size)
         }
 
 
 given directTransform: Transform[Direct]: 
     extension (v: Direct) 
         def transform(t: Transformation): Direct = {
-            val Seq(a, b) = (t.mat * v.toMat).toPositions
+            val Seq(a, b) = (t.toMat * primitiveMat[2].toMat(v)).toPositions
             Direct(a, b, v.width)
         }
 
@@ -59,7 +61,7 @@ given directTransform: Transform[Direct]:
 given triTransform: Transform[Tri] with 
     extension (v: Tri) 
         def transform(t: Transformation): Tri = {
-            val Seq(a, b, c) = (t.mat * v.toMat).toPositions
+            val Seq(a, b, c) = (t.toMat * primitiveMat[3].toMat(v)).toPositions
             Tri(a, b, c)
         }
 

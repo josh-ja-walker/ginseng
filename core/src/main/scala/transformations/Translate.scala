@@ -2,6 +2,7 @@ package ginseng.core.transformations
 
 import ginseng.maths.linalg.*
 import ginseng.maths.geometry.*
+import ginseng.maths.transformations.*
 
 
 trait Translate[A] {
@@ -15,6 +16,5 @@ trait Translate[A] {
 
 
 given [A] => Transform[A] => Translate[A]:
-
     def translate(a: A, d: Dir): A = Transformation.Translation(d)(a)
 

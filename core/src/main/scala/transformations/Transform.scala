@@ -3,6 +3,9 @@ package ginseng.core.transformations
 import ginseng.maths.linalg.*
 import ginseng.maths.geometry.*
 
+import ginseng.maths.transformations.*
+import ginseng.maths.transformations.given
+
 
 // this is more performant than using .reflected.translated..., etc., 
 // because composite matrix is computed rather than applying individual transformations step-by-step
@@ -19,9 +22,7 @@ trait Transform[V] {
 }
 
 
-given Transform[Pos] with 
-    extension (t: Pos)
-        def transform(transformation: Transformation): Pos = {
-            (transformation.mat * (t: Vec[4])).toPos
-        }
+given Transform[Pos]:
+    extension (v: Pos)
+        def transform(t: Transformation): Pos = (t.toMat * v).toPos
 
