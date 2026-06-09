@@ -3,7 +3,7 @@ package ginseng
 import scala.quoted.*
 import scala.scalanative.unsafe.*
 
-import ginseng.core.*
+import ginseng.core.shared.*
 import ginseng.core.colours.*
 import ginseng.core.mesh.*
 import ginseng.core.scene.SceneAST.*
@@ -16,19 +16,20 @@ import ginseng.renderer.renderers.staging.StagedRender.*
 
 import ginseng.core.scene.conversion.*
 import ginseng.core.scene.conversion.given
+import ginseng.core.shared.VertexIndex
 
 
 object MyMesh {
 
     val mesh = 
         Origin.anchors(
-            Square(1.u).scaffolded.vertex(1)
+            Square(1.u).scaffolded.vertex(VertexIndex.B)
                 .anchors(
                     Tri(2.u, Deg(90), 1.u)
                         .shaded(Shader.Flat(Colours.red)),
-                    from = _.vertex(0)
+                    from = _.vertex(VertexIndex.A)
                 ),
-            from = _.vertex(0) 
+            from = _.vertex(VertexIndex.A) 
     ).computeMesh
 
     inline def render()(using z: Zone): Unit = ${ renderCode('z) }

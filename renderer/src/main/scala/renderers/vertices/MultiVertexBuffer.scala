@@ -6,6 +6,8 @@ import scala.scalanative.unsigned.*
 import opengl.bindings.glad.*
 import opengl.bindings.glfw.*
 
+import ginseng.core.mesh.geometry.*
+
 
 /**
   * Wrapper for OpenGL vertex array object
@@ -26,15 +28,15 @@ class MultiVertexBuffer(vao: Ptr[UInt], sizes: Seq[Int]) extends VertexBuffer(va
 
 object MultiVertexBuffer {
 
-    def apply[T](primitives: T*)(using zone: Zone)(using Vertices[R]): MultiVertexBuffer = {
+    def apply[T](primitives: T*)(using zone: Zone)(using Vertices[T]): MultiVertexBuffer = {
         // Convert to list of points per primitive
-        val primitives: Seq[Seq[Float]] = renderables.map(_.pointArray)
+        val primitiveData: Seq[Seq[Float]] = primitives.map(_.data)
 
         // Count number of vertices in each primitive
         // NOTE: div 3 because float values per vertex
-        val sizes: Seq[Int] = primitives.map(_.length / 3) 
+        val sizes: Seq[Int] = primitiveData.map(_.length / 3) 
 
-        val vao: Ptr[UInt] = VertexBuffer(primitives.flatten).vao
+        val vao: Ptr[UInt] = VertexBuffer(primitiveData.flatten).vao
         new MultiVertexBuffer(vao, sizes)
     }
     

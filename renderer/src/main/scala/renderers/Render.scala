@@ -70,15 +70,15 @@ object Render {
     extension (mesh: Primitive) def render(shader: ShaderAST)(using Zone): Unit = {
         // FIXME: not a fan of the wildcard
         val renderer: Renderer[?] = mesh match { 
-
-            case Point(p, size) => PointRenderer.size(size.toFloat)(misc.Point(p))
-            case Direct(a, b, width) => LineRenderer.width(width.toFloat)(polylines.Line(a, b))
+            case _ => ???
+            // case Point(p, size) => PointRenderer.size(size.toFloat)(misc.Point(p))
+            // case Direct(a, b, width) => LineRenderer.width(width.toFloat)(polylines.Line(a, b))
 
             // FIXME:
             // case path: Path[n] => StripRenderer.width(width)(polylines.Strip[n](path.positions*))
             // case loop: Loop[n] => LoopRenderer.width(width)(polylines.Loop[n](loop.positions*))
                 
-            case Tri(a, b, c) => TriRenderer(polygons.Tri(a, b, c))
+            // case Tri(a, b, c) => TriRenderer(polygons.Tri(a, b, c))
         }
 
         renderer.render(shader.create)
