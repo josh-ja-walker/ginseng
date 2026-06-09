@@ -1,9 +1,8 @@
-package ginseng.renderer.renderers.vertices
+package ginseng.core.mesh.geometry
 
 import ginseng.core.mesh.AST.*
 
 import ginseng.maths.geometry.*
-import ginseng.core.mesh.geometry.ToMat
 
 
 trait Vertices[T] {
