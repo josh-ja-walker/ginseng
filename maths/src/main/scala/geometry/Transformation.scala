@@ -1,5 +1,6 @@
 package ginseng.maths.geometry
 
+import ginseng.maths.utils.*
 import ginseng.maths.angle.*
 import ginseng.maths.linalg.*
 import ginseng.maths.geometry.*

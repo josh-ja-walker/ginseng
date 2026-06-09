@@ -3,8 +3,8 @@ package ginseng.renderer.renderers.staging
 import scala.quoted.*
 
 import ginseng.core.colours.*
-import ginseng.core.ast.{ Shader as ShaderAST }
-import ginseng.core.ast.mesh.MeshAST.*
+import ginseng.core.{ Shader as ShaderAST }
+import ginseng.core.mesh.MeshAST.*
 
 import ginseng.maths.geometry.*
 

@@ -1,8 +1,8 @@
 package ginseng.renderer.renderers.staging
 
-import ginseng.core.ast.{ Shader as ShaderAST }
-import ginseng.core.ast.scene.SceneAST
-import ginseng.core.ast.mesh.MeshAST.*
+import ginseng.core.{ Shader as ShaderAST }
+import ginseng.core.scene.SceneAST
+import ginseng.core.mesh.MeshAST.*
 
 import ginseng.renderer.renderers.Render.*
 

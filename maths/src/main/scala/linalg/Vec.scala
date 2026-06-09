@@ -1,9 +1,9 @@
 package ginseng.maths.linalg
 
-import scala.compiletime.ops.any.==
-import scala.compiletime.ops.int.*
+import scala.compiletime.ops.int.+
 import scala.annotation.targetName
 
+import ginseng.maths.utils.*
 import ginseng.maths.angle.*
 import ginseng.maths.geometry.*
 
@@ -67,14 +67,14 @@ class Vec[N <: Int](private val values: Seq[Double])(using ValueOf[N]) {
 
 
     // Take first M values of vector
-    def take[M <: Int](using ValueOf[M], M < N =:= true): Vec[M] =
+    def take[M <: Int](using ValueOf[M], M < N): Vec[M] =
         new Vec(values.take(valueOf[M]))
     
     // Pad the vector with zeros to a size of M
-    def extend[M <: Int](using ValueOf[M], M >= N =:= true): Vec[M] = extend[M](0.0d)
+    def extend[M <: Int](using ValueOf[M], M >= N): Vec[M] = extend[M](0.0d)
 
     // Pad the vector with a value to a size of M
-    def extend[M <: Int](value: Double)(using ValueOf[M], M >= N =:= true): Vec[M] = {
+    def extend[M <: Int](value: Double)(using ValueOf[M], M >= N): Vec[M] = {
         val pad = Vec.fill[M](value)
         new Vec(values ++ pad.values.drop(valueOf[N]))
     }
@@ -110,21 +110,17 @@ object Vec {
 
     // Helper variables for accessing coordinate values
 
-    extension[N <: Int] (v: Vec[N])(using ValueOf[N], N >= 1 =:= true) {
+    extension[N <: Int] (v: Vec[N])(using ValueOf[N], N >= 1) 
         inline def x: Double = v(0)
-    }
 
-    extension[N <: Int] (v: Vec[N])(using ValueOf[N], N >= 2 =:= true) {
+    extension[N <: Int] (v: Vec[N])(using ValueOf[N], N >= 2)
         inline def y: Double = v(1)
-    }
 
-    extension[N <: Int] (v: Vec[N])(using ValueOf[N], N >= 3 =:= true) {
+    extension[N <: Int] (v: Vec[N])(using ValueOf[N], N >= 3)
         inline def z: Double = v(2)
-    }
 
-    extension[N <: Int] (v: Vec[N])(using ValueOf[N], N >= 4 =:= true) {
+    extension[N <: Int] (v: Vec[N])(using ValueOf[N], N >= 4)
         inline def w: Double = v(3)
-    }
 
 
     // Helper conversion methods to Pos and Dir
@@ -154,16 +150,16 @@ object Vec {
 
     // Vec[2] directional vectors
 
-    def up[N <: Int](using ValueOf[N], N >= 2 =:= true): Vec[N] = Vec[2](0, 1).extend[N]
-    def down[N <: Int](using ValueOf[N], N >= 2 =:= true): Vec[N] = -Vec.up[N]
+    def up[N <: Int](using ValueOf[N], N >= 2): Vec[N] = Vec[2](0, 1).extend[N]
+    def down[N <: Int](using ValueOf[N], N >= 2): Vec[N] = -Vec.up[N]
     
-    def left[N <: Int](using ValueOf[N], N >= 2 =:= true): Vec[N] = Vec[2](-1, 0).extend[N]
-    def right[N <: Int](using ValueOf[N], N >= 2 =:= true): Vec[N] = Vec[2](1, 0).extend[N]
+    def left[N <: Int](using ValueOf[N], N >= 2): Vec[N] = Vec[2](-1, 0).extend[N]
+    def right[N <: Int](using ValueOf[N], N >= 2): Vec[N] = Vec[2](1, 0).extend[N]
 
     // Vec[3] directional vectors
 
-    def forward[N <: Int](using ValueOf[N], N >= 3 =:= true): Vec[N] = Vec[3](0, 0, 1).extend[N]
-    def backward[N <: Int](using ValueOf[N], N >= 3 =:= true): Vec[N] = Vec[3](0, 0, -1).extend[N]
+    def forward[N <: Int](using ValueOf[N], N >= 3): Vec[N] = Vec[3](0, 0, 1).extend[N]
+    def backward[N <: Int](using ValueOf[N], N >= 3): Vec[N] = Vec[3](0, 0, -1).extend[N]
 
 }
 

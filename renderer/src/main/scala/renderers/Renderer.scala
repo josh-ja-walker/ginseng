@@ -2,7 +2,6 @@ package ginseng.renderer.renderers
 
 import scala.scalanative.unsafe.Zone
 
-import ginseng.core.poly.*
 import ginseng.renderer.shaders.*
 
 

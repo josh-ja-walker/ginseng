@@ -1,8 +1,5 @@
 package ginseng.core.transformations
 
-import ginseng.core.poly.*
-import ginseng.core.poly.geometry.*
-
 import ginseng.maths.linalg.*
 import ginseng.maths.geometry.*
 
@@ -28,10 +25,3 @@ given Transform[Pos] with
             (transformation.mat * (t: Vec[4])).toPos
         }
 
-
-given [N <: Int, T <: Poly[N]] => ValueOf[N] => (m: MatrixGeometry[T, N]) => Transform[T]:
-    extension (t: T)
-        def transform(transformation: Transformation): T = {
-            val mat = transformation.mat * m.toMat(t)
-            m.construct(mat)
-        }

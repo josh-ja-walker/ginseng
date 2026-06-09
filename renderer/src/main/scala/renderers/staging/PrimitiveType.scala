@@ -1,6 +1,6 @@
 package ginseng.renderer.renderers.staging
 
-import ginseng.core.ast.mesh.MeshAST.*
+import ginseng.core.mesh.MeshAST.*
 
 
 enum PrimitiveType { 

@@ -1,6 +1,6 @@
 package ginseng.renderer.renderers.staging
 
-import ginseng.core.ast.{ Shader as ShaderAST }
+import ginseng.core.{ Shader as ShaderAST }
 
 import ginseng.maths.geometry.*
 

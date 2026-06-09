@@ -1,7 +1,5 @@
 package ginseng.core.transformations
 
-import ginseng.core.poly.*
-
 import ginseng.maths.angle.*
 import ginseng.maths.linalg.*
 import ginseng.maths.geometry.*

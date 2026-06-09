@@ -1,9 +1,9 @@
 package ginseng.maths.linalg
 
-import scala.compiletime.ops.any.==
-import scala.compiletime.ops.int.*
+import scala.compiletime.ops.int.+
 import scala.annotation.targetName
 
+import ginseng.maths.utils.*
 import ginseng.maths.geometry.*
 
 
@@ -52,7 +52,7 @@ class Mat[R <: Int, C <: Int](vectors: Seq[Vec[R]])(using ValueOf[R], ValueOf[C]
 
 
     // Take first R vectors
-    def take[N <: Int](using ValueOf[N], N < C =:= true): Mat[R, N] =
+    def take[N <: Int](using ValueOf[N], N < C): Mat[R, N] =
         new Mat(cols.take(valueOf[N]))
 
 }
@@ -103,7 +103,7 @@ object Mat {
 
 
         // Extend to R dimensions with new values filled in from identity matrix
-        def extend[R <: Int](using ValueOf[R], R > M =:= true): Mat[R, R] = {
+        def extend[R <: Int](using ValueOf[R], R > M): Mat[R, R] = {
             val extended = Mat.identity[R, R].underlying
             extended.setMatrix[M, M](0, 0, mat.underlying)
             Mat.fromSlash(extended)

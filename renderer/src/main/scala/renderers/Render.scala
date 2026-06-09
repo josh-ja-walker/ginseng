@@ -7,10 +7,11 @@ import ginseng.renderer.renderers.misc.*
 import ginseng.renderer.renderers.polygons.*
 import ginseng.renderer.renderers.polylines.*
 
-import ginseng.core.poly.*
-import ginseng.core.ast.{ Shader as ShaderAST }
-import ginseng.core.ast.scene.SceneAST
-import ginseng.core.ast.mesh.MeshAST.*
+import ginseng.core.{ Shader as ShaderAST }
+import ginseng.core.scene.SceneAST
+import ginseng.core.mesh.MeshAST.*
+import ginseng.core.scene.conversion.*
+import ginseng.core.scene.conversion.given
 
 import ginseng.maths.geometry.*
 
@@ -19,8 +20,7 @@ object Render {
 
     // Helper for rendering a scene
     extension (scene: SceneAST.Scene) def render()(using Zone): Unit = {
-        import ginseng.core.ast.scene.conversion.*
-        import ginseng.core.ast.scene.conversion.given
+
         scene.computeMesh.render()
     }
 

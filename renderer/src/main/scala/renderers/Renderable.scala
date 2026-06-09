@@ -9,17 +9,11 @@ import opengl.bindings.glfw.*
 import ginseng.renderer.shaders.*
 import ginseng.renderer.renderers.*
 
-import ginseng.core.poly.*
-import ginseng.core.poly.misc.*
-import ginseng.core.poly.polygons.*
-import ginseng.core.poly.polylines.*
-import ginseng.core.poly.geometry.*
-import ginseng.core.poly.geometry.given
 
-import ginseng.core.ast.mesh.MeshAST.*
+import ginseng.core.mesh.MeshAST.*
 
 import ginseng.maths.geometry.Pos
-import ginseng.core.ast.mesh.Vertices
+import ginseng.core.mesh.geometry.Vertices
 
 
 trait Renderable[R] {
