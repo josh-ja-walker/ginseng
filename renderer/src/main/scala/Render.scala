@@ -18,6 +18,7 @@ import ginseng.core.scene.conversion.given
 
 import ginseng.core.mesh.given
 import ginseng.core.mesh.MeshAST.*
+import ginseng.core.mesh.anchoring.utils.*
 
 import ginseng.maths.geometry.*
 import ginseng.renderer.staging.RenderInfo
