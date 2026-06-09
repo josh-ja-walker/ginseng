@@ -20,7 +20,8 @@ import ginseng.core.ast.Shader
 
 import ginseng.core.ast.scene.SceneAST.*
 import ginseng.core.ast.scene.Anchors
-import ginseng.core.ast.scene.conversion.ComputeMesh.*
+import ginseng.core.ast.scene.conversion.*
+import ginseng.core.ast.scene.conversion.given
 
 import ginseng.maths.units.*
 import ginseng.maths.angle.*

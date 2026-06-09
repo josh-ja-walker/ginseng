@@ -32,7 +32,7 @@ object AST {
     // 2D primitives
     sealed trait Flat[N <: Int] extends Primitive
 
-    case class Tri(s1: Length, angle: Angle, s3: Length) extends Flat[3]
+    case class Tri(ca: Length, cab: Angle, ab: Length) extends Flat[3]
     case class Square(size: Length) extends Flat[4]
     case class Rect(width: Length, height: Length) extends Flat[4]
     case class Polygon[N <: Int](size: Length)(using v: ValueOf[N]) extends Flat[N]
@@ -60,28 +60,28 @@ object AST {
     case class Below(a: Scene, b: Scene) extends Positioning
 
     // Transformations
-    sealed trait Transform extends Scene
+    sealed trait Transformation extends Scene
 
     // TODO: provide access to local direcitons
-    case class Move(a: Scene, d: Dir) extends Transform
-    case class MoveTo(a: Scene, to: Pos, from: Scene => Anchor) extends Transform
+    case class Move(a: Scene, d: Dir) extends Transformation
+    case class MoveTo(a: Scene, to: Pos, from: Scene => Anchor) extends Transformation
 
-    case class Scale(a: Scene, factor: Vec[3]) extends Transform
-    case class Reflect(a: Scene, plane: Plane) extends Transform
+    case class Scale(a: Scene, factor: Vec[3]) extends Transformation
+    case class Reflect(a: Scene, plane: Plane) extends Transformation
 
     // TODO: ideally consolidate into one
-    case class Rotate(a: Scene, angle: Angle, axis: Dir) extends Transform
-    case class RotateAbout(a: Scene, angle: Angle, axis: Dir, about: Scene => Anchor) extends Transform
+    case class Rotate(a: Scene, angle: Angle, axis: Dir) extends Transformation
+    case class RotateAbout(a: Scene, angle: Angle, axis: Dir, about: Scene => Anchor) extends Transformation
 
     // TODO: consolidate into 1
-    case class SkewX(a: Scene, f: Double) extends Transform
-    case class SkewY(a: Scene, f: Double) extends Transform
-    case class SkewZ(a: Scene, f: Double) extends Transform
+    case class SkewX(a: Scene, f: Double) extends Transformation
+    case class SkewY(a: Scene, f: Double) extends Transformation
+    case class SkewZ(a: Scene, f: Double) extends Transformation
 
     // TODO: consolidate into 1
-    case class SqueezeX(a: Scene, f: Double) extends Transform
-    case class SqueezeY(a: Scene, f: Double) extends Transform
-    case class SqueezeZ(a: Scene, f: Double) extends Transform
+    case class SqueezeX(a: Scene, f: Double) extends Transformation
+    case class SqueezeY(a: Scene, f: Double) extends Transformation
+    case class SqueezeZ(a: Scene, f: Double) extends Transformation
     // TODO: include SqueezeXY, SqueezeYZ, SqueezeXZ 
 
 
@@ -89,8 +89,7 @@ object AST {
     sealed trait Modifiable[T <: Scene]
 
     // TODO: can vertex take any scene object? prob no
-    case class Vertex(index: VertexIndex)
-    case class Edge(a: Vertex, b: Vertex)
+    case class Edge(a: VertexIndex, b: VertexIndex)
 
     // Components that can be modified on a body    
     case class Face(index: Int)
@@ -101,10 +100,10 @@ object AST {
     // Modifications to a Flat object 
     sealed trait FlatModification[S <: Flat[?]] extends Modification[S]
 
-    case class MoveVertex(vertex: Vertex, d: Dir) extends FlatModification
-    case class MoveVertexTo(vertex: Vertex, p: Pos) extends FlatModification
-    case class ReflectVertex(vertex: Vertex, plane: Plane) extends FlatModification
-    case class RotateVertexAbout(vertex: Vertex, angle: Angle, axis: Dir, about: Pos) extends FlatModification
+    case class MoveVertex(vertex: VertexIndex, d: Dir) extends FlatModification
+    case class MoveVertexTo(vertex: VertexIndex, p: Pos) extends FlatModification
+    case class ReflectVertex(vertex: VertexIndex, plane: Plane) extends FlatModification
+    case class RotateVertexAbout(vertex: VertexIndex, angle: Angle, axis: Dir, about: Pos) extends FlatModification
     
     case class MoveEdge(edge: Edge, d: Dir) extends FlatModification
     case class ScaleEdge(edge: Edge, f: Double) extends FlatModification
@@ -112,7 +111,7 @@ object AST {
     // Modifications to a Body object 
     sealed trait BodyModification[S <: Body[?, ?]] extends Modification[S]
 
-    case class ModifyFace(face: Face, t: Transform) extends BodyModification
+    case class ModifyFace(face: Face, t: Transformation) extends BodyModification
 
     // Apply modification to a scene
     case class Modify[S <: Scene](scene: S, modification: Modification[S]) extends Scene

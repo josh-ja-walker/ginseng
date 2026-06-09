@@ -9,13 +9,14 @@ object Test {
     import ginseng.core.ast.*
     import ginseng.core.ast.mesh.*
     import ginseng.core.ast.scene.SceneAST.*
+    import ginseng.core.ast.scene.conversion.*
+    import ginseng.core.ast.scene.conversion.given
 
     import ginseng.maths.angle.*
     import ginseng.maths.units.*
     import ginseng.maths.geometry.*
 
     import ginseng.renderer.renderers.staging.StagedRender.*
-    import ginseng.core.ast.scene.conversion.ComputeMesh.*
 
 
     def checked(m: Int, n: Int) = {

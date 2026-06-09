@@ -12,6 +12,9 @@ import ginseng.renderer.renderers.Render
 import ginseng.renderer.renderers.staging.StagedRender
 import ginseng.renderer.renderers.staging.Test
 
+import ginseng.core.ast.scene.conversion.*
+import ginseng.core.ast.scene.conversion.given
+
 import scala.util.boundary, boundary.break
 
 

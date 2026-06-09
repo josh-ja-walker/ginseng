@@ -12,9 +12,10 @@ import opengl.bindings.glad.*
 import ginseng.core.colours.*
 import ginseng.core.ast.{ Shader as ShaderAST }
 import ginseng.core.ast.scene.SceneAST
+import ginseng.core.ast.scene.conversion.*
+import ginseng.core.ast.scene.conversion.given
 import ginseng.core.ast.mesh.MeshAST.*
 import ginseng.core.ast.mesh.given
-import ginseng.core.ast.scene.conversion.ComputeMesh.*
 
 import ginseng.maths.geometry.*
 

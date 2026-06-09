@@ -60,7 +60,7 @@ object Anchors {
                     case VertexIndex.A | VertexIndex.B | VertexIndex.C =>
                          VertexAnchor(base, index).pos
 
-                    // use any other triangle for D
+                    // use front fracing triangle for apex D
                     case VertexIndex.D => {
                         val Anchoring(VertexAnchor(front, _), rightAnchor, _) = others.runtimeChecked
                         VertexAnchor(front, VertexIndex.C).pos + anchoring.offset
@@ -69,7 +69,20 @@ object Anchors {
                     case _ => ???
                 }
             
-            case Pyramid(anchoring) => ???
+            case Pyramid(anchoring@Anchoring(VertexAnchor(base: Quad, _), others, from)) => 
+                index match {
+                    // use base square for vertices A B C D
+                    case VertexIndex.A | VertexIndex.B | VertexIndex.C | VertexIndex.D =>
+                        VertexAnchor(base, index).pos
+
+                    // use front facing triangle for apex E
+                    case VertexIndex.E => {
+                        val Anchoring(VertexAnchor(front, _), rightAnchor, _) = others.runtimeChecked
+                        VertexAnchor(front, VertexIndex.C).pos + anchoring.offset
+                    }
+                    
+                    case _ => ???
+                }
             
             case Cuboid(anchorRight@Anchoring(VertexAnchor(front: Quad, _), right, from)) =>
                 index match {

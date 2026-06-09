@@ -19,7 +19,8 @@ object Render {
 
     // Helper for rendering a scene
     extension (scene: SceneAST.Scene) def render()(using Zone): Unit = {
-        import ginseng.core.ast.scene.conversion.ComputeMesh.*
+        import ginseng.core.ast.scene.conversion.*
+        import ginseng.core.ast.scene.conversion.given
         scene.computeMesh.render()
     }
 
