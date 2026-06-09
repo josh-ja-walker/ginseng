@@ -1,11 +1,13 @@
-package ginseng.core.mesh
+package ginseng.core.mesh.anchoring
 
 import ginseng.core.*
 import ginseng.core.shared.*
+import ginseng.core.mesh.AST.*
+import ginseng.core.mesh.given
+import ginseng.core.mesh.anchoring.utils.*
 
 import ginseng.maths.geometry.*
 
-import AST.*
 
 
 // TODO:

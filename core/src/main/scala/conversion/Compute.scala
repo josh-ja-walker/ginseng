@@ -10,6 +10,7 @@ import ginseng.core.scene.SceneAST. { modify as _, * }
 import ginseng.core.mesh.given
 import ginseng.core.mesh.MeshAST
 import ginseng.core.mesh.AST.Mesh
+import ginseng.core.mesh.anchoring.given
 
 import ginseng.maths.units.*
 import ginseng.maths.angle.*
@@ -21,7 +22,6 @@ import ginseng.maths.transformations.given
 import ginseng.maths.transformations.extensions.*
 import ginseng.maths.transformations.extensions.given
 
-import ginseng.core.mesh.AST.FalsePrimitive
 import ginseng.core.mesh.given
 
  
@@ -56,14 +56,14 @@ given transformCompute: Transform[Mesh] => Compute[SceneAST.Transformation, Mesh
     // Compute mesh for transformed types by applying transformation to the computed sub-mesh
     extension (transform: Transformation) def computeMesh: Mesh = transform match {
         case Move(a, d) => a.computeMesh.translated(d)
-        case MoveTo(a, to, from) => a.computeMesh.repositioned(from(a).resolve.pos, to)
+        case MoveTo(a, to, from) => a.computeMesh.repositioned(from(a).resolve.located, to)
 
         case Scale(a, factor) => a.computeMesh.scaled(factor)
         case Reflect(a, plane) => a.computeMesh.reflected(plane.normal, plane.point) 
 
         case Rotate(a, angle, axis) => a.computeMesh.rotated(angle, axis)
         // TODO: use a property to ensure about(_) can be converted to about(_) : MeshAnchor
-        case RotateAbout(a, angle, axis, about) => a.computeMesh.rotated(angle, about(a).resolve.pos, axis) // FIXME: use consistent arg ordering
+        case RotateAbout(a, angle, axis, about) => a.computeMesh.rotated(angle, about(a).resolve.located, axis) // FIXME: use consistent arg ordering
 
         // FIXME: consolidate into 1
         case SkewX(a, f) => a.computeMesh.skewed(f, Dir.right)

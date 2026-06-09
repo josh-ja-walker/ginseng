@@ -2,6 +2,8 @@ package ginseng.core.mesh
 
 import ginseng.core.*
 import ginseng.core.shared.*
+import ginseng.core.mesh.anchoring.*
+import ginseng.core.mesh.anchoring.given
 
 import ginseng.maths.units.*
 import ginseng.maths.angle.*
@@ -39,10 +41,9 @@ object AST {
     case class Cuboid(cuboidAnchor: Anchoring) extends FalsePrimitive(cuboidAnchor)
     // TODO: case class Polygon[N <: Int](polygonAnchor: Anchoring) extends FalsePrimitive(polygonAnchor)
 
-
     // Position with respect to an anchor
     case class Anchoring(to: Anchor, mesh: Mesh, from: Mesh => Anchor) extends Mesh { 
-        def offset: Dir = to.pos - from(mesh).pos
+        def offset: Dir = to.located - from(mesh).located
     }
 
     // Shader specification
