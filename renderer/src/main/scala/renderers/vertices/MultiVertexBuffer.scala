@@ -1,11 +1,10 @@
-package ginseng.renderer.renderers.vertexbuffers
+package ginseng.renderer.renderers.vertices
 
 import scala.scalanative.unsafe.*
 import scala.scalanative.unsigned.*
 
 import opengl.bindings.glad.*
 import opengl.bindings.glfw.*
-import ginseng.renderer.renderers.Renderable
 
 
 /**
@@ -27,7 +26,7 @@ class MultiVertexBuffer(vao: Ptr[UInt], sizes: Seq[Int]) extends VertexBuffer(va
 
 object MultiVertexBuffer {
 
-    def apply[R](renderables: R*)(using zone: Zone)(using Renderable[R]): MultiVertexBuffer = {
+    def apply[T](primitives: T*)(using zone: Zone)(using Vertices[R]): MultiVertexBuffer = {
         // Convert to list of points per primitive
         val primitives: Seq[Seq[Float]] = renderables.map(_.pointArray)
 

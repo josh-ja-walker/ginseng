@@ -1,4 +1,4 @@
-package ginseng.renderer.renderers.vertexbuffers
+package ginseng.renderer.renderers.vertices
 
 import scala.scalanative.unsafe.*
 import scala.scalanative.unsigned.*
@@ -8,7 +8,6 @@ import opengl.bindings.glfw.*
 
 
 import ginseng.maths.geometry.*
-import ginseng.renderer.renderers.Renderable
 
 
 /**
@@ -25,11 +24,11 @@ class VertexBuffer(private[vertexbuffers] val vao: Ptr[UInt], length: Int) {
 
 object VertexBuffer {
 
-    def apply[R](renderables: R*)(using zone: Zone)(using Renderable[R]): VertexBuffer = {
-        // Convert to list of points per primitive and flatten to create buffer
-        VertexBuffer(renderables.map(_.pointArray).flatten)
-    }
-
+    // Convert to list of positions per primitive and flatten to create buffer
+    def apply[T](primitives: T*)(using zone: Zone)(using Vertices[T]): VertexBuffer = 
+        VertexBuffer(primitives.map(_.pointArray).flatten)
+    
+    // Construct a vertex array object from xyz values and wrap in VertexBuffer
     def apply(values: Seq[Float])(using zone: Zone): VertexBuffer = {
         // Define line points array
         val count: Int = values.length
@@ -57,4 +56,5 @@ object VertexBuffer {
         new VertexBuffer(vao, count)
     }
     
+
 }
