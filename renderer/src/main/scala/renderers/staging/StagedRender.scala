@@ -27,6 +27,7 @@ import ginseng.renderer.shaders.*
 import ginseng.renderer.settings.*
 import ginseng.renderer.renderers.given
 import ginseng.renderer.renderers.vertices.*
+import ginseng.renderer.renderers.vertices.given
 import ginseng.renderer.renderers.Render.*
 import ginseng.renderer.settings.Settings.*
 
@@ -75,7 +76,7 @@ object StagedRender {
 
                     val code = points.groupBy(_.size).map((size, points) => {
                         val sizeExpr = Expr(size)
-                        val pointsExpr = Expr(points.flatMap(_.data))
+                        val pointsExpr = Expr(points.data)
 
                         '{
                             // Bind vertex array to and draw
@@ -98,7 +99,7 @@ object StagedRender {
                 }
                 
                 case PrimitiveType.Tri => {
-                    val vertexDataExpr = Expr(primitives.flatMap(_.data))
+                    val vertexDataExpr = Expr(primitives.data)
                     
                     '{
                         // Bind shader to OpenGL state machine

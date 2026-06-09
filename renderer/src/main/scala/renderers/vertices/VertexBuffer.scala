@@ -6,8 +6,6 @@ import scala.scalanative.unsigned.*
 import opengl.bindings.glad.*
 import opengl.bindings.glfw.*
 
-import ginseng.core.mesh.geometry.*
-
 import ginseng.maths.geometry.*
 
 
@@ -26,8 +24,8 @@ class VertexBuffer(private[vertices] val vao: Ptr[UInt], length: Int) {
 object VertexBuffer {
 
     // Convert to list of positions per primitive and flatten to create buffer
-    def apply[T](primitives: T*)(using zone: Zone)(using Vertices[T]): VertexBuffer = 
-        VertexBuffer(primitives.flatMap(_.data))
+    def apply[T](primitives: T*)(using zone: Zone)(using VertexData[T]): VertexBuffer = 
+        VertexBuffer(primitives.data)
     
     // Construct a vertex array object from xyz values and wrap in VertexBuffer
     def apply(data: Seq[Float])(using zone: Zone): VertexBuffer = {

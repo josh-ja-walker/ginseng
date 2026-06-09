@@ -8,9 +8,6 @@ import ginseng.maths.geometry.*
 trait Vertices[T] {
     extension (t: T)
         def vertices: Seq[Pos]
-        def data: Seq[Float] = vertices
-            .flatMap(_.take[3].toSeq)
-            .map(_.toFloat)
 }
 
 
