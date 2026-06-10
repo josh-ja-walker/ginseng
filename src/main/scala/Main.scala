@@ -4,6 +4,7 @@ import scala.scalanative.unsafe.*
 import scala.scalanative.unsigned.*
 
 import ginseng.core.*
+import ginseng.core.shared.*
 import ginseng.core.shared.{ Shader as ShaderAST }
 import ginseng.core.colours.*
 
