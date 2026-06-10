@@ -12,31 +12,31 @@ import ginseng.maths.geometry.*
 object Bounds {
 
     sealed trait Bounds {
-        def resolve(anchorType: AnchorType): Pos
+        def locate(anchorType: AnchorType): Pos
     }
 
     case object Viewport extends Bounds {
-        def resolve(anchorType: AnchorType): Pos = PointCloud(
+        def locate(anchorType: AnchorType): Pos = PointCloud(
             Pos.bottomLeft - Dir.forward, Pos.bottomRight - Dir.forward, Pos.topLeft - Dir.forward, Pos.topRight - Dir.forward,
             Pos.bottomLeft + Dir.forward, Pos.bottomRight + Dir.forward, Pos.topLeft + Dir.forward, Pos.topRight + Dir.forward
-        ).resolve(anchorType)
+        ).locate(anchorType)
     }
 
     // Bounding box aligned upon the axis
     case class AABB(mesh: Mesh) extends Bounds {
-        def resolve(anchorType: AnchorType): Pos = 
-            PointCloud(mesh.vertices*).resolve(anchorType)
+        def locate(anchorType: AnchorType): Pos = 
+            PointCloud(mesh.vertices*).locate(anchorType)
     }
     
 
     // Bounding box orientated in the direction of the bound object
     case class OBB(mesh: Mesh) extends Bounds {
-        def resolve(anchorType: AnchorType): Pos = ???
+        def locate(anchorType: AnchorType): Pos = ???
     }
 
 
     private class PointCloud(positions: Pos*) extends Bounds {
-        def resolve(anchorType: AnchorType): Pos = {
+        def locate(anchorType: AnchorType): Pos = {
             val minX = positions.minBy(_.x).x
             val minY = positions.minBy(_.y).y
             val minZ = positions.minBy(_.z).z
@@ -84,7 +84,7 @@ object Bounds {
         }
 
         private def midpoint(a: AnchorType, b: AnchorType): Pos = {
-            resolve(a) + 0.5d * (resolve(b) - resolve(a))
+            locate(a) + 0.5d * (locate(b) - locate(a))
         }
         
     }

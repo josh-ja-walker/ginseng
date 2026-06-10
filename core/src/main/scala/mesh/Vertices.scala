@@ -3,6 +3,7 @@ package ginseng.core.mesh
 import ginseng.core.shared.*
 import ginseng.core.mesh.AST.*
 import ginseng.core.mesh.anchoring.*
+import ginseng.core.mesh.anchoring.utils.*
 import ginseng.core.mesh.anchoring.Anchors.*
 
 import ginseng.maths.linalg.*
@@ -14,7 +15,23 @@ trait Vertices[T] {
         def vertices: Seq[Pos]
 }
 
-given primitiveVertices: Vertices[Primitive] {
+
+given meshVertices: Vertices[Mesh] with 
+    extension (t: Mesh) def vertices: Seq[Pos] = t match {
+        
+        case p: Primitive => primitiveVertices.vertices(p)
+        case f: FalsePrimitive => falseVertices.vertices(f)
+                        
+        case Anchoring(to, mesh, from) => 
+            to.mesh.map(_.vertices).getOrElse(Nil) 
+                ++ mesh.vertices
+
+        case Rendered(mesh, shader) => mesh.vertices
+        case Scaffold(mesh) => mesh.vertices
+    }
+
+
+private given primitiveVertices: Vertices[Primitive] {
     extension (t: Primitive) 
         def vertices: Seq[Pos] = t match {
             case Point(p, _) => Seq(p)
@@ -23,22 +40,8 @@ given primitiveVertices: Vertices[Primitive] {
         }
 }
 
-given matVertices: [N <: Int, T] => ToPosMat[N, T] => Vertices[T] {
-    extension (t: T) 
-        def vertices: Seq[Pos] = t.toMat.toPosSeq
-}
 
-
-// Define ToPosMat instances using Vertices
-given vertexMat: [N <: Int, T] => ValueOf[N] => Vertices[T] => ToPosMat[N, T] {
-    extension (t: T) 
-        def toMat: PosMat[N] = Mat(t.vertices*)
-}
-
-given primitiveMat: [N <: Int] => ValueOf[N] => ToPosMat[N, Primitive] = vertexMat[N, Primitive]
-
-
-given falseVertices: Vertices[FalsePrimitive] with 
+private given falseVertices: Vertices[FalsePrimitive] with 
     extension (t: FalsePrimitive) 
         def vertices: Seq[Pos] = t match {
             case t: Quad => quadVertices.vertices(t)
@@ -48,7 +51,7 @@ given falseVertices: Vertices[FalsePrimitive] with
         }
 
 
-given quadVertices: Vertices[Quad] with
+private given quadVertices: Vertices[Quad] with
     extension (t: Quad) 
         def vertices: Seq[Pos] = {
             val Quad(anchoring) = t
@@ -60,8 +63,8 @@ given quadVertices: Vertices[Quad] with
                 ++ ut.vertices.take(2).map(_ + anchoring.offset)
         }
         
-given tetraVertices: Vertices[Tetra] with
-    extension (t: Tetra) 
+private given tetraVertices: Vertices[Tetra] with
+    extension (t: Tetra)
         def vertices: Seq[Pos] = {
             val Tetra(anchoring) = t
             val Anchoring(VertexAnchor(base: Tri, _), slanted: Anchoring, _) = anchoring.runtimeChecked
@@ -73,7 +76,7 @@ given tetraVertices: Vertices[Tetra] with
                 :+ (front.c + anchoring.offset)
         }
 
-given pyramidVertices: Vertices[Pyramid] with
+private given pyramidVertices: Vertices[Pyramid] with
     extension (t: Pyramid) 
         def vertices: Seq[Pos] = {
             val Pyramid(anchoring) = t
@@ -86,7 +89,7 @@ given pyramidVertices: Vertices[Pyramid] with
                 :+ (front.c + anchoring.offset)
         }
 
-given cuboidVertices: Vertices[Cuboid] with
+private given cuboidVertices: Vertices[Cuboid] with
     extension (t: Cuboid) 
         def vertices: Seq[Pos] = {
             val Cuboid(anchor) = t
@@ -102,3 +105,16 @@ given cuboidVertices: Vertices[Cuboid] with
                 // use back quad vertices A B C D for vertices E F G H
                 (backFace.vertices.map(_ + offset))
         }
+
+
+
+
+
+// Define ToPosMat instances using Vertices
+given vertexMat: [N <: Int, T] => ValueOf[N] => Vertices[T] => ToPosMat[N, T] {
+    extension (t: T) 
+        def toMat: PosMat[N] = Mat(t.vertices*)
+}
+
+given primitiveMat: [N <: Int] => ValueOf[N] => ToPosMat[N, Primitive] = vertexMat[N, Primitive]
+

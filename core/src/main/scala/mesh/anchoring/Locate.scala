@@ -26,7 +26,7 @@ given anchorPosition: Locate[Anchor] with
 
 given boundsPosition: Locate[BoundsAnchor] with 
     extension (a: BoundsAnchor) 
-        def located: Pos = a.bounds.resolve(a.anchorType)
+        def located: Pos = a.bounds.locate(a.anchorType)
 
 
 given vertexPosition: Locate[VertexAnchor] with 
@@ -41,10 +41,9 @@ given vertexPosition: Locate[VertexAnchor] with
             case f: FalsePrimitive => f.vertices(i)
 
             // Prioritise the anchoring mesh otherwise use the anchored mesh 
-            case Anchoring(to, mesh, from) => {
-                to.mesh.orElse(Some(mesh))
-                    .map(VertexAnchor(_, v).located)
-                    .get
+            case anchoring@Anchoring(to, mesh, from) => to.mesh match {
+                case Some(mesh) => VertexAnchor(mesh, v).located
+                case None => VertexAnchor(mesh, v).located + anchoring.offset
             }
 
             // Find vertex in submesh
