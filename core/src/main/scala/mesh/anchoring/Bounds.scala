@@ -9,8 +9,6 @@ import ginseng.core.mesh.anchoring.utils.*
 import ginseng.maths.geometry.*
 
 
-
-// TODO:
 object Bounds {
 
     sealed trait Bounds {
@@ -26,27 +24,8 @@ object Bounds {
 
     // Bounding box aligned upon the axis
     case class AABB(mesh: Mesh) extends Bounds {
-        def resolve(anchorType: AnchorType): Pos = {
-            
-            def allPositions(mesh: Mesh, offset: Dir = Dir.zero): Seq[Pos] = mesh match {
-
-                case anchoring@Anchoring(to, mesh, from) => {
-                    val anchorPositions = to.mesh
-                        .map(allPositions(_, offset))
-                        .getOrElse(Nil) 
-
-                    (anchorPositions ++ allPositions(mesh, offset + anchoring.offset)).distinct
-                }
-                    
-                case p: Primitive => p.vertices.map(_ + offset)
-                case f: FalsePrimitive => allPositions(f.anchoring, offset)
-                
-                case Rendered(mesh, shader) => allPositions(mesh)
-                case Scaffold(mesh) => allPositions(mesh)
-            }
-
-            PointCloud(allPositions(mesh)*).resolve(anchorType)
-        }
+        def resolve(anchorType: AnchorType): Pos = 
+            PointCloud(mesh.vertices*).resolve(anchorType)
     }
     
 
