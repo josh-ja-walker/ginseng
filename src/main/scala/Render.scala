@@ -23,13 +23,13 @@ object MyMesh {
 
     val mesh = 
         Origin.anchors(
-            Square(1.u).scaffolded.vertex(VertexIndex.B)
+            Square(1.u).scaffolded.vertex(Vertex.B)
                 .anchors(
                     Tri(2.u, Deg(90), 1.u)
                         .shaded(Shader.Flat(Colours.red)),
-                    from = _.vertex(VertexIndex.A)
+                    from = _.vertex(Vertex.A)
                 ),
-            from = _.vertex(VertexIndex.A) 
+            from = _.vertex(Vertex.A) 
     ).computeMesh
 
 
