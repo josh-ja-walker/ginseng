@@ -2,7 +2,7 @@ package ginseng.core.scene.conversion
 
 import ginseng.core.*
 import ginseng.core.shared.*
-import ginseng.core.shared.VertexIndex.*
+import ginseng.core.shared.Vertex.*
 
 import ginseng.core.scene.SceneAST
 import ginseng.core.scene.SceneAST. { modify as _, * }

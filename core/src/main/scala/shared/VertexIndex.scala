@@ -3,7 +3,7 @@ package ginseng.core.shared
 
 case class VertexIndex(value: Int)
 
-object VertexIndex {
+object Vertex {
     val A = VertexIndex(0)
     val B = VertexIndex(1)
     val C = VertexIndex(2)

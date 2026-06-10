@@ -17,7 +17,6 @@ import ginseng.renderer.staging.given
 
 import ginseng.core.scene.conversion.*
 import ginseng.core.scene.conversion.given
-import ginseng.core.shared.VertexIndex
 
 
 object MyMesh {

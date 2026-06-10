@@ -31,7 +31,7 @@ given boundsPosition: Locate[BoundsAnchor] with
 
 given vertexPosition: Locate[VertexAnchor] with 
     extension (a: VertexAnchor) def located: Pos = {
-        import VertexIndex.*
+        import Vertex.*
         val VertexAnchor(mesh, v@VertexIndex(i)) = a
         
         mesh match { 
@@ -43,24 +43,24 @@ given vertexPosition: Locate[VertexAnchor] with
             case Quad(anchoring@Anchoring(VertexAnchor(lt: Tri, _), ut: Tri, from)) => v match {
 
                 // use lower triangle for vertices A B
-                case VertexIndex.A | VertexIndex.B => VertexAnchor(lt, v).located
+                case Vertex.A | Vertex.B => VertexAnchor(lt, v).located
 
                 // use upper triangle for vertices C D
-                case VertexIndex.C => VertexAnchor(ut, VertexIndex.A).located + anchoring.offset 
-                case VertexIndex.D => VertexAnchor(ut, VertexIndex.B).located + anchoring.offset 
+                case Vertex.C => VertexAnchor(ut, Vertex.A).located + anchoring.offset 
+                case Vertex.D => VertexAnchor(ut, Vertex.B).located + anchoring.offset 
 
                 case _ => ??? // unreachable
             }
 
             case Tetra(anchoring@Anchoring(VertexAnchor(base: Tri, _), others, from)) => v match {
                 // use base triangle for vertices A B C
-                case VertexIndex.A | VertexIndex.B | VertexIndex.C =>
+                case Vertex.A | Vertex.B | Vertex.C =>
                         VertexAnchor(base, v).located
 
                 // use front fracing triangle for apex D
-                case VertexIndex.D => {
+                case Vertex.D => {
                     val Anchoring(VertexAnchor(front, _), rightAnchor, _) = others.runtimeChecked
-                    VertexAnchor(front, VertexIndex.C).located + anchoring.offset
+                    VertexAnchor(front, Vertex.C).located + anchoring.offset
                 }
                 
                 case _ => ??? // unreachable
@@ -68,13 +68,13 @@ given vertexPosition: Locate[VertexAnchor] with
             
             case Pyramid(anchoring@Anchoring(VertexAnchor(base: Quad, _), others, from)) => v match {
                 // use base square for vertices A B C D
-                case VertexIndex.A | VertexIndex.B | VertexIndex.C | VertexIndex.D =>
+                case Vertex.A | Vertex.B | Vertex.C | Vertex.D =>
                     VertexAnchor(base, v).located
 
                 // use front facing triangle for apex E
-                case VertexIndex.E => {
+                case Vertex.E => {
                     val Anchoring(VertexAnchor(front, _), rightAnchor, _) = others.runtimeChecked
-                    VertexAnchor(front, VertexIndex.C).located + anchoring.offset
+                    VertexAnchor(front, Vertex.C).located + anchoring.offset
                 }
                 
                 case _ => ??? // unreachable
@@ -82,11 +82,11 @@ given vertexPosition: Locate[VertexAnchor] with
             
             case Cuboid(anchorRight@Anchoring(VertexAnchor(front: Quad, _), right, from)) => v match {
                 // use front face for vertices A B C D
-                case VertexIndex.A | VertexIndex.B | VertexIndex.C | VertexIndex.D
+                case Vertex.A | Vertex.B | Vertex.C | Vertex.D
                         => VertexAnchor(front, v).located
 
                 // use back face for E F G H
-                case VertexIndex.E | VertexIndex.F | VertexIndex.G | VertexIndex.H => {
+                case Vertex.E | Vertex.F | Vertex.G | Vertex.H => {
                     val anchorTop@Anchoring(_, top, _) = right.runtimeChecked
                     val anchorBack@Anchoring(_, back, _) = top.runtimeChecked
                     val Anchoring(VertexAnchor(backFace, _), _, _) = back.runtimeChecked
