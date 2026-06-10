@@ -52,7 +52,7 @@ object VertexBuffer {
         glBindBuffer(GL_ARRAY_BUFFER, !vbo)
         glVertexAttribPointer(0.toUInt, 3, GL_FLOAT, GL_FALSE, 0, null)
 
-        new VertexBuffer(vao, count)
+        new VertexBuffer(vao, count / 3)
     }
     
 
