@@ -58,11 +58,11 @@ object Extensions {
     }
 
     extension (flat: Flat[?]) {
-        def modify(modification: Modification[Flat[?]]) = Modify(flat, modification)
+        def modifyFlat(modification: Modification[Flat[?]]) = Modify(flat, modification)
     }
     
     extension (body: Body[?, ?]) {
-        def modify(modification: Modification[Body[?, ?]]) = Modify(body, modification)
+        def modifyBody(modification: Modification[Body[?, ?]]) = Modify(body, modification)
     }
     
     extension (anchor: Anchor) {

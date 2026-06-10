@@ -1,19 +1,18 @@
 package ginseng.core.scene.conversion
 
-import ginseng.core.*
 import ginseng.core.shared.*
 
-import ginseng.core.scene.SceneAST
+import ginseng.core.scene.*
 import ginseng.core.scene.SceneAST.*
 
 import ginseng.core.mesh.*
 import ginseng.core.mesh.given
-import ginseng.core.mesh.MeshAST
 import ginseng.core.mesh.AST.Mesh
+import ginseng.core.mesh.MeshAST
 
 import ginseng.maths.units.*
 import ginseng.maths.angle.*
-import ginseng.maths.geometry.{ * }
+import ginseng.maths.geometry.* 
 import ginseng.maths.linalg.*
 
 

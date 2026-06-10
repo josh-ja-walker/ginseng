@@ -5,7 +5,7 @@ import ginseng.core.shared.*
 import ginseng.core.shared.Vertex.*
 
 import ginseng.core.scene.SceneAST
-import ginseng.core.scene.SceneAST. { modify as _, * }
+import ginseng.core.scene.SceneAST.*
 
 import ginseng.core.mesh.given
 import ginseng.core.mesh.MeshAST
