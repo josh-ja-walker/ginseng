@@ -85,11 +85,10 @@ object Staging {
                             // Bind vertex array to and draw
                             val vao = VertexBuffer($pointsExpr)(using $z)
                             vao.bind()
-                            
                             Settings.PointSize.using($sizeExpr.toFloat) {
                                 vao.draw(GL_POINTS)
                             }(using $z)
-                            
+                            vao.delete()
                         }
 
                     }).sequential
@@ -112,6 +111,7 @@ object Staging {
                         val vao = VertexBuffer($vertexDataExpr)(using $z)
                         vao.bind()
                         vao.draw(GL_TRIANGLES)
+                        vao.delete()
                     }
                 }
 

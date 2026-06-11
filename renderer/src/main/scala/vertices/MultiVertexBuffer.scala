@@ -13,7 +13,7 @@ import opengl.bindings.glfw.*
   * @param vao pointer to OpenGL vertex array object
   * @param length number of vertices held in the vertex buffer
   */
-class MultiVertexBuffer(vao: Ptr[UInt], sizes: Seq[Int]) extends VertexBuffer(vao, sizes.sum) {
+class MultiVertexBuffer(vao: Ptr[UInt], vbo: Ptr[UInt], sizes: Seq[Int]) extends VertexBuffer(vao, vbo, sizes.sum) {
     /** Number of primitives held in the vertex buffer */
     val count: Int = sizes.length
 
@@ -34,8 +34,8 @@ object MultiVertexBuffer {
         // NOTE: div 3 because float values per vertex
         val sizes: Seq[Int] = primitiveData.map(_.length / 3) 
 
-        val vao: Ptr[UInt] = VertexBuffer(primitiveData.flatten).vao
-        new MultiVertexBuffer(vao, sizes)
+        val vb = VertexBuffer(primitiveData.flatten)
+        new MultiVertexBuffer(vb.vao, vb.vbo, sizes)
     }
     
 }

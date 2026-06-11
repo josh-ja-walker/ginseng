@@ -106,6 +106,7 @@ given primitiveRenderer: Renderer[Primitive] with
                 
             }
 
+            vao.delete()
         }
 
     }

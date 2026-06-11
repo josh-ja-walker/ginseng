@@ -15,10 +15,14 @@ import ginseng.maths.geometry.*
   * @param vao pointer to OpenGL vertex array object
   * @param length number of vertices held in the vertex buffer
   */
-class VertexBuffer(private[vertices] val vao: Ptr[UInt], length: Int) {
+class VertexBuffer(private[vertices] val vao: Ptr[UInt], private[vertices] val vbo: Ptr[UInt], length: Int) {
     // Bind vertex array to state machine for rendering
     def bind(): Unit = glBindVertexArray(!vao)
-    def draw(drawMode: GLenum): Unit = glDrawArrays(drawMode, 0, length) 
+    def draw(drawMode: GLenum): Unit = glDrawArrays(drawMode, 0, length)
+    def delete(): Unit = {
+        glDeleteBuffers(1, vbo)
+        glDeleteVertexArrays(1, vao); 
+    }
 }
 
 object VertexBuffer {
@@ -52,7 +56,7 @@ object VertexBuffer {
         glBindBuffer(GL_ARRAY_BUFFER, !vbo)
         glVertexAttribPointer(0.toUInt, 3, GL_FLOAT, GL_FALSE, 0, null)
 
-        new VertexBuffer(vao, count / 3)
+        new VertexBuffer(vao, vbo, count / 3)
     }
     
 
