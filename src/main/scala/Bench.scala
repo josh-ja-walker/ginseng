@@ -20,7 +20,8 @@ import scala.util.boundary, boundary.break
 
 // @main 
 def renderMesh: Unit = Zone {
-    Benchmark.run  { () => Test.mesh.render() }
+    val mesh = Test.scene.computeMesh
+    Benchmark.run  { () => mesh.render() }
 }
 
 // @main 
