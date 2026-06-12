@@ -20,11 +20,8 @@ extension (mesh: Mesh) def modify(modification: Modification[?]): Mesh = modific
 
     case MoveVertex(v@VertexIndex(i), d) => mesh match {
         case MeshAST.Tri(a, b, c) => {
-            assert(c == Vertex.A || c == Vertex.B || c == Vertex.C)
-            
             val points: Seq[Pos] = Seq(a, b, c)
             val Seq(newA, newB, newC) = points.updated(i, points(i) + d)
-
             MeshAST.Tri(newA, newB, newC)
         }
 
