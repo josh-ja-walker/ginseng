@@ -55,8 +55,6 @@ given Compute[Scene, Mesh]:
 given transformCompute: Transform[Mesh] => Compute[SceneAST.Transformation, Mesh]:
     // Compute mesh for transformed types by applying transformation to the computed sub-mesh
     extension (transform: Transformation) def computeMesh: Mesh = transform match {
-        case Move(a, d) => a.computeMesh.translated(d)
-        case MoveTo(a, to, from) => a.computeMesh.repositioned(from(a).resolve.located, to)
 
         case Scale(a, factor) => a.computeMesh.scaled(factor)
         case Reflect(a, plane) => a.computeMesh.reflected(plane.normal, plane.point) 
@@ -103,14 +101,12 @@ given primitiveCompute: Compute[Primitive, Mesh]:
         case tri: Tri => triCompute.computeMesh(tri)
         case sq: Square => squareCompute.computeMesh(sq)
 
-        case Polygon(size) => ???
-
         case t: Tetra => tetraCompute.computeMesh(t)
         case p: Pyramid => pyramidCompute.computeMesh(p)
         case c: Cube => cubeCompute.computeMesh(c)
             
         case Rect(width@Length(x), Length(y)) => 
-            Square(width).scaled(Vec[3](1, x / y, 1)).computeMesh
+            Square(width).scaled(Vec[3](1, y / x, 1)).computeMesh
 
         case Cuboid(width@Length(x), Length(y), Length(z)) => 
             Cube(width).scaled(Vec[3](1, x / y, x / z)).computeMesh

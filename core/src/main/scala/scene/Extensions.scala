@@ -33,14 +33,10 @@ object Extensions {
         def aboveIs(other: Scene) = other.isAbove(scene)
         def belowIs(other: Scene) = other.isBelow(scene)
 
-        def moved(other: Dir) = Move(scene, other)
-        def movedTo(to: Pos, from: Scene => Anchor) = MoveTo(scene, to, from)
+
         def scaled(factor: Vec[3]) = Scale(scene, factor)
         def reflected(plane: Plane) = Reflect(scene, plane)
-
-        // TODO: ideally consolidate into one
         def rotated(angle: Angle, axis: Dir) = Rotate(scene, angle, axis)
-        def rotatedAbout(angle: Angle, axis: Dir, about: Scene => Anchor) = RotateAbout(scene, angle, axis, about)
 
         // TODO: consolidate into 1
         def skewedX(f: Double) = SkewX(scene, f)
@@ -51,7 +47,6 @@ object Extensions {
         def squeezedX(f: Double) = SqueezeX(scene, f)
         def squeezedY(f: Double) = SqueezeY(scene, f)
         def squeezedZ(f: Double) = SqueezeZ(scene, f)
-
 
         def shaded(shader: Shader) = Rendered(scene, shader)
         def scaffolded = Scaffold(scene)
