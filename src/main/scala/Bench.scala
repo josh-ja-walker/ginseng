@@ -21,29 +21,48 @@ import scala.util.boundary, boundary.break
 // @main 
 def renderMesh: Unit = Zone {
     val mesh = Test.scene.computeMesh
+    // Benchmark.runNoFPS { () => mesh.render() }
     Benchmark.run  { () => mesh.render() }
 }
 
-// @main 
+@main 
 def stagedRenderMesh: Unit = Zone {
-    Benchmark.run { () => Test.render() }
+    // Benchmark.runNoFPS { () => Test.render() }
+    Benchmark.run { () => Test.render() }  
 }
 
 
 object Benchmark {
 
-    val maxFrames: Option[Int] = None
-    // val maxFrames: Option[Int] = Some(1)
+    // val maxFrames: Option[Int] = None
+    val maxFrames: Option[Int] = Some(10000)
+
+    val maxSeconds: Option[Int] = None
+    // val maxSeconds: Option[Int] = Some(60)
 
 
     def benchContext(using Zone) = {
         val config = new ConfigBuilder()
             .withSize(800, 600)
             .withName("ginseng")
-            .withBackgroundColour(Colours.white)
+            .withBackgroundColour(Colours.black)
             .build
 
         Context(config)
+    }
+    
+    
+    def runNoFPS(render: () => Unit)(using Zone): Unit = {
+        var frame: Int = 0
+
+        boundary:
+            benchContext.run(() => {
+                render()
+                frame += 1
+                if (maxFrames.exists(frame >= _)) { 
+                    break() 
+                }
+            })
     }
     
     def run(render: () => Unit)(using Zone): Unit = {
@@ -70,7 +89,7 @@ object Benchmark {
                 render()
 
                 frame += 1
-                if (maxFrames.exists(frame >= _)) { 
+                if (maxFrames.exists(frame >= _) || maxSeconds.exists(currentTime >= _)) { 
                     break() 
                 }
             })
