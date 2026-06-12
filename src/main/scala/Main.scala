@@ -34,16 +34,16 @@ def main: Unit = Zone {
     val config = new ConfigBuilder()
         .withSize(800, 600)
         .withName("Hello Triangle")
-        .withBackgroundColour(Colours.white)
+        .withBackgroundColour(Colours.black)
         .build
 
     val context = Context(config)
 
     // Define shader
     val triShader = ShaderAST.Interpolate(
-        Colour.hex("#B85450"),
-        Colour.hex("#82B366"),
-        Colour.hex("#6C8EBF")
+        Colours.red,
+        Colours.green,
+        Colours.blue
     )
 
     // Animation timestep - start halfway through growth phase
@@ -58,10 +58,10 @@ def main: Unit = Zone {
         
         t += 1
 
-        Cube(0.5.u)
-            .rotated(Deg(5 * t), Dir.up)
-            .rotated(Deg(5 * t), Dir.right)
-            .render()
+        Origin.anchors(
+            Tris.equilateral.shaded(triShader),
+            _.vertex(Vertex.A)
+        ).render()
 
         Thread.sleep(200)
 
