@@ -6,6 +6,7 @@
 .bloop
 .bsp
 .sbt
+.vs
 *.gch
 .cache
 c-playground
@@ -17,3 +18,5 @@ project/metals.sbt
 
 example-sqlite/sqlite
 example-sqlite/sqlite.zip
+
+bench/

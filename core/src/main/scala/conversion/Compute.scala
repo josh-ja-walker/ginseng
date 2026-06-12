@@ -109,7 +109,7 @@ given primitiveCompute: Compute[Primitive, Mesh]:
             Square(width).scaled(Vec[3](1, y / x, 1)).computeMesh
 
         case Cuboid(width@Length(x), Length(y), Length(z)) => 
-            Cube(width).scaled(Vec[3](1, x / y, x / z)).computeMesh
+            Cube(width).scaled(Vec[3](1, y / x, z / x)).computeMesh
 
     }
 
