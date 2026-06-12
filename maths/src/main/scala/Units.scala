@@ -6,22 +6,19 @@ package object units {
     export Length.*
     export Length.given
 
-    opaque type Length = Double
+    case class Length(u: Double)
 
     object Length {
-
-        def apply(d: Double): Length = d
-
         extension (l: Length) {
-            def toDouble: Double = l
+            def toDouble: Double = l.u
         }
 
         extension (d: Double) {
-            def u: Length = d
+            def u: Length = Length(d)
         }
 
         extension (i: Int) {
-            def u: Length = i
+            def u: Length = Length(i)
         }
 
     }

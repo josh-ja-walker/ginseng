@@ -1,0 +1,63 @@
+package ginseng.renderer.vertices
+
+import scala.scalanative.unsafe.*
+import scala.scalanative.unsigned.*
+
+import opengl.bindings.glad.*
+import opengl.bindings.glfw.*
+
+import ginseng.maths.geometry.*
+
+
+/**
+  * Wrapper for OpenGL vertex array object
+  *
+  * @param vao pointer to OpenGL vertex array object
+  * @param length number of vertices held in the vertex buffer
+  */
+class VertexBuffer(private[vertices] val vao: Ptr[UInt], private[vertices] val vbo: Ptr[UInt], length: Int) {
+    // Bind vertex array to state machine for rendering
+    def bind(): Unit = glBindVertexArray(!vao)
+    def draw(drawMode: GLenum): Unit = glDrawArrays(drawMode, 0, length)
+    def delete(): Unit = {
+        glDeleteBuffers(1, vbo)
+        glDeleteVertexArrays(1, vao); 
+    }
+}
+
+object VertexBuffer {
+
+    // Convert to list of positions per primitive and flatten to create buffer
+    def apply[T](primitives: T*)(using zone: Zone)(using VertexData[T]): VertexBuffer = 
+        VertexBuffer(primitives.data)
+    
+    // Construct a vertex array object from xyz values and wrap in VertexBuffer
+    def apply(data: Seq[Float])(using zone: Zone): VertexBuffer = {
+        // Define line points array
+        val count: Int = data.length
+        val pointsPtr: Ptr[Byte] = data.toArray.at(0).asInstanceOf[Ptr[Byte]]
+        // FIXME: may require defining pointsPtr by hand to avoid heap OOM exception
+
+        // Initialise vertex buffer
+        val vbo: Ptr[UInt] = alloc[UInt]()
+        !vbo = 0.toUInt
+
+        glGenBuffers(1, vbo)
+        glBindBuffer(GL_ARRAY_BUFFER, !vbo)
+        glBufferData(GL_ARRAY_BUFFER, count * sizeOf[Float], pointsPtr, GL_STATIC_DRAW)
+
+        // Initialise vertex array
+        val vao: Ptr[UInt] = alloc[UInt]()
+        !vao = 0.toUInt
+        
+        glGenVertexArrays(1, vao)
+        glBindVertexArray(!vao)
+        glEnableVertexAttribArray(0.toUInt)
+        glBindBuffer(GL_ARRAY_BUFFER, !vbo)
+        glVertexAttribPointer(0.toUInt, 3, GL_FLOAT, GL_FALSE, 0, null)
+
+        new VertexBuffer(vao, vbo, count / 3)
+    }
+    
+
+}

@@ -13,7 +13,7 @@ import ginseng.renderer.*
 object Shaders {
     def flatShader(colour: Colour)(using Zone): ShaderProg = ShaderLoader()
         // Define vertex shader - no op
-        .load(Shader.vertex( 
+        .load(VertexShader( 
             """#version 410 core
             |in vec3 vp;
             |void main() {
@@ -23,7 +23,7 @@ object Shaders {
         // Define fragment shader - interpolates vertex colour
         .load({
             val Colour(r, g, b, a) = colour
-            Shader.frag(
+            FragmentShader(
                 s"""#version 410 core
                 |out vec4 frag_color;
                 |void main() {
@@ -41,7 +41,7 @@ object Shaders {
             val rgba = colours
                 .map({ case Colour(r, g, b, a) => s"vec4($r, $g, $b, $a)" })
 
-            Shader.vertex(
+            VertexShader(
                 s"""#version 410 core
                 |in vec3 vp;
                 |out vec4 vertex_colour;
@@ -53,7 +53,7 @@ object Shaders {
             )
         })
         // Define fragment shader - interpolates vertex colour
-        .load(Shader.frag(
+        .load(FragmentShader(
             """#version 410 core
             |in vec4 vertex_colour;
             |out vec4 frag_colour;

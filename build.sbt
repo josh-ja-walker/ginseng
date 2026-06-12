@@ -10,6 +10,7 @@ lazy val ginseng = project
     .enablePlugins(ScalaNativePlugin, VcpkgNativePlugin)
     .settings(vcpkgDependencies := VcpkgDependencies("glfw3"))
     .settings(openglSettings)
+    .settings(scalacOptions += "-Xcheck-macros")
 
 
 // Note: required to duplicate between projects
@@ -27,12 +28,12 @@ lazy val openglSettings: Seq[Def.Setting[_]] = Seq(
 lazy val core = project
     .in(file("core"))
     .dependsOn(maths)
-    .enablePlugins(ScalaNativePlugin, VcpkgNativePlugin)
+    .enablePlugins(ScalaNativePlugin)
 
 // Project containing mathematics helpers for Vectors, Matrices, etc.,
 lazy val maths = project
     .in(file("maths"))
-    .enablePlugins(ScalaNativePlugin, VcpkgNativePlugin)
+    .enablePlugins(ScalaNativePlugin)
     .settings(libraryDependencies += "ai.dragonfly" %%% "slash" %  "0.4.3")
 
 // Project containing renderers and OpenGL handlers
@@ -43,3 +44,4 @@ lazy val renderer = project
     .settings(vcpkgDependencies := VcpkgDependencies("glfw3"))
     .settings(libraryDependencies += "io.github.josh-ja-walker" %%% "opengl-bindings" % "0.1.4")
     .settings(openglSettings)
+    .settings(scalacOptions += "-Xcheck-macros")

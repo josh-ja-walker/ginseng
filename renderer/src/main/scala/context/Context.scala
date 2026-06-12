@@ -57,6 +57,8 @@ object Context {
         // Enable depth testing for rendering 3D objects
         glEnable(GL_DEPTH_TEST)
 
+        glfwSwapInterval(0) // Disable VSync for benchmarking purposes
+
         new Context(window, gladVersion)
     }
 }

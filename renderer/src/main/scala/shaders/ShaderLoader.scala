@@ -7,20 +7,20 @@ import opengl.bindings.glad.*
 import opengl.bindings.glfw.*
 
 
-class ShaderLoader(private val prog: UInt) {
+class ShaderLoader(prog: UInt, shaders: Seq[Shader]) {
     // Load shader into Shader programs
     def load(shader: Shader)(using zone: Zone): ShaderLoader = {
         glAttachShader(prog, shader.prog)
-        this
+        new ShaderLoader(prog, shaders :+ shader)
     }
 
     // Link shader program with OpenGL context
     def link(): ShaderProg = {
         glLinkProgram(prog)
-        new ShaderProg(prog)
+        new ShaderProg(prog, shaders)
     }
 }
 
 object ShaderLoader {
-    def apply(): ShaderLoader = new ShaderLoader(glCreateProgram())
+    def apply(): ShaderLoader = new ShaderLoader(glCreateProgram(), Nil)
 }

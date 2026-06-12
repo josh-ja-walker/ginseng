@@ -1,0 +1,19 @@
+package ginseng.renderer.staging
+
+import ginseng.core.mesh.MeshAST.*
+
+
+enum PrimitiveType { 
+    case Point
+    case Tri 
+}
+
+object PrimitiveType {
+    
+    def apply(p: Primitive) = p match {
+        case p: Point => PrimitiveType.Point
+        case t: Tri => PrimitiveType.Tri
+        // TODO:
+    }
+
+}

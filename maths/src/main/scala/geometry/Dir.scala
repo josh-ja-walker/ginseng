@@ -3,6 +3,9 @@ package ginseng.maths.geometry
 import ginseng.maths.angle.*
 import ginseng.maths.linalg.*
 
+import ginseng.maths.transformations.*
+import ginseng.maths.transformations.given
+
 
 /** Direction Vector */
 case class Dir(x: Double, y: Double, z: Double)
@@ -16,7 +19,8 @@ case class Dir(x: Double, y: Double, z: Double)
     infix def angle(t: Dir): Angle = Rad(math.acos(this.normalized.dot(t.normalized)))
 
     /** Rotate direction vector anticlockwise about origin */
-    infix def rotate(theta: Angle): Dir = (Transformation.Rotation(theta, Dir.forward).mat * this).toDir
+    infix def rotate(theta: Angle): Dir = 
+        (Transformation.Rotation(theta, Dir.forward).toMat * this).toDir
 
 
     infix def cross(d: Dir): Dir = (this.take[3].cross(d.take[3])).toDir
@@ -24,6 +28,8 @@ case class Dir(x: Double, y: Double, z: Double)
     override def unary_- : Dir = super.-(this).toDir
 
     override def *(scalar: Double): Dir = super.*(scalar).toDir
+
+    override def +(dir: Vec[4]): Dir = super.+(dir).toDir
 
 }
 
