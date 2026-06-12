@@ -1,0 +1,40 @@
+<primitive> <= <tri> | <square> | <quad>  
+
+
+<tri> <= "tri " <point> <point> <point> 
+    | <sas> | <sss> | <asa> | <rhs> | <equil> 
+
+<sas> <= "tri " <length> <angle> <length> 
+<sss> <= "tri " <length> <length> <length> 
+<asa> <= "tri " <angle> <length> <angle> 
+<rhs> <= "tri " <length> <length>  
+<equil> <= "tri " [<length>]  
+
+
+<square> <= "square " <point> <point> 
+    | "square " <length>  
+
+<quad> <= "quad " <point> <point> <point> <point> 
+
+
+<transform> <= <move> | <stretch> | <scale> | <rotate> 
+
+<move> <= "move " <vector> 
+<stretch> <= "stretch " <vector> 
+<skew> <= "skew " <vector>  
+<scale> <= "scale " <vector> 
+<rotate> <= "rotate" <number> ["c" | "ac"] "about" <point> 
+
+
+<vector> <= "(" <number> <number> [<number>] ")" 
+
+<nonzero> <= "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "0" 
+<digit> <= <nonzero> | "0" 
+
+<integer> <= "0" | ["-"] <nonzero> {<digit>} 
+<number> <= <integer> [ "." <digit> {<digit>} ] 
+
+<point> <= <vector> 
+
+<angle> <= <number> ("deg" | "rad") 
+<length> <= <number> "u" 
