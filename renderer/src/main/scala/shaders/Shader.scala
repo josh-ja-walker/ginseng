@@ -7,7 +7,9 @@ import opengl.bindings.glad.*
 import opengl.bindings.glfw.*
 
 
-class Shader(private[shaders] val prog: UInt)
+class Shader(private[shaders] val prog: UInt) {
+    def delete(): Unit = glDeleteShader(prog)
+}
 
 object Shader {
     def apply(glType: GLenum, code: String)(using Zone): Shader = {        

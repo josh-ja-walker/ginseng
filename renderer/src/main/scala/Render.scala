@@ -80,7 +80,8 @@ given primitiveRenderer: Renderer[Primitive] with
         shaderOpt.foreach { shader => 
 
             // Bind shader to OpenGL state machine
-            shader.create.bind()
+            val shaderProg = shader.create
+            shaderProg.bind()
 
             // Bind vertex array to and draw
             val vao = VertexBuffer(offsetPrimitive.data)
@@ -107,6 +108,7 @@ given primitiveRenderer: Renderer[Primitive] with
             }
 
             vao.delete()
+            shaderProg.delete()
         }
 
     }

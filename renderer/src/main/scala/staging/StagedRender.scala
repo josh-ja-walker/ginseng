@@ -105,13 +105,17 @@ object Staging {
                     
                     '{
                         // Bind shader to OpenGL state machine
-                        $shaderExpr.create(using $z).bind()
+                        val shader = $shaderExpr.create(using $z)
+                        
+                        shader.bind()
 
                         // Bind vertex array to and draw
                         val vao = VertexBuffer($vertexDataExpr)(using $z)
                         vao.bind()
                         vao.draw(GL_TRIANGLES)
                         vao.delete()
+
+                        shader.delete()
                     }
                 }
 
