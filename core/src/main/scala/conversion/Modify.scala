@@ -14,116 +14,62 @@ import ginseng.maths.units.*
 import ginseng.maths.angle.*
 import ginseng.maths.geometry.* 
 import ginseng.maths.linalg.*
+import ginseng.maths.transformations.*
+import ginseng.maths.transformations.extensions.given
 
 
-extension (mesh: Mesh) def modify(modification: Modification[?]): Mesh = modification match {
-
-    case MoveVertex(v@VertexIndex(i), d) => mesh match {
-        case MeshAST.Tri(a, b, c) => {
-            val points: Seq[Pos] = Seq(a, b, c)
-            val Seq(newA, newB, newC) = points.updated(i, points(i) + d)
-            MeshAST.Tri(newA, newB, newC)
-        }
-
-        // TODO:
-            
-        case MeshAST.Anchoring(to, mesh: Flat[?], from) => MeshAST.Anchoring(to, mesh.modify(modification), from)
-        case MeshAST.Anchoring(to, mesh, from) => ???
-
-        case MeshAST.Rendered(mesh, shader) => MeshAST.Rendered(mesh.modify(modification), shader)
-        case MeshAST.Scaffold(mesh) => MeshAST.Scaffold(mesh.modify(modification))
-
-        case _ => ???
-    }
-
-    case MoveVertexTo(vertex, p) => ???
-    case ReflectVertex(vertex, plane) => ???
-    case RotateVertexAbout(vertex, angle, axis, about) => ???
+given Compute[BodyModification[?], Mesh]:
+    extension (v: BodyModification[?]) def computeMesh: Mesh = ???
     
-    case MoveEdge(Edge(v, u), d) => mesh match {
-        case MeshAST.Tri(a, b, c) => {
-            mesh.modify(MoveVertex(v, d))
-                .modify(MoveVertex(u, d))
-        }
+
+given triModificationCompute: Compute[FlatModification[Tri], MeshAST.Tri] with
+    extension (v: FlatModification[Tri]) def computeMesh: MeshAST.Tri = v match {
+
+        case MoveVertex(tri: Tri, vert, d) => tri.mapVertexPos(vert, _ + d)
+        case MoveVertexTo(tri: Tri, vert, p) => tri.mapVertexPos(vert, _ => p)
         
-        // TODO:
+        case ReflectVertex(tri: Tri, vert, Plane(n, p)) => 
+            tri.mapVertexPos(vert, _.reflected(n, p))
 
-        case MeshAST.Anchoring(to, mesh: Flat[?], from) => MeshAST.Anchoring(to, mesh.modify(modification), from)
-        case MeshAST.Anchoring(to, mesh, from) => ???
+        case RotateVertexAbout(tri: Tri, vert, angle, axis, about) => 
+            tri.mapVertexPos(vert, _.rotated(angle, about, axis))
+        
 
-        case MeshAST.Rendered(mesh, shader) => MeshAST.Rendered(mesh.modify(modification), shader)
-        case MeshAST.Scaffold(mesh) => MeshAST.Scaffold(mesh.modify(modification))
-
-        case _ => ???
-    }
-
-    case ScaleEdge(Edge(v@VertexIndex(i), u@VertexIndex(j)), f) => mesh match {
-        case MeshAST.Tri(a, b, c) => {
-            val points = Seq(a, b, c)
+        case MoveEdge(tri: Tri, Edge(v, u), d) =>
+            tri.mapVertexPos(v, _ + d)
+                .mapVertexPos(u, _ + d)
             
-            val edgeDir = points(j) - points(i)
+            // FIXME: should be able to modify more than just flats
+            // MoveVertex(MoveVertex(tri, v, d), u, d) \
+
+        case ScaleEdge(tri: Tri, Edge(v@VertexIndex(i), u@VertexIndex(j)), f) => {
+            val meshTri: MeshAST.Tri = tri.computeMesh
+            
+            val vertices = meshTri.vertices
+            val edgeDir = vertices(j) - vertices(i)
             val offset = (f * 0.5f * edgeDir)
+            val midpoint = vertices(i) + edgeDir * 0.5f  
 
-            val midpoint = points(i) + edgeDir * 0.5f  
-
-            mesh.modify(MoveVertex(v, (midpoint - offset) - points(i)))
-                .modify(MoveVertex(u, (midpoint + offset) - points(j)))
+            meshTri.mapVertexPos(v, _ => (midpoint - offset))
+                .mapVertexPos(u, _ => (midpoint + offset))
         }
-        
-        // TODO:
             
-        case MeshAST.Anchoring(to, mesh: Flat[?], from) => MeshAST.Anchoring(to, mesh.modify(modification), from)
-        case MeshAST.Anchoring(to, mesh, from) => ???
-
-        case MeshAST.Rendered(mesh, shader) => MeshAST.Rendered(mesh.modify(modification), shader)
-        case MeshAST.Scaffold(mesh) => MeshAST.Scaffold(mesh.modify(modification))
-        
-        case _ => ???
     }
 
-    // TODO:
-    case ModifyFace(Face(index), t) => ???
-}
 
-// trait Modify[M <: Mesh, F <: Modification[?]] {
-//     extension (m: M) 
-//         def modify(mod: F): M
-// }
+extension (tri: Tri)
+    def mapVertexPos(vert: VertexIndex, f: Pos => Pos): MeshAST.Tri = {
+        tri.computeMesh.mapVertexPos(vert, f)
+    }
 
-// given [F <: Modification[?]] => Modify[Mesh, F]:
-//     extension (m: Mesh) def modify(mod: F): Mesh = ???
+extension (tri: MeshAST.Tri)
+    def mapVertexPos(vert: VertexIndex, f: Pos => Pos): MeshAST.Tri = {
+        assert(vert == Vertex.A || vert == Vertex.B || vert == Vertex.C)
 
+        val vertices = tri.vertices
+        val Seq(a, b, c) = vertices
+            .updated(vert.value, f(vertices(vert.value)))
 
-// given Modify[MeshAST.Tri, FlatModification[Tri]]:
-//     extension (m: MeshAST.Tri) def modify(mod: FlatModification[Tri]): MeshAST.Tri = mod match {
-
-//         case MoveVertex(index, d) => {
-//             assert(index == VertexIndex.A || index == VertexIndex.B || index == VertexIndex.C)
-            
-//             val points: Seq[Pos] = m.vertices
-//             val Seq(newA, newB, newC) = points.updated(index.value, points(index.value) + d)
-
-//             MeshAST.Tri(newA, newB, newC)
-//         }
-
-//         case MoveVertexTo(vertex, p) => ???
-//         case ReflectVertex(vertex, plane) => ???
-//         case RotateVertexAbout(vertex, angle, axis, about) => ???
-
-
-//         // case MoveEdge(Edge(v, u), d) => m.modify(MoveVertex(v, d)).modify(MoveVertex(u, d))
-
-//         // case ScaleEdge(Edge(v@VertexIndex(i), u@VertexIndex(j)), f) => {
-//         //     val points: Seq[Pos] = m.vertices
-            
-//         //     val edgeDir = points(j) - points(i)
-//         //     val offset = (f * 0.5f * edgeDir)
-
-//         //     val midpoint = points(i) + edgeDir * 0.5f  
-
-//         //     m.modify(MoveVertex(v, (midpoint - offset) - points(i)))
-//         //         .modify(MoveVertex(u, (midpoint + offset) - points(j)))
-//         // }
-
-//     }
-
+        MeshAST.Tri(a, b, c)
+    }
+    

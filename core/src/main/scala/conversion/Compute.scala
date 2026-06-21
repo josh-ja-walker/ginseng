@@ -44,7 +44,7 @@ given Compute[Scene, Mesh]:
         case t: Transformation => transformCompute.computeMesh(t)
 
         // Compute mesh and modify
-        case Modify(scene, modification) => scene.computeMesh.modify(modification)
+        case m: FlatModification[Tri] => triModificationCompute.computeMesh(m)
 
         // Compute mesh from scene and propagate shared shader information 
         case Rendered(scene, shader) => MeshAST.Rendered(scene.computeMesh, shader)
