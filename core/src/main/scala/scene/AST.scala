@@ -96,30 +96,23 @@ object AST {
     case class Face(index: Int)
 
     // Modification to a Scene object
-    sealed trait Modification[S <: Scene]
+    sealed trait Modification[S <: Scene] extends Scene
 
     // Modifications to a Flat object 
     sealed trait FlatModification[S <: Flat[?]] extends Modification[S]
-// RENAME TO MODIFYFLAT
-// RENAME TO MODIFYBODY
-// PUT SCENE IN NODE
 
-    case class MoveVertex(vertex: VertexIndex, d: Dir) extends FlatModification
-    case class MoveVertexTo(vertex: VertexIndex, p: Pos) extends FlatModification
-    case class ReflectVertex(vertex: VertexIndex, plane: Plane) extends FlatModification
-    case class RotateVertexAbout(vertex: VertexIndex, angle: Angle, axis: Dir, about: Pos) extends FlatModification
-// TODO: a: Flat, 
+    case class MoveVertex(f: Flat[?], vertex: VertexIndex, d: Dir) extends FlatModification
+    case class MoveVertexTo(f: Flat[?], vertex: VertexIndex, p: Pos) extends FlatModification
+    case class ReflectVertex(f: Flat[?], vertex: VertexIndex, plane: Plane) extends FlatModification
+    case class RotateVertexAbout(f: Flat[?], vertex: VertexIndex, angle: Angle, axis: Dir, about: Pos) extends FlatModification
     
-    case class MoveEdge(edge: Edge, d: Dir) extends FlatModification
-    case class ScaleEdge(edge: Edge, f: Double) extends FlatModification
+    case class MoveEdge(f: Flat[?], edge: Edge, d: Dir) extends FlatModification
+    case class ScaleEdge(f: Flat[?], edge: Edge, factor: Double) extends FlatModification
 
     // Modifications to a Body object 
     sealed trait BodyModification[S <: Body[?, ?]] extends Modification[S]
-// TODO: a: Body, 
-    case class ModifyFace(face: Face, t: Transformation) extends BodyModification
+    case class ModifyFace(b: Body[?, ?], f: Face, t: Transformation) extends BodyModification
 
-    // Apply modification to a scene
-    case class Modify[S <: Scene](scene: S, modification: Modification[S]) extends Scene
 
     // Shader specification
     case class Rendered(scene: Scene, shader: Shader) extends Scene

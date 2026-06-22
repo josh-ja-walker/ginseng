@@ -53,11 +53,17 @@ object Extensions {
     }
 
     extension (flat: Flat[?]) {
-        def modifyFlat(modification: Modification[Flat[?]]) = Modify(flat, modification)
+        def moveVertex(vertex: VertexIndex, d: Dir) = MoveVertex(flat, vertex, d)
+        def moveVertexTo(vertex: VertexIndex, p: Pos) = MoveVertexTo(flat, vertex, p)
+        def reflectVertex(vertex: VertexIndex, plane: Plane) = ReflectVertex(flat, vertex, plane)
+        def rotateVertexAbout(vertex: VertexIndex, angle: Angle, axis: Dir, about: Pos) = RotateVertexAbout(flat, vertex, angle, axis, about)
+
+        def moveEdge(edge: Edge, d: Dir) = MoveEdge(flat, edge, d)
+        def scaleEdge(edge: Edge, factor: Double) = ScaleEdge(flat, edge, factor)
     }
     
     extension (body: Body[?, ?]) {
-        def modifyBody(modification: Modification[Body[?, ?]]) = Modify(body, modification)
+        def modifyFace(f: Face, t: Transformation) = ModifyFace(body, f, t)
     }
     
     extension (anchor: Anchor) {
